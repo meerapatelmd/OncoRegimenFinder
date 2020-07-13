@@ -6,7 +6,7 @@
  @regimenIngredientTable = "test_ingredient_table"  
  @vocabularyTable = "regimen_voc_upd"  
  @drug_classification_id_input = 21601387  
- @date_lag_input = 30 
+ @date_lag_input = 30  
  @regimen_repeats = 5  
  @generateVocabTable = T  
  
