@@ -1,11 +1,15 @@
+--4 Create @writeDatabaseSchema.@regimenIngredientTable
 drop table if exists  @writeDatabaseSchema.@regimenIngredientTable;
 
+--Aggregating ingredients in @writeDatabaseSchema.@regimenTable in a comma-separated string based on patient and ingredient_start_date,
+--now regimen_start_date
 with cte as (
 select r.person_id, r.ingredient_start_date as regimen_start_date,
        string_agg(distinct lower(r.concept_name), ','   order by lower(r.concept_name) ) as regimen
 from @writeDatabaseSchema.@regimenTable r
 group by r.person_id, r.ingredient_start_date
 )
+--Joining ingredient details with regimen information and regimen_end_date is derived from max ingredient end date in groupings of regimen_start_date and patient identifier
 select cte.person_id, orig.drug_exposure_id, i.concept_name as ingredient, i.ingredient_start_date, i.ingredient_end_date,
         cte.regimen, vt.concept_id as hemonc_concept_id, vt.reg_name, cte.regimen_start_date, max(i.ingredient_end_date) over (partition by cte.regimen_start_date, cte.person_id) as regimen_end_date
 into @writeDatabaseSchema.@regimenIngredientTable

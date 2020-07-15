@@ -1,5 +1,9 @@
+--3: (optional) Create @writeDatabaseSchema.@vocabularyTable
 drop table if exists @writeDatabaseSchema.@vocabularyTable;
 
+--Creating a component-based "combo_name" for each reimgne by getting all concepts in HemOnc
+--that has a "is antineoplastic of" relationship and performing a comma-separated string aggregate of all
+--concept_names of its components
 with CTE as (
 select c1.concept_name as reg_name,
      string_agg(lower(c2.concept_name), ','   order by lower(c2.concept_name) asc) as combo_name,
@@ -11,11 +15,14 @@ group by c1.concept_name,c1.concept_id
 order by c1.concept_name
 ),
 CTE_second as (
+--After replacing all " and " with "," in the combo_name, if it equals the native regimen concept_name, it receives a rank of 0
+--All obs that does not rank 0, the combo_name is ranked in sequential order by the length of c.reg_name
 select c.*, (case when lower(reg_name) = regexp_replace(combo_name,',',' and ') then 0
 			 else row_number() over (partition by combo_name order by length(c.reg_name)) end ) as rank
 from CTE c
 order by rank desc
 ),
+--Minimum rank value by combo_name is filtered for
 CTE_third as (
 select *,min(rank) over (partition by combo_name)
 from CTE_second
