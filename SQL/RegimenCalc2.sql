@@ -1,4 +1,6 @@
---2: After @writeDatabaseSchema.@regimenTable is written in CohortBuild.sql, it is modified based on ingredient_start_date overlaps
+--2: After @writeDatabaseSchema.@regimenTable is written in CohortBuild.sql, it is:
+----a) modified based on ingredient_start_date overlaps
+----b) iterated by number of regimen_repeats parameter
 ---Grouping by person_id, drug_exposure_id, concept_name, and ingredient_start_date, and joining back to the same table to
 ---identify concurrently administered ingredients
 WITH add_groups AS (

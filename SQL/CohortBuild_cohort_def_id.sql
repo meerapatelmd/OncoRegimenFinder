@@ -1,5 +1,5 @@
---1: create @writeDatabaseSchema.@cohortTable and @writeDatabaseSchema.@regimenTable without a
----cohort definition identifier
+--1: create @writeDatabaseSchema.@cohortTable and @writeDatabaseSchema.@regimenTable
+---that incorporates a cohort definition id in a @cdmResultSchema.cohort table
 --Build the cohort and regimen tables in the database schema to write to
 DROP TABLE IF EXISTS @writeDatabaseSchema.@cohortTable;
 DROP TABLE IF EXISTS @writeDatabaseSchema.@regimenTable;
@@ -16,6 +16,7 @@ select
        de.drug_exposure_end_date as ingredient_end_date
 from @cdmDatabaseSchema.drug_exposure de
 inner join @cdmDatabaseSchema.cohort ch on ch.drug_exposure_id = de.drug_exposure_id
+inner join @cdmResultSchema.cohort c2 on ch.person_id = c2.subject_id and c2.cohort_definition_id = @cohortDefinitionId
 inner join @cdmDatabaseSchema.concept_ancestor ca on ca.descendant_concept_id = de.drug_concept_id
 inner join @cdmDatabaseSchema.concept c on c.concept_id = ca.ancestor_concept_id
     where c.concept_id in (
