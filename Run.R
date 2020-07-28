@@ -2,6 +2,12 @@ library(DatabaseConnector)
 library(SqlRender)
 source('R/file.R')
 
+
+hemonc_component_class <-
+        chariot::query_athena("SELECT * FROM concept WHERE vocabulary_id = 'HemOnc' AND concept_class_id = 'Component Class';") %>%
+        dplyr::select(component_class_id = concept_id) %>%
+        chariot::pivot_relative_level(levels_type = "min")
+
 connectionDetails <-  DatabaseConnector::createConnectionDetails(dbms = "postgresql",
                                                                  server = "dlvidhiomop1.mskcc.org/omop_raw",
                                                                  user = Sys.getenv("omop_username"),
@@ -16,8 +22,11 @@ create_regimens(connectionDetails = connectionDetails,
                cohortTable = "oncoregimenfinder_cohort",
                regimenTable = "oncoregimenfinder_regimen",
                regimenIngredientTable = "oncoregimenfinder_regimen_ingredients",
-               vocabularyTable = "ncoregimenfinder_vocab",
-               drug_classification_id_input = 21601387,
+               vocabularyTable = "oncoregimenfinder_vocab",
+               drug_classification_id_input = c(21601387,
+                                                35807188, #HemOnc Chemotherapeutic
+                                                35807277, #Hypomethylating Agents
+                                                35807189), #Immunotherapeutics
                date_lag_input = 30,
                regimen_repeats = 5,
                generateVocabTable = T)

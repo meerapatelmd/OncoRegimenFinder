@@ -22,7 +22,7 @@ inner join @cdmDatabaseSchema.concept c on c.concept_id = ca.ancestor_concept_id
     where c.concept_id in (
           select descendant_concept_id as drug_concept_id from @cdmDatabaseSchema.concept_ancestor ca1
           where ancestor_concept_id in (@drug_classification_id_input)  --(21601387) /* Antineoplastic Agents ATC classification*/
-)
+) OR c.concept_id IN ()
 and c.concept_class_id = 'Ingredient'
 )
 
