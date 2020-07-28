@@ -3,7 +3,3 @@
 .RData
 .Ruserdata
 errorReportSql.txt
-
-
-inst/doc
-docs
