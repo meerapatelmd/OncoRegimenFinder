@@ -8,10 +8,16 @@
 #                                                                             35807188,
 #                                                                             35807277,
 #                                                                             35807189))
-
-# processRegimenTable(conn = conn,
+# 
+# OncoRegimenFinder::processRegimenTable(conn = conn,
 #                     writeDatabaseSchema = "patelm9",
 #                     regimenTable = "oncoregimenfinder_regimen",
 #                     date_lag_input = 30,
 #                     regimen_repeats = 5)
+# 
+# OncoRegimenFinder::createVocabTable(conn = conn,
+#                                     writeDatabaseSchema = "patelm9",
+#                                     cdmDatabaseSchema = "omop_cdm_2",
+#                                     vocabularyTable = "oncoregimenfinder_vocabulary")
+# 
 # fantasia::dcOMOP(conn = conn)
