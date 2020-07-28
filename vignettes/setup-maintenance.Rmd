@@ -1,5 +1,5 @@
 ---
-title: "Setup and Maintenance"
+title: "setup-maintenance"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{setup-maintenance}

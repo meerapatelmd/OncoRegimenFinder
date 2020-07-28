@@ -7,3 +7,4 @@ Timestamp	Activity Type	Function	File	Details
 2020-07-28 16:11:22	write	copy_to_clipboard		
 2020-07-28 16:15:56	write	copy_to_clipboard		
 2020-07-28 17:00:40	read	simply_read_csv	data-raw/topclasses.csv	
+2020-07-28 18:48:58	write	write_temp_csv	/var/folders/pg/_nr70_kj7y31yvv84yyy7524sx_q0w/T//RtmpA58HVi/fileba241563e107.csv	

@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Setup and Maintenance • OncoRegimenFinder</title>
+<title>setup-maintenance • OncoRegimenFinder</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Setup and Maintenance">
+<script src="../pkgdown.js"></script><meta property="og:title" content="setup-maintenance">
 <meta property="og:description" content="OncoRegimenFinder">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -54,7 +54,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/setup-maintenance.html">Setup and Maintenance</a>
+      <a href="../articles/esophagus-redcap.html">esophagus-redcap</a>
+    </li>
+    <li>
+      <a href="../articles/setup-maintenance.html">setup-maintenance</a>
     </li>
   </ul>
 </li>
@@ -72,7 +75,7 @@
       </header><script src="setup-maintenance_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Setup and Maintenance</h1>
+      <h1 data-toc-skip>setup-maintenance</h1>
             
       
       
@@ -141,93 +144,93 @@
 <h6>Cohort Table</h6>
 <p>The <code>Cohort Table</code> includes the Person Id, Drug Exposure Id with Start and End Dates, and Ingredient representing that Drug Exposure filtered for all descendants of the Drug Classification Concept Id argument.</p>
 <pre><code>#&gt;        concept_name drug_exposure_id person_id drug_concept_id
-#&gt; 1       oxaliplatin         39663233   1413757        35603924
-#&gt; 2      fluorouracil         42026601   1503533          955641
-#&gt; 3       vinorelbine         33629251   1244551        35605202
-#&gt; 4      fluorouracil          3456708    307687          955641
-#&gt; 5  cyclophosphamide           169174    385164        35606513
-#&gt; 6       vincristine         15414674    807801         1593012
-#&gt; 7       gemcitabine         38430561   1375400        35603181
-#&gt; 8       gemcitabine         39085937   1396219        35603181
-#&gt; 9       gemcitabine         40562623   1444009        35603181
-#&gt; 10 cyclophosphamide         10152789    408576        36408146
-#&gt; 11      vincristine         16454403    843951         1593012
-#&gt; 12       paclitaxel         43143751   1555104         1378389
-#&gt; 13      binimetinib         47232614   1290571         1559935
-#&gt; 14     fluorouracil          1539299    264375          955641
-#&gt; 15       paclitaxel           141774    334224        42937770
-#&gt; 16       pemetrexed         42724465   1534581        35604789
-#&gt; 17     fluorouracil           418011    907850        40042274
-#&gt; 18 cyclophosphamide         16063659    832584        36408146
-#&gt; 19      doxorubicin         18168671    120898        40243759
-#&gt; 20      carboplatin         20914104    991400         1344909
+#&gt; 1      fluorouracil          6802400    556304          955640
+#&gt; 2      methotrexate          4793302    162711        46275601
+#&gt; 3       bevacizumab         41570033   1487438        46275989
+#&gt; 4  cyclophosphamide           360661    678745        35606510
+#&gt; 5      streptozocin          4674217    158618        19057519
+#&gt; 6         rituximab         15483876    810801        46275083
+#&gt; 7      methotrexate           375816    868404        44091489
+#&gt; 8       gemcitabine           340137    590625        44071497
+#&gt; 9       vinorelbine          9073264    586393        35605200
+#&gt; 10       paclitaxel            59296    111554        42937770
+#&gt; 11     fluorouracil         29646088   1161481          955641
+#&gt; 12      oxaliplatin         38007743   1364137        35603924
+#&gt; 13        docetaxel         41741988   1493820         1718763
+#&gt; 14      doxorubicin         30110932   1170057        36249243
+#&gt; 15      doxorubicin         40540994   1443839        40243759
+#&gt; 16     fluorouracil         38825576   1387549          955641
+#&gt; 17      bevacizumab         12167006     40310         1397141
+#&gt; 18      clofarabine         41388128   1480643        19054823
+#&gt; 19      carboplatin           472276    987416        41087078
+#&gt; 20       paclitaxel         29725698   1162860         1378385
 #&gt;    ingredient_start_date ingredient_end_date
-#&gt; 1             2016-12-21          2016-12-22
-#&gt; 2             2018-12-05          2018-12-07
-#&gt; 3             2016-04-13          2016-04-14
-#&gt; 4             1999-04-19          1999-04-23
-#&gt; 5             1998-06-22          1998-06-22
-#&gt; 6             1990-08-13          1990-09-12
-#&gt; 7             2018-05-09          2018-05-10
-#&gt; 8             2016-08-08          2016-08-09
-#&gt; 9             2018-01-15          2018-01-16
-#&gt; 10            2001-11-29          2001-11-29
-#&gt; 11            1992-05-05          1992-05-06
-#&gt; 12            2020-04-28          2020-04-28
-#&gt; 13            2020-04-24          2020-04-24
-#&gt; 14            2000-12-26          2000-12-27
-#&gt; 15            2000-05-02          2000-05-02
-#&gt; 16            2019-09-18          2019-09-18
-#&gt; 17            2005-09-28          2005-09-28
-#&gt; 18            1991-05-06          1991-05-08
-#&gt; 19            1993-10-11          1993-10-12
-#&gt; 20            2006-04-24          2006-04-24</code></pre>
+#&gt; 1             2006-08-15          2006-08-15
+#&gt; 2             1999-08-12          1999-08-13
+#&gt; 3             2018-09-06          2018-09-07
+#&gt; 4             1998-12-09          1998-12-09
+#&gt; 5             1998-01-12          1998-01-13
+#&gt; 6             2003-06-16          2003-06-17
+#&gt; 7             1998-04-10          1998-04-10
+#&gt; 8             2001-08-16          2001-08-16
+#&gt; 9             2000-10-05          2000-10-06
+#&gt; 10            2001-10-04          2001-10-04
+#&gt; 11            2011-10-03          2011-10-03
+#&gt; 12            2015-11-24          2015-11-25
+#&gt; 13            2018-07-20          2018-07-21
+#&gt; 14            2011-01-06          2011-01-06
+#&gt; 15            2018-03-16          2018-03-17
+#&gt; 16            2016-06-09          2016-06-11
+#&gt; 17            2003-04-03          2003-04-04
+#&gt; 18            2018-05-23          2018-05-24
+#&gt; 19            2006-03-27          2006-03-27
+#&gt; 20            2011-03-25          2011-03-25</code></pre>
 </div>
 <div id="regimen-staging-table" class="section level6">
 <h6>Regimen Staging Table</h6>
 <p>The Regimen and Regimen Staging Tables, are identical to one another at this point, are a subset of Cohort Table of the Person Id, Drug Exposure Id, Ingredient Name, and the Start Date of exposure to that Ingredient. The Regimen Table will be processed further while the Regimen Staging Table serves as a reference back to the Regimen Table’s original state before being processed by algorithm.</p>
 <pre><code>#&gt;        concept_name drug_exposure_id person_id drug_concept_id
-#&gt; 1        cytarabine         14213090    690156         1311104
-#&gt; 2       alemtuzumab         40992547   1458505         1312709
-#&gt; 3       doxorubicin          6319606    165206        40243759
-#&gt; 4         docetaxel            77494    167275        43266308
-#&gt; 5  cyclophosphamide           291008    558143        35606510
-#&gt; 6      methotrexate         38888965   1389205        46275604
-#&gt; 7       bevacizumab           104684    248447        41174289
-#&gt; 8        paclitaxel         19785585    965354         1378389
-#&gt; 9         nilotinib         25778249   1090707        19127718
-#&gt; 10    pembrolizumab         42857150   1539546        44175744
-#&gt; 11     fluorouracil           442315    942557        40042274
-#&gt; 12       paclitaxel            99458    245117        42937770
-#&gt; 13     capecitabine         45414482   1194610        19023530
-#&gt; 14       paclitaxel           394646    885156        42937770
-#&gt; 15       romidepsin         40376403   1437596        40168388
-#&gt; 16     methotrexate         43189185   1556719        46275604
-#&gt; 17        nivolumab         15118371    794689        41267273
-#&gt; 18      ruxolitinib         46877837   1340866        40244474
-#&gt; 19        etoposide            52635     43259         1350544
-#&gt; 20      gemcitabine         31937295   1208155        35603176
+#&gt; 1       gemcitabine         26811485   1107168        35603181
+#&gt; 2        paclitaxel         37218435   1337213         1378385
+#&gt; 3       vincristine         15416056    807867        42620750
+#&gt; 4         docetaxel           383936    876018        43266308
+#&gt; 5      fluorouracil         42626250   1529285          955641
+#&gt; 6       daratumumab         40184071   1431570        35604271
+#&gt; 7        paclitaxel         36013735   1301687         1378385
+#&gt; 8      fluorouracil           355244    637852        40042274
+#&gt; 9      fluorouracil         41978491   1502226          955641
+#&gt; 10     fluorouracil           318360    578090        40042274
+#&gt; 11 cyclophosphamide           146809    336890        35606510
+#&gt; 12      oxaliplatin         35591392   1289619        35603929
+#&gt; 13     fluorouracil         39960116   1423607        42628973
+#&gt; 14     fluorouracil         32281517   1217742          955641
+#&gt; 15       paclitaxel           128448    321238        42937770
+#&gt; 16 cyclophosphamide           470253    984793         1310317
+#&gt; 17 cyclophosphamide         42563615   1525769        35606516
+#&gt; 18        rituximab         32979497   1229942        46275083
+#&gt; 19      floxuridine         32492732   1219504        19077379
+#&gt; 20      oxaliplatin           429351    920571        35603923
 #&gt;    ingredient_start_date ingredient_end_date
-#&gt; 1             1994-05-18          1994-05-19
-#&gt; 2             2018-09-28          2018-09-29
-#&gt; 3             2000-11-07          2000-11-08
-#&gt; 4             2000-03-08          2000-03-08
-#&gt; 5             1999-04-15          1999-04-15
-#&gt; 6             2016-12-27          2016-12-28
-#&gt; 7             2006-08-08          2006-08-08
-#&gt; 8             2012-10-15          2012-10-15
-#&gt; 9             2010-03-26          2010-04-22
-#&gt; 10            2019-07-01          2019-07-01
-#&gt; 11            2007-11-28          2007-11-28
-#&gt; 12            2001-04-10          2001-04-10
-#&gt; 13            2011-09-30          2011-09-30
-#&gt; 14            2003-08-04          2003-08-04
-#&gt; 15            2019-08-01          2019-08-01
-#&gt; 16            2019-11-28          2019-11-28
-#&gt; 17            2019-11-07          2019-11-07
-#&gt; 18            2015-04-21          2015-04-21
-#&gt; 19            2002-12-16          2002-12-16
-#&gt; 20            2012-06-08          2012-06-08</code></pre>
+#&gt; 1             2009-09-01          2009-09-01
+#&gt; 2             2016-01-28          2016-01-29
+#&gt; 3             1989-07-27          1989-07-28
+#&gt; 4             2004-01-02          2004-01-02
+#&gt; 5             2019-05-13          2019-05-13
+#&gt; 6             2019-12-18          2019-12-18
+#&gt; 7             2015-10-02          2015-10-02
+#&gt; 8             2003-04-15          2003-04-15
+#&gt; 9             2019-08-22          2019-08-22
+#&gt; 10            2001-10-15          2001-10-15
+#&gt; 11            1998-03-23          1998-03-23
+#&gt; 12            2014-02-07          2014-02-07
+#&gt; 13            2017-09-20          2017-09-21
+#&gt; 14            2012-08-14          2012-08-14
+#&gt; 15            1999-11-02          1999-11-02
+#&gt; 16            2006-02-06          2006-02-06
+#&gt; 17            2019-05-30          2019-05-30
+#&gt; 18            2012-12-13          2012-12-13
+#&gt; 19            2013-01-14          2013-01-14
+#&gt; 20            2004-09-07          2004-09-07</code></pre>
 </div>
 </div>
 <div id="processing-the-regimen-table" class="section level4">
@@ -243,27 +246,27 @@
 <div id="regimen-table" class="section level5">
 <h5 class="hasAnchor">
 <a href="#regimen-table" class="anchor"></a>Regimen Table</h5>
-<pre><code>#&gt;    person_id drug_exposure_id        concept_name ingredient_start_date
-#&gt; 1    1279348         35226557         gemcitabine            2014-09-16
-#&gt; 2     899515         10223247           rituximab            2003-09-15
-#&gt; 3     357733           158223        methotrexate            1998-02-13
-#&gt; 4    1317164         36500527 brentuximab vedotin            2015-02-02
-#&gt; 5    1047990         23692244    cyclophosphamide            2008-02-25
-#&gt; 6     787507         14987320           etoposide            1990-08-03
-#&gt; 7    1081515         25430791          irinotecan            2009-08-25
-#&gt; 8    1289174         35585049        fluorouracil            2018-09-05
-#&gt; 9     934194         15719358           celecoxib            2005-06-02
-#&gt; 10    559323           292610           etoposide            1999-05-05
-#&gt; 11    881590          3977201         doxorubicin            2003-04-30
-#&gt; 12   1520243         42421500            eribulin            2020-03-26
-#&gt; 13   1291567         35675213         carboplatin            2014-05-27
-#&gt; 14    654561         13472495         vinblastine            1991-10-30
-#&gt; 15    166930          6389638           etoposide            1999-10-01
-#&gt; 16    767399         14676755        fluorouracil            1989-05-11
-#&gt; 17    585219           328991         gemcitabine            2004-03-01
-#&gt; 18     37715         12083842         gemcitabine            2002-11-01
-#&gt; 19   1398110         39177644        fluorouracil            2018-09-19
-#&gt; 20   1002377         21476604         bevacizumab            2009-03-19</code></pre>
+<pre><code>#&gt;    person_id drug_exposure_id     concept_name ingredient_start_date
+#&gt; 1      13493         11157250     fluorouracil            2002-08-29
+#&gt; 2     852846           373247      doxorubicin            1999-07-08
+#&gt; 3    1487838         41601974      doxorubicin            2018-05-21
+#&gt; 4     885002          4499639      gemcitabine            2014-08-22
+#&gt; 5    1202635         31660885       irinotecan            2012-01-26
+#&gt; 6    1025868           490508        etoposide            2007-03-26
+#&gt; 7     244708            98614      gemcitabine            2006-05-09
+#&gt; 8       9839         10990851      gemcitabine            2007-10-19
+#&gt; 9    1197803         31451695      thioguanine            2012-01-13
+#&gt; 10   1204291         31745696        docetaxel            2014-01-21
+#&gt; 11    954140         19279178     fluorouracil            2005-06-17
+#&gt; 12   1261595         34448862     fluorouracil            2019-09-04
+#&gt; 13    992852           475643        cisplatin            2006-06-05
+#&gt; 14    879380          2967294      bevacizumab            2006-06-26
+#&gt; 15    133420           805764     fluorouracil            1993-12-08
+#&gt; 16    430979           221295     fluorouracil            2001-06-26
+#&gt; 17    984316           470090        topotecan            2007-03-06
+#&gt; 18    868711          5028701 cyclophosphamide            2013-09-26
+#&gt; 19     20565            26814      gemcitabine            2002-07-11
+#&gt; 20     19160         11397533       paclitaxel            2002-08-30</code></pre>
 </div>
 </div>
 <div id="create-vocabulary-table" class="section level4">
@@ -277,69 +280,69 @@
 <div id="vocabulary-table" class="section level5">
 <h5 class="hasAnchor">
 <a href="#vocabulary-table" class="anchor"></a>Vocabulary Table</h5>
-<pre><code>#&gt;                                      reg_name
-#&gt; 1               Fluorouracil and Streptozocin
-#&gt; 2                                      R-CHMP
-#&gt; 3              Octreotide and Interferon alfa
-#&gt; 4                                      COPDAC
-#&gt; 5                     FluBuCy, then allo HSCT
-#&gt; 6                                         FCA
-#&gt; 7  Cyclophosphamide, Dacarbazine, Vincristine
-#&gt; 8                                         SOX
-#&gt; 9      Lenalidomide, Dexamethasone, Rituximab
-#&gt; 10                 Chlorambucil and Cisplatin
-#&gt; 11               Low-dose TBI, then allo HSCT
-#&gt; 12                Fluoxymesterone monotherapy
-#&gt; 13                   Temsirolimus monotherapy
-#&gt; 14                                        GCD
-#&gt; 15                                 ADT and RT
-#&gt; 16                                       DDGP
-#&gt; 17                             TAC (Taxotere)
-#&gt; 18                                       CaRD
-#&gt; 19                          R-Hyper-CVAD/R-MA
-#&gt; 20         Irinotecan, Vemurafenib, Cetuximab
-#&gt;                                                                                     combo_name
-#&gt; 1                                                                    fluorouracil,streptozocin
-#&gt; 2  cyclophosphamide,pegylated liposomal doxorubicin,prednisone,rituximab,vincristine liposomal
-#&gt; 3                                                                interferon alfa-2b,octreotide
-#&gt; 4                                          cyclophosphamide,dacarbazine,prednisone,vincristine
-#&gt; 5                                  allogeneic stem cells,busulfan,cyclophosphamide,fludarabine
-#&gt; 6                                                     alemtuzumab,cyclophosphamide,fludarabine
-#&gt; 7                                                     cyclophosphamide,dacarbazine,vincristine
-#&gt; 8                                                       oxaliplatin,tegafur gimeracil oteracil
-#&gt; 9                                                         dexamethasone,lenalidomide,rituximab
-#&gt; 10                                                                      chlorambucil,cisplatin
-#&gt; 11                                            allogeneic stem cells,external beam radiotherapy
-#&gt; 12                                                                             fluoxymesterone
-#&gt; 13                                                                                temsirolimus
-#&gt; 14                                                       carboplatin,dexamethasone,gemcitabine
-#&gt; 15  bicalutamide,endocrine ablation surgery,external beam radiotherapy,flutamide,gnrh agonists
-#&gt; 16                                            cisplatin,dexamethasone,gemcitabine,pegaspargase
-#&gt; 17                                                      cyclophosphamide,docetaxel,doxorubicin
-#&gt; 18                                                         carfilzomib,dexamethasone,rituximab
-#&gt; 19    cyclophosphamide,cytarabine,dexamethasone,doxorubicin,methotrexate,rituximab,vincristine
-#&gt; 20                                                            cetuximab,irinotecan,vemurafenib
+<pre><code>#&gt;                                reg_name
+#&gt; 1            Lenalidomide and Rituximab
+#&gt; 2                             VAD doxil
+#&gt; 3                                   ECF
+#&gt; 4                                  COMP
+#&gt; 5                 Cortisone monotherapy
+#&gt; 6               FOLFOX4 and Panitumumab
+#&gt; 7                Lorlatinib monotherapy
+#&gt; 8                                  TACE
+#&gt; 9           Doxifluridine and Mitomycin
+#&gt; 10              Abemaciclib monotherapy
+#&gt; 11                             Dara-VMP
+#&gt; 12    Gemtuzumab ozogamicin monotherapy
+#&gt; 13        Hepatic arterial chemotherapy
+#&gt; 14                  BCG and Dacarbazine
+#&gt; 15 Bortezomib and Doxorubicin liposomal
+#&gt; 16               CapeOx and Bevacizumab
+#&gt; 17          TCH (Taxotere, Carboplatin)
+#&gt; 18               Dabrafenib monotherapy
+#&gt; 19           Paclitaxel and Ramucirumab
+#&gt; 20        R-CODOX-M (Doxil substituted)
+#&gt;                                                                             combo_name
+#&gt; 1                                                               lenalidomide,rituximab
+#&gt; 2                            dexamethasone,pegylated liposomal doxorubicin,vincristine
+#&gt; 3                                                    cisplatin,epirubicin,fluorouracil
+#&gt; 4                                 cyclophosphamide,methotrexate,prednisone,vincristine
+#&gt; 5                                                                            cortisone
+#&gt; 6                                    fluorouracil,folinic acid,oxaliplatin,panitumumab
+#&gt; 7                                                                           lorlatinib
+#&gt; 8                                         carboplatin,doxorubicin,epirubicin,mitomycin
+#&gt; 9                                                              doxifluridine,mitomycin
+#&gt; 10                                                                         abemaciclib
+#&gt; 11                                         bortezomib,daratumumab,melphalan,prednisone
+#&gt; 12                                                               gemtuzumab ozogamicin
+#&gt; 13                                                                         floxuridine
+#&gt; 14                                                bacillus calmette-guerin,dacarbazine
+#&gt; 15                                          bortezomib,pegylated liposomal doxorubicin
+#&gt; 16                                                bevacizumab,capecitabine,oxaliplatin
+#&gt; 17                                                   carboplatin,docetaxel,trastuzumab
+#&gt; 18                                                                          dabrafenib
+#&gt; 19                                                              paclitaxel,ramucirumab
+#&gt; 20 cyclophosphamide,methotrexate,pegylated liposomal doxorubicin,rituximab,vincristine
 #&gt;    concept_id
-#&gt; 1    35806380
-#&gt; 2    35805040
-#&gt; 3    35806386
-#&gt; 4    35805819
-#&gt; 5    35803705
-#&gt; 6    35804576
-#&gt; 7    35806646
-#&gt; 8    35804784
-#&gt; 9    35805648
-#&gt; 10   35806494
-#&gt; 11   35803495
-#&gt; 12   35804358
-#&gt; 13   35804432
-#&gt; 14   35805832
-#&gt; 15   35806822
-#&gt; 16   35806363
-#&gt; 17   35804219
-#&gt; 18   35807167
-#&gt; 19   35804051
-#&gt; 20   42542406</code></pre>
+#&gt; 1    35804591
+#&gt; 2    35806296
+#&gt; 3    35804562
+#&gt; 4    35804086
+#&gt; 5    35806866
+#&gt; 6    35804794
+#&gt; 7    35806425
+#&gt; 8    35805790
+#&gt; 9    35805686
+#&gt; 10   35804258
+#&gt; 11   35806282
+#&gt; 12   35803475
+#&gt; 13   35804763
+#&gt; 14   35806141
+#&gt; 15   35806307
+#&gt; 16   35804766
+#&gt; 17   35804307
+#&gt; 18   35804434
+#&gt; 19   35805371
+#&gt; 20   35804382</code></pre>
 </div>
 </div>
 <div id="final-step-creating-the-regimen-ingredient-table" class="section level4">
@@ -355,89 +358,89 @@
 <h5 class="hasAnchor">
 <a href="#regimen-ingredient-table" class="anchor"></a>Regimen Ingredient Table</h5>
 <pre><code>#&gt;    person_id drug_exposure_id       ingredient ingredient_start_date
-#&gt; 1     554455           284347      gemcitabine            2003-11-21
-#&gt; 2    1399250         39202751     fluorouracil            2016-11-29
-#&gt; 3     572868           310849     fluorouracil            2000-10-30
-#&gt; 4     905395         18576878     mitoxantrone            2004-01-05
-#&gt; 5    1300074         35953604       elotuzumab            2016-09-19
-#&gt; 6     559443          6944920     methotrexate            1999-06-11
-#&gt; 7    1411813         39556503       irinotecan            2020-03-18
-#&gt; 8     972634         20018227        docetaxel            2005-10-14
-#&gt; 9    1124391         27638476       paclitaxel            2013-07-01
-#&gt; 10   1041176         23385142      gemcitabine            2011-12-06
-#&gt; 11   1244174         33627781      gemcitabine            2017-05-10
-#&gt; 12   1010415         21845194 cyclophosphamide            2006-11-14
-#&gt; 13    952743           449192        etoposide            2005-05-03
-#&gt; 14    580664          8971247        rituximab            2007-01-05
-#&gt; 15   1269502         34820960     fluorouracil            2014-03-25
-#&gt; 16    903037           414186        docetaxel            2004-05-13
-#&gt; 17   1060910         24353220 cyclophosphamide            2009-09-18
-#&gt; 18   1390100         38921634        etoposide            2016-06-23
-#&gt; 19   1532022         42699765      trastuzumab            2019-08-07
-#&gt; 20    745137         14415141     fluorouracil            1988-09-20
-#&gt;    ingredient_end_date                                            regimen
-#&gt; 1           2003-11-21                                        gemcitabine
-#&gt; 2           2016-12-01                                       fluorouracil
-#&gt; 3           2000-10-30         cyclophosphamide,fluorouracil,methotrexate
-#&gt; 4           2004-01-05                                       mitoxantrone
-#&gt; 5           2016-09-20                                         elotuzumab
-#&gt; 6           1999-06-12                                       methotrexate
-#&gt; 7           2020-03-18                                         irinotecan
-#&gt; 8           2005-10-14                                          docetaxel
-#&gt; 9           2013-07-01                               cisplatin,paclitaxel
-#&gt; 10          2011-12-06                                        gemcitabine
-#&gt; 11          2017-05-11                                        gemcitabine
-#&gt; 12          2006-11-14 cyclophosphamide,doxorubicin,rituximab,vincristine
-#&gt; 13          2005-05-03                                cisplatin,etoposide
-#&gt; 14          2007-01-05                              rituximab,vincristine
-#&gt; 15          2014-03-25                                       fluorouracil
-#&gt; 16          2004-05-13                              docetaxel,gemcitabine
-#&gt; 17          2009-09-18                                   cyclophosphamide
-#&gt; 18          2016-06-27                                etoposide,rituximab
-#&gt; 19          2019-08-07                                        trastuzumab
-#&gt; 20          1988-09-21                                       fluorouracil
-#&gt;    hemonc_concept_id                  reg_name regimen_start_date
-#&gt; 1           35804135   Gemcitabine monotherapy         2003-11-21
-#&gt; 2           35804769  Fluorouracil monotherapy         2016-11-29
-#&gt; 3           35804224                       CMF         2000-10-30
-#&gt; 4           35804363  Mitoxantrone monotherapy         2004-01-05
-#&gt; 5                 NA                      &lt;NA&gt;         2016-08-22
-#&gt; 6           35804095  Methotrexate monotherapy         1999-06-11
-#&gt; 7           35803692    Irinotecan monotherapy         2020-03-03
-#&gt; 8           35804238            ddT (Taxotere)         2005-10-14
-#&gt; 9           35804527  Cisplatin and Paclitaxel         2013-07-01
-#&gt; 10          35804135   Gemcitabine monotherapy         2011-12-06
-#&gt; 11          35804135   Gemcitabine monotherapy         2017-04-26
-#&gt; 12                NA                      &lt;NA&gt;         2006-10-20
-#&gt; 13          35805329   Cisplatin and Etoposide         2005-04-04
-#&gt; 14                NA                      &lt;NA&gt;         2006-12-15
-#&gt; 15          35804769  Fluorouracil monotherapy         2014-03-10
-#&gt; 16          35803577 Docetaxel and Gemcitabine         2004-05-13
-#&gt; 17          35804235                       ddC         2009-08-28
-#&gt; 18                NA                      &lt;NA&gt;         2016-06-02
-#&gt; 19          35804222   Trastuzumab monotherapy         2019-07-15
-#&gt; 20          35804769  Fluorouracil monotherapy         1988-09-13
+#&gt; 1     918918           427964        docetaxel            2004-05-13
+#&gt; 2    1189056         47086325     lenalidomide            2015-12-16
+#&gt; 3    1547323         43006558       irinotecan            2019-11-05
+#&gt; 4    1334850         47069976        alpelisib            2015-11-30
+#&gt; 5    1512319         42241537      floxuridine            2019-03-19
+#&gt; 6    1164084         29790652        cisplatin            2011-02-15
+#&gt; 7    1396648         39124768     fluorouracil            2017-02-01
+#&gt; 8    1025718           490427        docetaxel            2007-03-14
+#&gt; 9    1323790         36751969     fluorouracil            2019-10-09
+#&gt; 10    323772          4088956       irinotecan            2001-01-02
+#&gt; 11    572868           310860 cyclophosphamide            2000-12-11
+#&gt; 12   1515176         42314438     fluorouracil            2019-05-07
+#&gt; 13    103738            56672     fluorouracil            1999-01-13
+#&gt; 14     11697            14756       paclitaxel            2002-04-18
+#&gt; 15    548744          5951246     fluorouracil            1998-12-31
+#&gt; 16   1523846         42515325        nivolumab            2019-11-12
+#&gt; 17   1113167         27069045       paclitaxel            2009-11-06
+#&gt; 18    493004           266574     fluorouracil            2004-06-30
+#&gt; 19   1093081         26030979      trastuzumab            2011-03-15
+#&gt; 20    564170           300560       paclitaxel            2003-04-30
+#&gt;    ingredient_end_date                                    regimen
+#&gt; 1           2004-05-13                        cisplatin,docetaxel
+#&gt; 2           2016-01-12                               lenalidomide
+#&gt; 3           2019-11-05                                 irinotecan
+#&gt; 4           2015-11-30                                  alpelisib
+#&gt; 5           2019-03-19                                floxuridine
+#&gt; 6           2011-02-15                                  cisplatin
+#&gt; 7           2017-02-02                               fluorouracil
+#&gt; 8           2007-03-14                        cisplatin,docetaxel
+#&gt; 9           2019-10-09                   bevacizumab,fluorouracil
+#&gt; 10          2001-01-03                                 irinotecan
+#&gt; 11          2000-12-11 cyclophosphamide,fluorouracil,methotrexate
+#&gt; 12          2019-05-07                               fluorouracil
+#&gt; 13          1999-01-13                               fluorouracil
+#&gt; 14          2002-04-18                     carboplatin,paclitaxel
+#&gt; 15          1999-01-01                               fluorouracil
+#&gt; 16          2019-11-12                                  nivolumab
+#&gt; 17          2009-11-06                     doxorubicin,paclitaxel
+#&gt; 18          2004-06-30                    fluorouracil,irinotecan
+#&gt; 19          2011-03-15                                trastuzumab
+#&gt; 20          2003-04-30    cyclophosphamide,doxorubicin,paclitaxel
+#&gt;    hemonc_concept_id                      reg_name regimen_start_date
+#&gt; 1           35803574       Cisplatin and Docetaxel         2004-04-22
+#&gt; 2           35803596      Lenalidomide monotherapy         2015-12-16
+#&gt; 3           35803692        Irinotecan monotherapy         2019-10-15
+#&gt; 4                 NA                          &lt;NA&gt;         2015-11-02
+#&gt; 5           35804763 Hepatic arterial chemotherapy         2019-03-14
+#&gt; 6           35803573         Cisplatin monotherapy         2011-02-15
+#&gt; 7           35804769      Fluorouracil monotherapy         2017-01-04
+#&gt; 8           35803574       Cisplatin and Docetaxel         2007-02-27
+#&gt; 9                 NA                          &lt;NA&gt;         2019-10-09
+#&gt; 10          35803692        Irinotecan monotherapy         2000-12-26
+#&gt; 11          35804224                           CMF         2000-12-11
+#&gt; 12          35804769      Fluorouracil monotherapy         2019-04-22
+#&gt; 13          35804769      Fluorouracil monotherapy         1998-12-17
+#&gt; 14          35803572    Carboplatin and Paclitaxel         2002-03-27
+#&gt; 15          35804769      Fluorouracil monotherapy         1998-12-28
+#&gt; 16          35803677         Nivolumab monotherapy         2019-11-01
+#&gt; 17          35804226                    AT (Taxol)         2009-10-09
+#&gt; 18                NA                          &lt;NA&gt;         2004-06-30
+#&gt; 19          35804222       Trastuzumab monotherapy         2011-03-15
+#&gt; 20          35101507                          AC-T         2003-04-02
 #&gt;    regimen_end_date
-#&gt; 1        2003-11-21
-#&gt; 2        2016-12-29
-#&gt; 3        2000-11-20
-#&gt; 4        2004-02-02
-#&gt; 5        2016-09-20
-#&gt; 6        1999-07-07
-#&gt; 7        2020-03-31
-#&gt; 8        2005-11-08
-#&gt; 9        2013-07-08
-#&gt; 10       2012-01-03
-#&gt; 11       2017-05-25
-#&gt; 12       2006-11-14
-#&gt; 13       2005-05-04
-#&gt; 14       2007-01-05
-#&gt; 15       2014-04-08
-#&gt; 16       2004-05-13
-#&gt; 17       2009-09-18
-#&gt; 18       2016-06-27
-#&gt; 19       2019-08-07
-#&gt; 20       1988-09-21</code></pre>
+#&gt; 1        2004-05-13
+#&gt; 2        2016-01-12
+#&gt; 3        2019-11-05
+#&gt; 4        2015-11-30
+#&gt; 5        2019-03-19
+#&gt; 6        2011-02-22
+#&gt; 7        2017-02-02
+#&gt; 8        2007-03-27
+#&gt; 9        2019-10-09
+#&gt; 10       2001-01-17
+#&gt; 11       2000-12-11
+#&gt; 12       2019-05-20
+#&gt; 13       1999-01-13
+#&gt; 14       2002-04-25
+#&gt; 15       1999-01-05
+#&gt; 16       2019-11-30
+#&gt; 17       2009-11-06
+#&gt; 18       2004-07-14
+#&gt; 19       2011-04-12
+#&gt; 20       2003-04-30</code></pre>
 </div>
 </div>
 </div>
@@ -452,7 +455,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by First Last.</p>
+  <p>Developed by Meera Patel.</p>
 </div>
 
 <div class="pkgdown">
