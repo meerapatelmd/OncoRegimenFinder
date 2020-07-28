@@ -17,6 +17,9 @@ buildCohortRegimenTable <-
                  renameCurrentTables = TRUE,
                  drug_classification_id_input) {
 
+                cohortTable <- toupper(cohortTable)
+                regimenTable <- toupper(regimenTable)
+
                 if (renameCurrentTables) {
 
                         Tables <- pg13::lsTables(conn = conn,
