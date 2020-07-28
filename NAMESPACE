@@ -2,6 +2,7 @@
 
 export(buildCohortRegimenTable)
 export(make_connDetails)
+export(processRegimenTable)
 import(DatabaseConnector)
 import(SqlRender)
 import(pg13)

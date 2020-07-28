@@ -46,39 +46,39 @@
 #                                        writeDatabaseSchema = writeDatabaseSchema,
 #                                        regimenTable = regimenTable,
 #                                        date_lag_input = date_lag_input)
-#
+# 
 #               #sql <- SqlRender::translate(sql,targetDialect = connectionDetails$dbms)
-#
+# 
 #               for( i in 1:regimen_repeats) {
-#
+# 
 #                 DatabaseConnector::executeSql(connection, sql)
-#
+# 
 #               }
-#
+# 
 #               if(generateVocabTable){
-#
+# 
 #                 sql <- SqlRender::render(SqlRender::readSql("SQL/RegimenVoc.sql"),
 #                                          writeDatabaseSchema = writeDatabaseSchema,
 #                                          cdmDatabaseSchema = cdmDatabaseSchema,
 #                                          vocabularyTable = vocabularyTable)
-#
+# 
 #                 #sql <- SqlRender::translate(sql,targetDialect = connectionDetails$dbms)
-#
+# 
 #                 DatabaseConnector::executeSql(connection, sql)
-#
+# 
 #               }
-#
-#
+# 
+# 
 #               sql <- SqlRender::render(SqlRender::readSql("SQL/RegimenFormat.sql"),
 #                                        writeDatabaseSchema = writeDatabaseSchema,
 #                                        cohortTable = cohortTable,
 #                                        regimenTable = regimenTable,
 #                                        regimenIngredientTable = regimenIngredientTable,
 #                                        vocabularyTable = vocabularyTable)
-#
+# 
 #               #sql <- SqlRender::translate(sql,targetDialect = connectionDetails$dbms)
-#
-#
+# 
+# 
 #               DatabaseConnector::executeSql(connection, sql)
-#
+# 
 # }
