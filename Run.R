@@ -14,3 +14,4 @@
 #                     regimenTable = "oncoregimenfinder_regimen",
 #                     date_lag_input = 30,
 #                     regimen_repeats = 5)
+# fantasia::dcOMOP(conn = conn)

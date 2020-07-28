@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS patelm9.ONCOREGIMENFINDER_REGIMEN
+DROP TABLE IF EXISTS patelm9.oncoregimenfinder_regimen

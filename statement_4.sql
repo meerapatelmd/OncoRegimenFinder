@@ -1,2 +1,1 @@
-select * into  patelm9.ONCOREGIMENFINDER_REGIMEN
-from patelm9.ONCOREGIMENFINDER_COHORT
+DROP TABLE IF EXISTS patelm9.oncoregimenfinder_regimen_tmp
