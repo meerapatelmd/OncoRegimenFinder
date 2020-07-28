@@ -1,5 +1,5 @@
 ---
-title: "setup-maintenance"
+title: "Setup and Maintenance"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{setup-maintenance}
@@ -14,38 +14,54 @@ knitr::opts_chunk$set(
 )
 ```
 
+### Package Load
+
 ```{r setup}
 library(OncoRegimenFinder)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE,eval=TRUE,message=FALSE,results="hide"}
 library(fantasia)
 conn <- fantasia::connectOMOP()
 ```
 
-# Parameters  
+### Parameters  
 It is recommended that the parameters are centralized at the start of execution to ensure that arguments remain consistent across all function calls.  
 
 ```{r settings, eval=FALSE}
-
+# Schema of Source Person and Drug Exposure Tables
 cdmDatabaseSchema = "omop_cdm_2"
+
+# Output Schema and Tables
 writeDatabaseSchema = "patelm9"
 cohortTable = "oncoregimenfinder_cohort"
 regimenTable = "oncoregimenfinder_regimen"
+regimenStagingTable = "oncoregimenfinder_regimen_staging"
 vocabularyTable = "oncoregimenfinder_vocabulary"
 regimenIngredientTable= "oncoregimenfinder_regimen_ingredients"
+
+# OMOP Vocabulary Drug Classes to filter Drug Exposures for
 drug_classification_id_input = c(21601387,
                                 35807188,
                                 35807277,
                                 35807189)
+
+# Date difference when assessing for drug combinations in the Drug Exposures table
 date_lag_input = 30
 regimen_repeats = 5
 
 ```
 
-### 1. Create the Cohort and Regimen Tables in the designated schema
+### Steps  
+1. Cohort, Regimen, and a copy of Regimen as "Regimen Staging" Tables are written. Tables that are already present in the schema are copied to a new table appended with the date.  
+1. Regimen Table undergoes further processing by combining overlapping instances of an ingredient start date and +/- the date lag input over the number of regimen repeats desired.  
+1. A Separate Vocabulary Table is created that maps the HemOnc Regimen Concept Name to string aggregates of the individual Component Concept Names  
+1. A final Regimen Ingredient Table joins the Vocabulary Table with the Regimen Table to map drug combinations derived from this algorithm back to HemOnc and other OMOP Concepts  
+
+#### Create Cohort, Regimen and Regimen Staging Tables
 
 ```{r, eval=FALSE}
+
 OncoRegimenFinder::buildCohortRegimenTable(conn = conn,
                                            cdmDatabaseSchema = "omop_cdm_2",
                                            writeDatabaseSchema = "patelm9",
@@ -57,12 +73,11 @@ OncoRegimenFinder::buildCohortRegimenTable(conn = conn,
                                                                             35807189))
 ```
 
-#### Cohort Table  
-1. Person Id
-1. Drug Exposure Id with Start and End Dates
-1. Ingredient representing that Drug Exposure filtered for those that are descendants of drug_classification_id_input  
+###### Cohort Table  
+The `Cohort Table` includes the Person Id, Drug Exposure Id with Start and End Dates, and Ingredient representing that Drug Exposure filtered for all descendants of the Drug Classification Concept Id argument.  
 
 ```{r cohortTable, eval=TRUE, echo=FALSE}
+
 cohortTable <-
   pg13::query(conn = conn,
               sql_statement = pg13::buildQuery(schema = "patelm9",
@@ -71,12 +86,42 @@ cohortTable <-
                                                n_type = "random"))
 
 print(cohortTable)
+
 ```
 
-#### Regimen Table  
-Subset of Cohort Table of the Person Id, Drug Exposure Id, Ingredient Name, and the Start Date of exposure to that Ingredient.  
+###### Regimen Staging Table  
+The Regimen and Regimen Staging Tables, are identical to one another at this point, are a subset of Cohort Table of the Person Id, Drug Exposure Id, Ingredient Name, and the Start Date of exposure to that Ingredient. The Regimen Table will be processed further while the Regimen Staging Table serves as a reference back to the Regimen Table's original state before being processed by algorithm.   
 
 ```{r, echo=FALSE, eval=TRUE}
+
+regimenStagingTable <-
+  pg13::query(conn = conn,
+              sql_statement = pg13::buildQuery(schema = "patelm9",
+                                               tableName = "oncoregimenfinder_regimen_staging",
+                                               n = 20,
+                                               n_type = "random"))
+
+print(regimenStagingTable)
+
+```
+
+#### Processing the Regimen Table  
+The Regimen Table is grouped by Person Id, Drug Exposure Id, Ingredient and Ingredient Start Date and joined onto itself based on overlapping window of time by +/= the Date Lag Input parameter and iterated on based on the Regimen Repeats given.  
+
+```{r, eval=FALSE,echo=TRUE}
+
+OncoRegimenFinder::processRegimenTable(conn = conn,
+                    writeDatabaseSchema = "patelm9",
+                    regimenTable = "oncoregimenfinder_regimen",
+                    date_lag_input = 30,
+                    regimen_repeats = 5)
+
+```
+
+##### Regimen Table  
+
+```{r, echo=FALSE, eval=TRUE}
+
 regimenTable <-
   pg13::query(conn = conn,
               sql_statement = pg13::buildQuery(schema = "patelm9",
@@ -88,30 +133,60 @@ print(regimenTable)
 
 ```
 
+#### Create Vocabulary Table  
 
+```{r, eval=FALSE,echo=TRUE}
 
-```{r, eval=FALSE}
-OncoRegimenFinder::processRegimenTable(conn = conn,
-                    writeDatabaseSchema = "patelm9",
-                    regimenTable = "oncoregimenfinder_regimen",
-                    date_lag_input = 30,
-                    regimen_repeats = 5)
-```
-
-
-```{r, eval=FALSE}
 OncoRegimenFinder::createVocabTable(conn = conn,
                                     writeDatabaseSchema = "patelm9",
                                     cdmDatabaseSchema = "omop_cdm_2",
                                     vocabularyTable = "oncoregimenfinder_vocabulary")
+
 ```
 
-```{r, eval=FALSE}
+##### Vocabulary Table 
+
+```{r, echo=FALSE, eval=TRUE}
+
+vocabularyTable <-
+  pg13::query(conn = conn,
+              sql_statement = pg13::buildQuery(schema = "patelm9",
+                                               tableName = "oncoregimenfinder_vocabulary",
+                                               n = 20,
+                                               n_type = "random"))
+
+print(vocabularyTable)
+
+```
+
+#### Final Step: Creating the Regimen Ingredient Table   
+
+```{r, eval=FALSE, echo = TRUE}
 createRegimenIngrTable(conn = conn,
-                                          writeDatabaseSchema = "patelm9",
-                                          cohortTable = "oncoregimenfinder_cohort",
-                                          regimenTable = "oncoregimenfinder_regimen",
-                                          regimenIngredientTable = "oncoregimenfinder_regimen_ingredients",
-                                          vocabularyTable = "oncoregimenfinder_vocabulary")
+                       writeDatabaseSchema = "patelm9",
+                       cohortTable = "oncoregimenfinder_cohort",
+                       regimenTable = "oncoregimenfinder_regimen",
+                       regimenIngredientTable = "oncoregimenfinder_regimen_ingredients",
+                       vocabularyTable = "oncoregimenfinder_vocabulary")
+```
+
+##### Regimen Ingredient Table  
+
+```{r, echo=FALSE, eval=TRUE}
+regimenIngrTable <-
+  pg13::query(conn = conn,
+              sql_statement = pg13::buildQuery(schema = "patelm9",
+                                               tableName = "oncoregimenfinder_regimen_ingredients",
+                                               n = 20,
+                                               n_type = "random"))
+
+print(regimenIngrTable)
+
+```
+
+
+```{r,echo=FALSE,eval=TRUE,message=FALSE,results="hide"}
+fantasia::dcOMOP(conn = conn,
+                 remove = TRUE)
 ```
 
