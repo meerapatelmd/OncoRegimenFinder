@@ -1,0 +1,63 @@
+---
+title: "troubleshoot-oncoregimenfinder"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{troubleshoot-oncoregimenfinder}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(OncoRegimenFinder)
+```
+
+```{r}
+#580739 has 0 OncoRegimenFinder Results, but many REDCap Entries
+patient_drug_exposures <-
+fantasia::qOMOP(pg13::buildQuery(schema = "omop_cdm_2",
+                                 tableName = "drug_exposure",
+                                 whereInField = "person_id",
+                                 caseInsensitive = F,
+                                 whereInVector = 580739))
+patient_drug_concept <- 
+  chariot::pivot_relative(patient_drug_exposures %>%
+                                     dplyr::select(drug_concept_id),
+                          names_from = "concept_class_id") %>%
+  dplyr::select(drug_concept_id,
+                Ingredient) %>%
+  chariot::unmerge_concepts(concept_col = Ingredient) %>%
+  dplyr::select(ingredient_concept_id = concept_id)
+
+
+```
+
+```{r}
+
+all_relatives <-
+chariot::left_join_relatives(patient_drug_concept %>%
+                               chariot::ids_to_integer())
+
+
+```
+
+```{r}
+hemonc_relatives <-
+  all_relatives %>%
+  dplyr::filter(relative_vocabulary_id == "HemOnc")
+```
+
+
+```{r}
+chariot::pivot_relative_level(hemonc_relatives %>%
+                                dplyr::select(relative_concept_id),
+                              levels_type = "max",
+                              include_count = F)
+```
+

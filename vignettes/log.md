@@ -17,3 +17,15 @@ Timestamp	Activity Type	Function	File	Details
 2020-07-28 14:36:56	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv	
 2020-07-28 15:46:54	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv	
 2020-07-28 15:46:57	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv	
+2020-07-28 17:40:27	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv	
+2020-07-28 17:40:30	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv	
+2020-07-28 17:42:29	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv	
+2020-07-28 17:42:31	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv	
+2020-07-28 17:46:40	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv	
+2020-07-28 17:46:43	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv	
+2020-07-28 18:16:04	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv	
+2020-07-28 18:16:07	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv	
+2020-07-28 18:20:31	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv	
+2020-07-28 18:20:34	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv	
+2020-07-28 18:22:25	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv	
+2020-07-28 18:22:28	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv	
