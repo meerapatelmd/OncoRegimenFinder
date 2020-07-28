@@ -3,6 +3,7 @@
 --Build the cohort and regimen tables in the database schema to write to
 DROP TABLE IF EXISTS @writeDatabaseSchema.@cohortTable;
 DROP TABLE IF EXISTS @writeDatabaseSchema.@regimenTable;
+DROP TABLE IF EXISTS @writeDatabaseSchema.@regimenTable_staging;
 
 --Taking all drug_exposures and their start and end dates in a cohort as determined by a Cohort Definition Identifier
 --filtered for the drugs in drug_exposures that are concept_class_id "Ingredient" and also descendant of 21601387) /* Antineoplastic Agents ATC classification*/
@@ -30,4 +31,7 @@ into @writeDatabaseSchema.@cohortTable
 from CTE_second;
 
 select * into  @writeDatabaseSchema.@regimenTable
+from @writeDatabaseSchema.@cohortTable;
+
+select * into  @writeDatabaseSchema.@regimenTable_staging
 from @writeDatabaseSchema.@cohortTable;

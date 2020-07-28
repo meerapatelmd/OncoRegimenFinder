@@ -19,6 +19,7 @@ buildCohortRegimenTable <-
 
                 cohortTable <- toupper(cohortTable)
                 regimenTable <- toupper(regimenTable)
+                regimenStagingTable <- toupper(paste0(regimenTable, "_staging"))
 
                 if (renameCurrentTables) {
 
@@ -38,6 +39,13 @@ buildCohortRegimenTable <-
                                                   schema = writeDatabaseSchema,
                                                   tableName = regimenTable,
                                                   newTableName = pg13::appendDate(regimenTable))
+                        }
+                        
+                        if (regimenStagingTable %in% Tables) {
+                                pg13::renameTable(conn = conn,
+                                                  schema = writeDatabaseSchema,
+                                                  tableName = regimenStagingTable,
+                                                  newTableName = pg13::appendDate(regimenStagingTable))
                         }
 
                 }

@@ -1,0 +1,117 @@
+---
+title: "setup-maintenance"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{setup-maintenance}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(OncoRegimenFinder)
+```
+
+```{r, echo=FALSE}
+library(fantasia)
+conn <- fantasia::connectOMOP()
+```
+
+# Parameters  
+It is recommended that the parameters are centralized at the start of execution to ensure that arguments remain consistent across all function calls.  
+
+```{r settings, eval=FALSE}
+
+cdmDatabaseSchema = "omop_cdm_2"
+writeDatabaseSchema = "patelm9"
+cohortTable = "oncoregimenfinder_cohort"
+regimenTable = "oncoregimenfinder_regimen"
+vocabularyTable = "oncoregimenfinder_vocabulary"
+regimenIngredientTable= "oncoregimenfinder_regimen_ingredients"
+drug_classification_id_input = c(21601387,
+                                35807188,
+                                35807277,
+                                35807189)
+date_lag_input = 30
+regimen_repeats = 5
+
+```
+
+### 1. Create the Cohort and Regimen Tables in the designated schema
+
+```{r, eval=FALSE}
+OncoRegimenFinder::buildCohortRegimenTable(conn = conn,
+                                           cdmDatabaseSchema = "omop_cdm_2",
+                                           writeDatabaseSchema = "patelm9",
+                                           cohortTable = "oncoregimenfinder_cohort",
+                                           regimenTable = "oncoregimenfinder_regimen",
+                                           drug_classification_id_input = c(21601387,
+                                                                            35807188,
+                                                                            35807277,
+                                                                            35807189))
+```
+
+#### Cohort Table  
+1. Person Id
+1. Drug Exposure Id with Start and End Dates
+1. Ingredient representing that Drug Exposure filtered for those that are descendants of drug_classification_id_input  
+
+```{r cohortTable, eval=TRUE, echo=FALSE}
+cohortTable <-
+  pg13::query(conn = conn,
+              sql_statement = pg13::buildQuery(schema = "patelm9",
+                                               tableName = "oncoregimenfinder_cohort",
+                                               n = 20,
+                                               n_type = "random"))
+
+print(cohortTable)
+```
+
+#### Regimen Table  
+Subset of Cohort Table of the Person Id, Drug Exposure Id, Ingredient Name, and the Start Date of exposure to that Ingredient.  
+
+```{r, echo=FALSE, eval=TRUE}
+regimenTable <-
+  pg13::query(conn = conn,
+              sql_statement = pg13::buildQuery(schema = "patelm9",
+                                               tableName = "oncoregimenfinder_regimen",
+                                               n = 20,
+                                               n_type = "random"))
+
+print(regimenTable)
+
+```
+
+
+
+```{r, eval=FALSE}
+OncoRegimenFinder::processRegimenTable(conn = conn,
+                    writeDatabaseSchema = "patelm9",
+                    regimenTable = "oncoregimenfinder_regimen",
+                    date_lag_input = 30,
+                    regimen_repeats = 5)
+```
+
+
+```{r, eval=FALSE}
+OncoRegimenFinder::createVocabTable(conn = conn,
+                                    writeDatabaseSchema = "patelm9",
+                                    cdmDatabaseSchema = "omop_cdm_2",
+                                    vocabularyTable = "oncoregimenfinder_vocabulary")
+```
+
+```{r, eval=FALSE}
+createRegimenIngrTable(conn = conn,
+                                          writeDatabaseSchema = "patelm9",
+                                          cohortTable = "oncoregimenfinder_cohort",
+                                          regimenTable = "oncoregimenfinder_regimen",
+                                          regimenIngredientTable = "oncoregimenfinder_regimen_ingredients",
+                                          vocabularyTable = "oncoregimenfinder_vocabulary")
+```
+
