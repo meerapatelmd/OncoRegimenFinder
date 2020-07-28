@@ -54,7 +54,7 @@ buildCohortRegimenTable <-
                                                          cohortDefinitionId = cohortDefinitionId)
                                 )
 
-                        } else {
+                } else {
 
                                 pg13::execute(conn,
                                 SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/inst/sql/CohortBuild.sql")),

@@ -1,19 +1,19 @@
-# conn <- fantasia::connectOMOP()
-# OncoRegimenFinder::buildCohortRegimenTable(conn = conn,
-#                                            cdmDatabaseSchema = "omop_cdm_2",
-#                                            writeDatabaseSchema = "patelm9",
-#                                            cohortTable = "oncoregimenfinder_cohort",
-#                                            regimenTable = "oncoregimenfinder_regimen",
-#                                            drug_classification_id_input = c(21601387,
-#                                                                             35807188,
-#                                                                             35807277,
-#                                                                             35807189))
-#
-# connectionDetails <-  DatabaseConnector::createConnectionDetails(dbms = "postgresql",
-#                                                                  server = "dlvidhiomop1.mskcc.org/omop_raw",
-#                                                                  user = Sys.getenv("omop_username"),
-#                                                                  password = Sys.getenv("omop_password"),
-#                                                                  port = 5432)
+conn <- fantasia::connectOMOP()
+OncoRegimenFinder::buildCohortRegimenTable(conn = conn,
+                                           cdmDatabaseSchema = "omop_cdm_2",
+                                           writeDatabaseSchema = "patelm9",
+                                           cohortTable = "oncoregimenfinder_cohort",
+                                           regimenTable = "oncoregimenfinder_regimen",
+                                           drug_classification_id_input = c(21601387,
+                                                                            35807188,
+                                                                            35807277,
+                                                                            35807189))
+
+connectionDetails <-  DatabaseConnector::createConnectionDetails(dbms = "postgresql",
+                                                                 server = "dlvidhiomop1.mskcc.org/omop_raw",
+                                                                 user = Sys.getenv("omop_username"),
+                                                                 password = Sys.getenv("omop_password"),
+                                                                 port = 5432)
 
 # create_regimens(connectionDetails = connectionDetails,
 #                cdmDatabaseSchema = "omop_cdm_2",
