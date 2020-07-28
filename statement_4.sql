@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS patelm9.oncoregimenfinder_regimen_tmp

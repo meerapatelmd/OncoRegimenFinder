@@ -1,1 +1,0 @@
-drop table if exists patelm9.ONCOREGIMENFINDER_VOCABULARY
