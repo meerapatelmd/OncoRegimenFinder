@@ -44,7 +44,7 @@ buildCohortRegimenTable <-
 
                 if (!is.null(cohortDefinitionId)) {
                                 pg13::execute(conn,
-                                            SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/inst/sql/CohortBuild_cohort_def_id.sql")),
+                                            SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/CohortBuild_cohort_def_id.sql")),
                                                          cdmDatabaseSchema = cdmDatabaseSchema,
                                                          cdmResultSchema = cohortDefinitionIdSchema,
                                                          writeDatabaseSchema = writeDatabaseSchema,
@@ -57,7 +57,7 @@ buildCohortRegimenTable <-
                 } else {
 
                                 pg13::execute(conn,
-                                SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/inst/sql/CohortBuild.sql")),
+                                SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/CohortBuild.sql")),
                                                          cdmDatabaseSchema = cdmDatabaseSchema,
                                                          writeDatabaseSchema = writeDatabaseSchema,
                                                          cohortTable = cohortTable,
