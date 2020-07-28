@@ -1,0 +1,245 @@
+---
+title: "Esophagus REDCap Treatment Data vs OncoRegimenFinder"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{esophagus-redcap}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidyverse)
+library(rubix)
+library(OncoRegimenFinder)
+
+```
+
+```{r, echo=FALSE,eval=TRUE,message=FALSE,results="hide"}
+library(fantasia)
+conn <- fantasia::connectOMOP()
+```
+
+### Esophagus Cohort OncoRegimenFinder Results  
+1. Get the Current Esophagus Cohort  
+1. Filter oncoregimen_regimen_ingredients Table for Esophagus Cohort
+
+```{r, eval = TRUE, echo=FALSE}
+
+sql <-
+pg13::buildJoinQuery(fields = c("patelm9.esophagus_cohort.person_id AS esophagus_person_id",
+                                "patelm9.esophagus_cohort.ptid",
+                                "patelm9.oncoregimenfinder_regimen_ingredients.*"),
+                     schema = "patelm9",
+                     tableName = "esophagus_cohort",
+                     column = "person_id",
+                     joinType = "LEFT",
+                     joinOnSchema = "patelm9",
+                     joinOnTableName = "oncoregimenfinder_regimen_ingredients",
+                     joinOnColumn = "person_id")
+
+cat(sql)
+
+```
+
+
+```{r, echo=FALSE, eval=TRUE,results='hide'}
+
+esophagus_oncoregimenfinder_results <-
+pg13::query(conn = conn,
+             sql_statement = sql)
+
+```
+
+
+```{r, echo = FALSE, eval = TRUE}
+esophagus_oncoregimenfinder_results <-
+  esophagus_oncoregimenfinder_results %>%
+  tibble::as_tibble() %>% 
+  dplyr::mutate_all(as.character) %>%
+  rubix::normalize_all_to_na() 
+print(esophagus_oncoregimenfinder_results)
+```
+
+## OncoRegimenFinder Results Summary  
+### Missingness  
+
+```{r}
+esophagus_oncoregimenfinder_results %>%
+  rubix::summarize_variables() %>%
+  dplyr::select(-contains("DISTINCT_VALUES"))
+```
+
+## REDCap Data  
+
+```{r}
+# redcap_data <- fantasia::read_redcap_data("~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv")
+
+input <-
+fantasia::processRedcapData(data_csv_file = "~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv",
+                  parsed_metadata_csv_file = "~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv",
+                    identifier_variables = "ptid")
+
+```
+
+The following are Treatment Variables with Text or Selection Values: 
+```{r}
+
+identifier_vars <- "ptid"
+treatment_vars <-
+  c('neoadj_regimen',
+  'neoadj_tx_additional_drugs',
+  'neoadj_tx_addtl_drugs_2',
+  'crt_name',
+  'neoadjcrt_tx_additional_drugs',
+  'neoadjcrt_tx_addtl_drugs_2',
+  'adj_regimen',
+  'adj_tx_additional_drugs',
+  'adj_tx_addtl_drugs_2',
+  'adj_rt_concurrent',
+  'adjcrt_tx_additional_drugs',
+  'adjcrt_tx_addtl_drugs_2',
+  'induction_regimen',
+  'periop_neo_regimen',
+  'periop_adj_regimen',
+  'tx_name',
+  'advanced_tx_additional_drugs',
+  'advanced_tx_addtl_drugs_2',
+  'tx_maintenance_drugs',
+  'advanced_tx_addtl_drugsm1_1',
+  'advanced_tx_addtl_drugsm1_2',
+  'tx_maintenance2_drugs',
+  'advanced_tx_addtl_drugsm2_1',
+  'advanced_tx_addtl_drugsm2_2',
+  'palliative_rt_concurrent',
+  'neoadj_tx_base_regimen',
+  'neoadjcrt_tx_base_regimen',
+  'adj_tx_base_regimen',
+  'adjcrt_tx_base_regimen',
+  'advanced_tx_base_regimen',
+  'regimen_name_m1',
+  'regimen_name_m2',
+  'hipec_drugs')
+
+
+
+```
+
+
+
+```{r}
+qa <- treatment_vars[!(treatment_vars %in% colnames(input$ProcessedData))]
+treatment_vars <- treatment_vars[(treatment_vars %in% colnames(input$ProcessedData))]
+```
+
+
+```{r}
+
+output <-
+treatment_vars %>%
+  rubix::map_names_set(function(x) input$ProcessedData %>%
+                         tibble::as_tibble() %>%
+                              rubix::normalize_all_to_na() %>%
+                            dplyr::filter_at(vars(all_of(x)),
+                                             any_vars(!is.na(.))) %>%
+                            dplyr::select(all_of(identifier_vars),
+                                          all_of(x),
+                                          contains("start"),
+                                          contains("stop")) %>%
+                         rubix::deselect_if_all_na()) %>%
+  purrr::keep(~nrow(.) > 0) %>% 
+  # If the df has less than 2 columns, that means there wasn't a date associated with the variable
+  purrr::keep(~ncol(.) > 2)
+
+```
+
+
+
+```{r}
+output2 <-
+  output %>%
+  purrr::map2(names(output), function(x, y) x %>%
+                          tidyr::pivot_longer(cols = c(contains("start"), contains("stop")),
+                                              names_to = c("Context",
+                                                           "DateType"),
+                                              names_pattern = "(^.*)_([start|stop].*$)",
+                                              values_to = "Date")) %>%
+  purrr::map(function(x) x %>%
+                          dplyr::rename_at(vars(2),
+                                           ~paste("PV"))) %>%
+  dplyr::bind_rows(.id = "VARIABLE")
+```
+
+```{r}
+output3 <-
+  output2 %>% 
+  dplyr::mutate(DateType = forcats::as_factor(DateType)) %>% 
+  dplyr::mutate(DateType = forcats::fct_collapse(DateType,
+                                                 EVENT_START_DATE = c("start", "start_date"),
+                                                 EVENT_END_DATE = c("stop", "stop_date"))) %>%
+  tidyr::pivot_wider(id_cols = c(!DateType, !Date),
+                     names_from = DateType,
+                     values_from = Date,
+                     values_fn = list(Date = function(x) paste(unique(x), collapse = "\n")))
+
+```
+
+```{r}
+
+esophagus_cohort <- 
+  pg13::readTable(conn = conn,
+                  schema = "patelm9",
+                  tableName = "esophagus_cohort")
+
+output4 <-
+  output3 %>%
+  dplyr::full_join(esophagus_cohort) %>%
+  dplyr::select(all_of(colnames(output3)),
+                person_id) %>%
+  dplyr::mutate(NORMALIZE_START_DATE = EVENT_START_DATE,
+                NORMALIZE_END_DATE = EVENT_END_DATE)
+
+
+```
+
+```{r}
+output5 <- split(output4, output4$person_id)
+```
+
+Split by person_id because the esophagus_person_id is the most comprehensive source of truth in terms of the patient population. Person_id is only for regimen matches.
+
+
+```{r}
+
+esophagus_results2 <-
+esophagus_oncoregimenfinder_results %>%
+  dplyr::mutate(NORMALIZE_START_DATE = ingredient_start_date,
+                NORMALIZE_END_DATE = ingredient_end_date) %>%
+  dplyr::mutate_at(vars(person_id), as.integer) 
+esophagus_results3 <- split(esophagus_results2, esophagus_results2$esophagus_person_id)
+
+```
+
+
+```{r}
+list(REDCAP = output5,
+     OMOP = esophagus_results3) %>%
+  purrr::transpose() %>% 
+  purrr::map(dplyr::bind_rows, .id = "DATA_SOURCE")
+```
+
+
+
+
+```{r,echo=FALSE,eval=TRUE,message=FALSE,results="hide"}
+fantasia::dcOMOP(conn = conn,
+                 remove = TRUE)
+```
+
+

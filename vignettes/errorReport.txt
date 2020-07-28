@@ -1,0 +1,30 @@
+DBMS:
+postgresql
+
+Error:
+org.postgresql.util.PSQLException: This connection has been closed.
+
+SQL:
+SELECT * FROM patelm9.esophagus_cohort
+ LEFT JOIN patelm9.oncoregimenfinder_regimen_ingredients ON patelm9.oncoregimenfinder_regimen_ingredients.person_id = patelm9.esophagus_cohort.person_id
+
+
+R version:
+R version 4.0.0 (2020-04-24)
+
+Platform:
+x86_64-apple-darwin17.0
+
+Attached base packages:
+- stats
+- graphics
+- grDevices
+- utils
+- datasets
+- methods
+- base
+
+Other attached packages:
+- OncoRegimenFinder (0.0.0.9000)
+- fantasia (0.1.0)
+- DatabaseConnector (2.4.4)
