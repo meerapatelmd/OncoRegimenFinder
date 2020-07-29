@@ -9,3 +9,12 @@
 #'}
 #' @details DETAILS
 "topclasses"
+
+#' @title False Positive Cancer Drugs
+#' @description Concept Ids that fall under a Cancer-related drug classification, but are unlikely to be used primarily for a cancer.
+#' @format A data frame with 283 rows and 1 variables:
+#' \describe{
+#'   \item{\code{concept_id}}{character RxNorm Ingredient Concept Id} 
+#'}
+#' @details DETAILS
+"falsepositives"

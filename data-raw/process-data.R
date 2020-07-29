@@ -3,5 +3,5 @@ library(devtools)
 devtools::install_github("patelm9/broca")
 library(broca)
 topclasses <- broca::simply_read_csv("data-raw/topclasses.csv")
-
-usethis::use_data(topclasses, overwrite = TRUE)
+falsepositives <- broca::simply_read_csv("data-raw/falsepositives.csv")
+usethis::use_data(topclasses, falsepositives, overwrite = TRUE)
