@@ -31,14 +31,14 @@ conn <- fantasia::connectOMOP()
 ```
 
 ## Summary 
-The results of the OncoRegimenFinder algorithm is compared to the abstracted Esophagus REDCap cohort treatment data. 
+The results of the 1) OncoRegimenFinder algorithm is compared to the 2) abstracted Esophagus REDCap cohort treatment data. 
 
-## Esophagus Cohort OncoRegimenFinder  
+## 1. Esophagus Cohort OncoRegimenFinder  
 ### Source Tables:  
-1. Esophagus Cohort Table  
+1. Esophagus Cohort Table   
 1. OncoRegimenFinder Regimen Ingredient Table  
     
-An Esophagus Cohort table is currently present in the OMOP `patelm9.esophagus_cohort` table: 
+**The Esophagus Cohort table `patelm9.esophagus_cohort`**:  
 
 ```{r cohort, echo=FALSE,eval=TRUE}
 
@@ -51,11 +51,14 @@ esophagus_cohort <-
 
 
 ```{r cohort2,echo=F,eval=TRUE}
+
 head(esophagus_cohort) %>%
   kableExtra::kable()
+
 ```
 
-The `patelm9.oncoregimenfinder_regimen_ingredient` table is as follows: 
+**OncoRegimenFinder Regimen Ingredient Table `patelm9.oncoregimenfinder_regimen_ingredient`**:  
+
 ```{r regimen_ingr,echo=F,eval=TRUE}
 
 regimen_ingredient <- 
@@ -67,12 +70,13 @@ regimen_ingredient <-
 
 ```
 
+
 ```{r regimen_ingr2,echo=F,eval=TRUE}
+
 head(regimen_ingredient) %>%
       kableExtra::kable()
+
 ```
-
-
 
 ### SQL  
 The following SQL is used to join the 2 Source Tables:
@@ -103,7 +107,8 @@ pg13::query(conn = conn,
 
 ```
 
-The resulting output:
+**Output**:
+
 ```{r, echo = FALSE, eval = TRUE}
 
 esophagus_oncoregimenfinder_results <-
@@ -111,8 +116,9 @@ esophagus_oncoregimenfinder_results <-
           tibble::as_tibble() %>% 
           dplyr::mutate_all(as.character) %>%
           rubix::normalize_all_to_na() 
+
 head(esophagus_oncoregimenfinder_results) %>%
-  kableExtra::kable()
+          kableExtra::kable()
 
 ```
 
@@ -120,17 +126,22 @@ head(esophagus_oncoregimenfinder_results) %>%
 ### Missingness  
 
 ```{r data_summary, echo=FALSE,eval=TRUE}
+
 data_summary <-
-esophagus_oncoregimenfinder_results %>%
-  rubix::summarize_variables() %>%
-  dplyr::select(-contains("DISTINCT_VALUES"))
+  esophagus_oncoregimenfinder_results %>%
+    rubix::summarize_variables() %>%
+    dplyr::select(-contains("DISTINCT_VALUES"))
+
 ```
 
 Analysis of OncoRegimenFinder results shows that out of the unique OMOP Person Id count of `r data_summary[data_summary$Variable == "esophagus_person_id", "DISTINCT_COUNT"]` patients in the Esophagus Cohort overall, only `r data_summary[data_summary$Variable == "person_id", "DISTINCT_COUNT"]` Person Ids were resulted from OncoRegimenFinder.
 
-Full Metrics:
+Full Metrics:  
 ```{r data_summary2, echo=FALSE,eval=TRUE}
-print(data_summary)
+
+data_summary %>%
+    kableExtra::kable()
+
 ```
 
 

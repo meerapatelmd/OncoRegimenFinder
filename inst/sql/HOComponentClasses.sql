@@ -1,0 +1,5 @@
+SELECT DISTINCT concept_id, concept_name   
+FROM @schema.concept c 
+WHERE c.vocabulary_id = 'HemOnc' 
+AND c.concept_class_id = 'Component Class'
+;

@@ -58,3 +58,5 @@ Timestamp	Activity Type	Function	File	Details
 2020-07-28 18:59:26	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv	
 2020-07-28 19:01:13	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv	
 2020-07-28 19:01:16	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv	
+2020-07-31 11:14:41	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv	
+2020-07-31 11:14:44	read	simply_read_csv	~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv	
