@@ -7,7 +7,8 @@ library(broca)
 
 topclasses <- broca::simply_read_csv("data-raw/topclasses.csv")
 falsepositives <- broca::simply_read_csv("data-raw/falsepositives.csv")
-falsepositives <- falsepositives$concept_id
+falsepositives <- falsepositives$concept_id %>% 
+        centipede::no_na()
 
 atc_antineoplastic_id <- 21601387
 
