@@ -15,7 +15,8 @@ buildCohortRegimenTable <-
                  cohortTable,
                  regimenTable,
                  renameCurrentTables = TRUE,
-                 drug_classification_id_input,
+                 drug_classification_id_input = c(OncoRegimenFinder::atc_antineoplastic_id,
+                                                  OncoRegimenFinder::hemonc_classes),
                  false_positive_id = OncoRegimenFinder::falsepositives) {
 
                 cohortTable <- toupper(cohortTable)
