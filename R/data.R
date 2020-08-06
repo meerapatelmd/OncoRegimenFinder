@@ -18,3 +18,21 @@
 #'}
 #' @details DETAILS
 "falsepositives"
+
+#' @title ATC Antineoplastic Id
+#' @description Concept Id of the ATC Antineoplastics Class
+#' @format A vector of length 1 
+#' \describe{
+#'   \item{\code{concept_id}}{integer} 
+#'}
+#' @details DETAILS
+"atc_antineoplastic_id"
+
+#' @title HemOnc Antineoplastic Classes
+#' @description Concept Ids of  HemOnc Antineoplastic Drug Classes
+#' @format A vector 
+#' \describe{
+#'   \item{\code{concept_id}}{integer} 
+#'}
+#' @details DETAILS
+"hemonc_classes"

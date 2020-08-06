@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>setup-maintenance</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">setup-maintenance</h1>
+
+
+
+<div id="package-load" class="section level3">
+<h3>Package Load</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(OncoRegimenFinder)</span></code></pre></div>
+</div>
+<div id="parameters" class="section level3">
+<h3>Parameters</h3>
+<p>It is recommended that the parameters are centralized at the start of execution to ensure that arguments remain consistent across all function calls.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Schema of Source Person and Drug Exposure Tables</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>cdmDatabaseSchema =<span class="st"> &quot;omop_cdm_2&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Output Schema and Tables</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>writeDatabaseSchema =<span class="st"> &quot;patelm9&quot;</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>cohortTable =<span class="st"> &quot;oncoregimenfinder_cohort&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>regimenTable =<span class="st"> &quot;oncoregimenfinder_regimen&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>regimenStagingTable =<span class="st"> &quot;oncoregimenfinder_regimen_staging&quot;</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>vocabularyTable =<span class="st"> &quot;oncoregimenfinder_vocabulary&quot;</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>regimenIngredientTable=<span class="st"> &quot;oncoregimenfinder_regimen_ingredients&quot;</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co"># OMOP Vocabulary Drug Classes to filter Drug Exposures for</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>drug_classification_id_input =<span class="st"> </span><span class="kw">c</span>(<span class="dv">21601387</span>,</span>
+<span id="cb2-14"><a href="#cb2-14"></a>                                <span class="dv">35807188</span>,</span>
+<span id="cb2-15"><a href="#cb2-15"></a>                                <span class="dv">35807277</span>,</span>
+<span id="cb2-16"><a href="#cb2-16"></a>                                <span class="dv">35807189</span>)</span>
+<span id="cb2-17"><a href="#cb2-17"></a></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co"># Date difference when assessing for drug combinations in the Drug Exposures table</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a>date_lag_input =<span class="st"> </span><span class="dv">30</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>regimen_repeats =<span class="st"> </span><span class="dv">5</span></span></code></pre></div>
+</div>
+<div id="steps" class="section level3">
+<h3>Steps</h3>
+<ol style="list-style-type: decimal">
+<li>Cohort, Regimen, and a copy of Regimen as “Regimen Staging” Tables are written. Tables that are already present in the schema are copied to a new table appended with the date.<br />
+</li>
+<li>Regimen Table undergoes further processing by combining overlapping instances of an ingredient start date and +/- the date lag input over the number of regimen repeats desired.<br />
+</li>
+<li>A Separate Vocabulary Table is created that maps the HemOnc Regimen Concept Name to string aggregates of the individual Component Concept Names<br />
+</li>
+<li>A final Regimen Ingredient Table joins the Vocabulary Table with the Regimen Table to map drug combinations derived from this algorithm back to HemOnc and other OMOP Concepts</li>
+</ol>
+<div id="create-cohort-regimen-and-regimen-staging-tables" class="section level4">
+<h4>Create Cohort, Regimen and Regimen Staging Tables</h4>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2"></a>OncoRegimenFinder<span class="op">::</span><span class="kw">buildCohortRegimenTable</span>(<span class="dt">conn =</span> conn,</span>
+<span id="cb3-3"><a href="#cb3-3"></a>                                           <span class="dt">cdmDatabaseSchema =</span> <span class="st">&quot;omop_cdm_2&quot;</span>,</span>
+<span id="cb3-4"><a href="#cb3-4"></a>                                           <span class="dt">writeDatabaseSchema =</span> <span class="st">&quot;patelm9&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>                                           <span class="dt">cohortTable =</span> <span class="st">&quot;oncoregimenfinder_cohort&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>                                           <span class="dt">regimenTable =</span> <span class="st">&quot;oncoregimenfinder_regimen&quot;</span>,</span>
+<span id="cb3-7"><a href="#cb3-7"></a>                                           <span class="dt">drug_classification_id_input =</span> <span class="kw">c</span>(<span class="dv">21601387</span>,</span>
+<span id="cb3-8"><a href="#cb3-8"></a>                                                                            <span class="dv">35807188</span>,</span>
+<span id="cb3-9"><a href="#cb3-9"></a>                                                                            <span class="dv">35807277</span>,</span>
+<span id="cb3-10"><a href="#cb3-10"></a>                                                                            <span class="dv">35807189</span>))</span></code></pre></div>
+<div id="cohort-table" class="section level6">
+<h6>Cohort Table</h6>
+<p>The <code>Cohort Table</code> includes the Person Id, Drug Exposure Id with Start and End Dates, and Ingredient representing that Drug Exposure filtered for all descendants of the Drug Classification Concept Id argument.</p>
+<pre><code>#&gt;        concept_name drug_exposure_id person_id drug_concept_id
+#&gt; 1      fluorouracil         38461780   1376551          955641
+#&gt; 2         cisplatin         27126162   1115055        19075392
+#&gt; 3       trastuzumab          7469178    436007        19132126
+#&gt; 4       oxaliplatin         40459657   1440345        35603924
+#&gt; 5        ifosfamide         42741589   1533792        42628946
+#&gt; 6         cisplatin           389167    880622        35604085
+#&gt; 7        irinotecan         26102037   1094453        35604259
+#&gt; 8        irinotecan         20989520    992000        35604259
+#&gt; 9        bexarotene         25281042   1078812        19074212
+#&gt; 10      carfilzomib         38738995   1384845        40221279
+#&gt; 11 cyclophosphamide         10164887    409056        36408146
+#&gt; 12        cisplatin         26803159   1107065        19075392
+#&gt; 13         busulfan         10501780    418055         1333361
+#&gt; 14 cyclophosphamide         35536077   1287772        35606514
+#&gt; 15      gemcitabine           159704    365904        44071497
+#&gt; 16      gemcitabine         26668815   1104436        35603181
+#&gt; 17      vincristine         37467210   1344638         1592862
+#&gt; 18       paclitaxel         31883863   1207157         1378389
+#&gt; 19      gemcitabine           161683    366972        44071497
+#&gt; 20     fluorouracil         37083555   1333235          955641
+#&gt;    ingredient_start_date ingredient_end_date
+#&gt; 1             2016-03-18          2016-03-19
+#&gt; 2             2009-09-08          2009-09-08
+#&gt; 3             2001-07-13          2001-07-14
+#&gt; 4             2019-01-02          2019-01-02
+#&gt; 5             2019-05-13          2019-05-15
+#&gt; 6             2003-07-11          2003-07-11
+#&gt; 7             2012-01-23          2012-01-23
+#&gt; 8             2009-07-03          2009-07-03
+#&gt; 9             2009-05-18          2009-06-16
+#&gt; 10            2018-08-24          2018-08-26
+#&gt; 11            2001-11-19          2001-11-20
+#&gt; 12            2009-09-04          2009-09-04
+#&gt; 13            2002-05-23          2002-05-24
+#&gt; 14            2017-11-06          2017-11-07
+#&gt; 15            2001-05-25          2001-05-25
+#&gt; 16            2011-12-09          2011-12-09
+#&gt; 17            2016-04-11          2016-04-12
+#&gt; 18            2014-07-16          2014-07-16
+#&gt; 19            2002-01-18          2002-01-18
+#&gt; 20            2015-03-25          2015-03-25</code></pre>
+</div>
+<div id="regimen-staging-table" class="section level6">
+<h6>Regimen Staging Table</h6>
+<p>The Regimen and Regimen Staging Tables, are identical to one another at this point, are a subset of Cohort Table of the Person Id, Drug Exposure Id, Ingredient Name, and the Start Date of exposure to that Ingredient. The Regimen Table will be processed further while the Regimen Staging Table serves as a reference back to the Regimen Table’s original state before being processed by algorithm.</p>
+<pre><code>#&gt;        concept_name drug_exposure_id person_id drug_concept_id
+#&gt; 1   mechlorethamine         15489436    810991        40185386
+#&gt; 2  cyclophosphamide           414699    903957        35606515
+#&gt; 3        irinotecan           303864    566488        42656229
+#&gt; 4        pemetrexed         43161595   1555339        35604789
+#&gt; 5         etoposide         10835528      5420        19033607
+#&gt; 6         rituximab         41183277   1464833        46275079
+#&gt; 7       vincristine         14085872    727187         1593012
+#&gt; 8        paclitaxel            62152    136630        42937770
+#&gt; 9      valacyclovir         47101022   1071042         1717707
+#&gt; 10       paclitaxel          3904127    318615        19035209
+#&gt; 11      doxorubicin           172504    394087        36892739
+#&gt; 12        mitomycin         15760179    821178        44032462
+#&gt; 13        etoposide           267093    493420         1350544
+#&gt; 14      carboplatin         25545412   1083881         1344909
+#&gt; 15      carboplatin           267096    493420        41087078
+#&gt; 16      trastuzumab         39430809   1406404        40099452
+#&gt; 17       irinotecan         27549741   1122277        35604259
+#&gt; 18       bortezomib          9379906    634441        19102219
+#&gt; 19      gemcitabine         35328508   1282737        35603176
+#&gt; 20      bevacizumab         38928402   1390365        46275989
+#&gt;    ingredient_start_date ingredient_end_date
+#&gt; 1             1990-01-19          1990-01-20
+#&gt; 2             2004-01-05          2004-01-05
+#&gt; 3             2003-03-21          2003-03-21
+#&gt; 4             2019-11-23          2019-11-23
+#&gt; 5             2002-03-09          2002-03-09
+#&gt; 6             2018-05-15          2018-05-16
+#&gt; 7             1991-08-07          1991-08-08
+#&gt; 8             1999-09-01          1999-09-01
+#&gt; 9             2016-01-07          2016-01-07
+#&gt; 10            1999-12-03          1999-12-03
+#&gt; 11            1998-09-16          1998-09-16
+#&gt; 12            1994-05-27          1994-05-28
+#&gt; 13            2000-05-25          2000-05-25
+#&gt; 14            2009-01-03          2009-01-03
+#&gt; 15            2000-06-13          2000-06-13
+#&gt; 16            2017-08-22          2017-08-23
+#&gt; 17            2010-06-07          2010-06-07
+#&gt; 18            2009-02-26          2009-02-26
+#&gt; 19            2014-07-07          2014-07-07
+#&gt; 20            2017-04-07          2017-04-08</code></pre>
+</div>
+</div>
+<div id="processing-the-regimen-table" class="section level4">
+<h4>Processing the Regimen Table</h4>
+<p>The Regimen Table is grouped by Person Id, Drug Exposure Id, Ingredient and Ingredient Start Date and joined onto itself based on overlapping window of time by +/= the Date Lag Input parameter and iterated on based on the Regimen Repeats given.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2"></a>OncoRegimenFinder<span class="op">::</span><span class="kw">processRegimenTable</span>(<span class="dt">conn =</span> conn,</span>
+<span id="cb6-3"><a href="#cb6-3"></a>                    <span class="dt">writeDatabaseSchema =</span> <span class="st">&quot;patelm9&quot;</span>,</span>
+<span id="cb6-4"><a href="#cb6-4"></a>                    <span class="dt">regimenTable =</span> <span class="st">&quot;oncoregimenfinder_regimen&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>                    <span class="dt">date_lag_input =</span> <span class="dv">30</span>,</span>
+<span id="cb6-6"><a href="#cb6-6"></a>                    <span class="dt">regimen_repeats =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div id="regimen-table" class="section level5">
+<h5>Regimen Table</h5>
+<pre><code>#&gt;    person_id drug_exposure_id          concept_name ingredient_start_date
+#&gt; 1    1284362         35394486            pemetrexed            2015-05-16
+#&gt; 2    1323905         36753504             etoposide            2015-01-26
+#&gt; 3    1373067         38352427             cisplatin            2016-04-21
+#&gt; 4    1433738         40263655           hydroxyurea            2018-04-04
+#&gt; 5     432557           224070          methotrexate            2000-05-08
+#&gt; 6    1422286         39924725         pembrolizumab            2019-11-13
+#&gt; 7     633157           348415           vinblastine            2000-12-28
+#&gt; 8    1026093           490737          fluorouracil            2007-03-06
+#&gt; 9     886956           396744          fluorouracil            2003-05-12
+#&gt; 10     38988            48685             docetaxel            2003-02-28
+#&gt; 11   1001133           479809          methotrexate            2006-08-17
+#&gt; 12    633658           349073          fluorouracil            2004-03-16
+#&gt; 13    451727          7865553 peginterferon alfa-2b            2002-12-05
+#&gt; 14    908434         12714261           carboplatin            2003-12-31
+#&gt; 15    996013         21177663             etoposide            2009-01-05
+#&gt; 16   1274653         35023538            paclitaxel            2014-01-02
+#&gt; 17   1387147         38811823            paclitaxel            2016-06-13
+#&gt; 18   1202174         31644010          fluorouracil            2015-02-23
+#&gt; 19   1114930         27185451           bevacizumab            2012-11-29
+#&gt; 20    898263          9715000             topotecan            2010-03-05</code></pre>
+</div>
+</div>
+<div id="create-vocabulary-table" class="section level4">
+<h4>Create Vocabulary Table</h4>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2"></a>OncoRegimenFinder<span class="op">::</span><span class="kw">createVocabTable</span>(<span class="dt">conn =</span> conn,</span>
+<span id="cb8-3"><a href="#cb8-3"></a>                                    <span class="dt">writeDatabaseSchema =</span> <span class="st">&quot;patelm9&quot;</span>,</span>
+<span id="cb8-4"><a href="#cb8-4"></a>                                    <span class="dt">cdmDatabaseSchema =</span> <span class="st">&quot;omop_cdm_2&quot;</span>,</span>
+<span id="cb8-5"><a href="#cb8-5"></a>                                    <span class="dt">vocabularyTable =</span> <span class="st">&quot;oncoregimenfinder_vocabulary&quot;</span>)</span></code></pre></div>
+<div id="vocabulary-table" class="section level5">
+<h5>Vocabulary Table</h5>
+<pre><code>#&gt;                                                                    reg_name
+#&gt; 1                                                                       MAP
+#&gt; 2                                                                      HDMP
+#&gt; 3                                                                   m-BNCOD
+#&gt; 4                                  Docetaxel, Fluorouracil, Hydroxyurea, RT
+#&gt; 5                                                 Topotecan and Bevacizumab
+#&gt; 6                                                  Samarium-153 monotherapy
+#&gt; 7                                          Nordic Regimen, younger patients
+#&gt; 8                                                                  R-COPADM
+#&gt; 9                                                   Cisplatin and Cetuximab
+#&gt; 10                                    Methotrexate, Vinblastine, Prednisone
+#&gt; 11                                                       FC, then allo HSCT
+#&gt; 12                                                                    BVCPP
+#&gt; 13                                                 Docetaxel and Vandetanib
+#&gt; 14                                                 TC, then IE, VDoxoC, VEC
+#&gt; 15                                                                      CVB
+#&gt; 16                                                   Teniposide monotherapy
+#&gt; 17 Cyclophosphamide, Doxorubicin, L-Asparaginase, Vincristine, Prednisolone
+#&gt; 18                                                    BuFlu, then allo HSCT
+#&gt; 19                                                 Benralizumab monotherapy
+#&gt; 20                                              Carboplatin, Paclitaxel, RT
+#&gt;                                                                                                                combo_name
+#&gt; 1                                                                                      cisplatin,doxorubicin,methotrexate
+#&gt; 2                                                                                                      methylprednisolone
+#&gt; 3                                          bleomycin,cyclophosphamide,dexamethasone,methotrexate,mitoxantrone,vincristine
+#&gt; 4                                                           docetaxel,external beam radiotherapy,fluorouracil,hydroxyurea
+#&gt; 5                                                                                                   bevacizumab,topotecan
+#&gt; 6                                                                                                            samarium-153
+#&gt; 7  cyclophosphamide,cytarabine,cytarabine liposomal,dexamethasone,ifosfamide,methotrexate,rituximab,vincristine,vindesine
+#&gt; 8                                            cyclophosphamide,doxorubicin,methotrexate,prednisolone,rituximab,vincristine
+#&gt; 9                                                                                                     cetuximab,cisplatin
+#&gt; 10                                                                                    methotrexate,prednisone,vinblastine
+#&gt; 11                                                                     allogeneic stem cells,cyclophosphamide,fludarabine
+#&gt; 12                                                        carmustine,cyclophosphamide,prednisone,procarbazine,vinblastine
+#&gt; 13                                                                                                   docetaxel,vandetanib
+#&gt; 14                                                cyclophosphamide,doxorubicin,etoposide,ifosfamide,topotecan,vincristine
+#&gt; 15                                                                                        bleomycin,lomustine,vinblastine
+#&gt; 16                                                                                                             teniposide
+#&gt; 17                                                     asparaginase,cyclophosphamide,doxorubicin,prednisolone,vincristine
+#&gt; 18                                                                             allogeneic stem cells,busulfan,fludarabine
+#&gt; 19                                                                                                           benralizumab
+#&gt; 20                                                                      carboplatin,external beam radiotherapy,paclitaxel
+#&gt;    concept_id
+#&gt; 1    35806469
+#&gt; 2    35804626
+#&gt; 3    35805104
+#&gt; 4    35805768
+#&gt; 5    35806489
+#&gt; 6    35806863
+#&gt; 7    35804425
+#&gt; 8    35804371
+#&gt; 9    35805775
+#&gt; 10   35805983
+#&gt; 11   35804619
+#&gt; 12   35805858
+#&gt; 13   35806422
+#&gt; 14   35805456
+#&gt; 15   35805861
+#&gt; 16   35806946
+#&gt; 17   35804087
+#&gt; 18   35803485
+#&gt; 19   35101653
+#&gt; 20   35805350</code></pre>
+</div>
+</div>
+<div id="final-step-creating-the-regimen-ingredient-table" class="section level4">
+<h4>Final Step: Creating the Regimen Ingredient Table</h4>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">createRegimenIngrTable</span>(<span class="dt">conn =</span> conn,</span>
+<span id="cb10-2"><a href="#cb10-2"></a>                       <span class="dt">writeDatabaseSchema =</span> <span class="st">&quot;patelm9&quot;</span>,</span>
+<span id="cb10-3"><a href="#cb10-3"></a>                       <span class="dt">cohortTable =</span> <span class="st">&quot;oncoregimenfinder_cohort&quot;</span>,</span>
+<span id="cb10-4"><a href="#cb10-4"></a>                       <span class="dt">regimenTable =</span> <span class="st">&quot;oncoregimenfinder_regimen&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5"></a>                       <span class="dt">regimenIngredientTable =</span> <span class="st">&quot;oncoregimenfinder_regimen_ingredients&quot;</span>,</span>
+<span id="cb10-6"><a href="#cb10-6"></a>                       <span class="dt">vocabularyTable =</span> <span class="st">&quot;oncoregimenfinder_vocabulary&quot;</span>)</span></code></pre></div>
+<div id="regimen-ingredient-table" class="section level5">
+<h5>Regimen Ingredient Table</h5>
+<pre><code>#&gt;    person_id drug_exposure_id       ingredient ingredient_start_date
+#&gt; 1    1025547         22622707      vinblastine            2008-12-17
+#&gt; 2    1271520         34893307       venetoclax            2013-12-31
+#&gt; 3    1449473         40729495      trastuzumab            2017-11-20
+#&gt; 4    1082607         19442131     fluorouracil            2009-12-22
+#&gt; 5     629451           342822       paclitaxel            2005-07-01
+#&gt; 6    1211186         32074349        rituximab            2012-06-27
+#&gt; 7    1120207         27453081      oxaliplatin            2009-10-20
+#&gt; 8    1520243         42421502         eribulin            2020-04-09
+#&gt; 9    1228519         32911222     daunorubicin            2012-07-08
+#&gt; 10    878542           387249       paclitaxel            2003-03-04
+#&gt; 11    482408           254282        topotecan            2003-12-05
+#&gt; 12   1486426         41558518 cyclophosphamide            2018-05-21
+#&gt; 13   1189950         31088896     dactinomycin            2011-07-26
+#&gt; 14    284250          2466000      doxorubicin            1995-08-15
+#&gt; 15    246294           101300       paclitaxel            2007-11-09
+#&gt; 16   1006493         21681979      bevacizumab            2009-10-22
+#&gt; 17    989511           474075        rituximab            2006-03-13
+#&gt; 18   1450986         40783887        nivolumab            2018-05-03
+#&gt; 19    139729          1097232     streptozocin            1995-07-17
+#&gt; 20    901311         10812624     temsirolimus            2011-09-01
+#&gt;    ingredient_end_date                                            regimen
+#&gt; 1           2008-12-17                                        vinblastine
+#&gt; 2           2013-12-31                                         venetoclax
+#&gt; 3           2017-11-21                                        trastuzumab
+#&gt; 4           2009-12-22                           bevacizumab,fluorouracil
+#&gt; 5           2005-07-01                                         paclitaxel
+#&gt; 6           2012-06-27                                          rituximab
+#&gt; 7           2009-10-20                                        oxaliplatin
+#&gt; 8           2020-04-09                                           eribulin
+#&gt; 9           2012-07-10                            cytarabine,daunorubicin
+#&gt; 10          2003-03-04                             paclitaxel,trastuzumab
+#&gt; 11          2003-12-05                                          topotecan
+#&gt; 12          2018-05-23                       cyclophosphamide,doxorubicin
+#&gt; 13          2011-07-26                                       dactinomycin
+#&gt; 14          1995-08-16           cyclophosphamide,doxorubicin,vincristine
+#&gt; 15          2007-11-09                             carboplatin,paclitaxel
+#&gt; 16          2009-10-22                                        bevacizumab
+#&gt; 17          2006-03-13 cyclophosphamide,doxorubicin,rituximab,vincristine
+#&gt; 18          2018-05-04                                          nivolumab
+#&gt; 19          1995-07-18                carmustine,streptozocin,vincristine
+#&gt; 20          2011-09-01                                       temsirolimus
+#&gt;    hemonc_concept_id                    reg_name regimen_start_date
+#&gt; 1           35805839     Vinblastine monotherapy         2008-12-17
+#&gt; 2           35804617      Venetoclax monotherapy         2013-12-03
+#&gt; 3           35804222     Trastuzumab monotherapy         2017-11-20
+#&gt; 4                 NA                        &lt;NA&gt;         2009-12-22
+#&gt; 5           35804166      Paclitaxel monotherapy         2005-06-10
+#&gt; 6           35803432       Rituximab monotherapy         2012-06-27
+#&gt; 7           35805078     Oxaliplatin monotherapy         2009-10-20
+#&gt; 8           35804265        Eribulin monotherapy         2020-03-26
+#&gt; 9           35803442 Cytarabine and Daunorubicin         2012-07-04
+#&gt; 10          35804201                  TH (Taxol)         2003-02-25
+#&gt; 11          35804433       Topotecan monotherapy         2003-12-02
+#&gt; 12          35804199                          AC         2018-05-01
+#&gt; 13          35805247    Dactinomycin monotherapy         2011-07-12
+#&gt; 14          35806944                         CAV         1995-08-15
+#&gt; 15          35803572  Carboplatin and Paclitaxel         2007-11-09
+#&gt; 16          35803688     Bevacizumab monotherapy         2009-09-24
+#&gt; 17                NA                        &lt;NA&gt;         2006-02-13
+#&gt; 18          35803677       Nivolumab monotherapy         2018-05-03
+#&gt; 19                NA                        &lt;NA&gt;         1995-07-03
+#&gt; 20          35804432    Temsirolimus monotherapy         2011-08-18
+#&gt;    regimen_end_date
+#&gt; 1        2009-01-09
+#&gt; 2        2014-01-01
+#&gt; 3        2017-12-13
+#&gt; 4        2010-01-19
+#&gt; 5        2005-07-08
+#&gt; 6        2012-07-03
+#&gt; 7        2009-10-20
+#&gt; 8        2020-04-16
+#&gt; 9        2012-07-10
+#&gt; 10       2003-03-25
+#&gt; 11       2003-12-26
+#&gt; 12       2018-05-28
+#&gt; 13       2011-07-26
+#&gt; 14       1995-09-06
+#&gt; 15       2007-11-09
+#&gt; 16       2009-10-22
+#&gt; 17       2006-03-13
+#&gt; 18       2018-05-04
+#&gt; 19       1995-08-01
+#&gt; 20       2011-09-14</code></pre>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

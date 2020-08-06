@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>esophagus-redcap</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">esophagus-redcap</h1>
+
+
+
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(rlang)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rubix)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(OncoRegimenFinder)</span></code></pre></div>
+<pre><code>#&gt; Warning: replacing previous import &#39;R.cache::clearCache&#39; by &#39;pg13::clearCache&#39;
+#&gt; when loading &#39;fantasia&#39;</code></pre>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>The results of the 1) OncoRegimenFinder algorithm is compared to the 2) abstracted Esophagus REDCap cohort treatment data.</p>
+</div>
+<div id="esophagus-cohort-oncoregimenfinder" class="section level2">
+<h2>1. Esophagus Cohort OncoRegimenFinder</h2>
+<div id="source-tables" class="section level3">
+<h3>Source Tables:</h3>
+<ol style="list-style-type: decimal">
+<li>Esophagus Cohort Table<br />
+</li>
+<li>OncoRegimenFinder Regimen Ingredient Table</li>
+</ol>
+<p><strong>The Esophagus Cohort table <code>patelm9.esophagus_cohort</code></strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+project_cohort_mrn
+</th>
+<th style="text-align:left;">
+ptid
+</th>
+<th style="text-align:left;">
+project_cohort_source
+</th>
+<th style="text-align:right;">
+person_id
+</th>
+<th style="text-align:left;">
+mrn
+</th>
+<th style="text-align:right;">
+pt_deidentification_id
+</th>
+<th style="text-align:right;">
+patientid
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+00043478
+</td>
+<td style="text-align:left;">
+MSKEGC0082
+</td>
+<td style="text-align:left;">
+STGIEsophagogastricS_DATA_2020-06-24_1748
+</td>
+<td style="text-align:right;">
+42471
+</td>
+<td style="text-align:left;">
+00043478
+</td>
+<td style="text-align:right;">
+393502
+</td>
+<td style="text-align:right;">
+301504
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+00165329
+</td>
+<td style="text-align:left;">
+MSKEGC0083
+</td>
+<td style="text-align:left;">
+STGIEsophagogastricS_DATA_2020-06-24_1748
+</td>
+<td style="text-align:right;">
+110192
+</td>
+<td style="text-align:left;">
+00165329
+</td>
+<td style="text-align:right;">
+993175
+</td>
+<td style="text-align:right;">
+163341
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+00167176
+</td>
+<td style="text-align:left;">
+MSKEGC0084
+</td>
+<td style="text-align:left;">
+STGIEsophagogastricS_DATA_2020-06-24_1748
+</td>
+<td style="text-align:right;">
+112009
+</td>
+<td style="text-align:left;">
+00167176
+</td>
+<td style="text-align:right;">
+995242
+</td>
+<td style="text-align:right;">
+301508
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+00170650
+</td>
+<td style="text-align:left;">
+MSKEGC0009
+</td>
+<td style="text-align:left;">
+STGIEsophagogastricS_DATA_2020-06-24_1748
+</td>
+<td style="text-align:right;">
+115457
+</td>
+<td style="text-align:left;">
+00170650
+</td>
+<td style="text-align:right;">
+999682
+</td>
+<td style="text-align:right;">
+269485
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+00177521
+</td>
+<td style="text-align:left;">
+MSKEGC0096
+</td>
+<td style="text-align:left;">
+STGIEsophagogastricS_DATA_2020-06-24_1748
+</td>
+<td style="text-align:right;">
+122243
+</td>
+<td style="text-align:left;">
+00177521
+</td>
+<td style="text-align:right;">
+1007830
+</td>
+<td style="text-align:right;">
+135744
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+00178632
+</td>
+<td style="text-align:left;">
+MSKEGC0097
+</td>
+<td style="text-align:left;">
+STGIEsophagogastricS_DATA_2020-06-24_1748
+</td>
+<td style="text-align:right;">
+123332
+</td>
+<td style="text-align:left;">
+00178632
+</td>
+<td style="text-align:right;">
+1009058
+</td>
+<td style="text-align:right;">
+161112
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OncoRegimenFinder Regimen Ingredient Table <code>patelm9.oncoregimenfinder_regimen_ingredient</code></strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+person_id
+</th>
+<th style="text-align:right;">
+drug_exposure_id
+</th>
+<th style="text-align:left;">
+ingredient
+</th>
+<th style="text-align:left;">
+ingredient_start_date
+</th>
+<th style="text-align:left;">
+ingredient_end_date
+</th>
+<th style="text-align:left;">
+regimen
+</th>
+<th style="text-align:right;">
+hemonc_concept_id
+</th>
+<th style="text-align:left;">
+reg_name
+</th>
+<th style="text-align:left;">
+regimen_start_date
+</th>
+<th style="text-align:left;">
+regimen_end_date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1105323
+</td>
+<td style="text-align:right;">
+26639495
+</td>
+<td style="text-align:left;">
+irinotecan
+</td>
+<td style="text-align:left;">
+2014-10-14
+</td>
+<td style="text-align:left;">
+2014-10-14
+</td>
+<td style="text-align:left;">
+irinotecan
+</td>
+<td style="text-align:right;">
+35803692
+</td>
+<td style="text-align:left;">
+Irinotecan monotherapy
+</td>
+<td style="text-align:left;">
+2014-10-14
+</td>
+<td style="text-align:left;">
+2014-10-28
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+162602
+</td>
+<td style="text-align:right;">
+4812383
+</td>
+<td style="text-align:left;">
+cyclophosphamide
+</td>
+<td style="text-align:left;">
+1997-12-03
+</td>
+<td style="text-align:left;">
+1997-12-04
+</td>
+<td style="text-align:left;">
+cyclophosphamide,fluorouracil,methotrexate
+</td>
+<td style="text-align:right;">
+35804224
+</td>
+<td style="text-align:left;">
+CMF
+</td>
+<td style="text-align:left;">
+1997-11-12
+</td>
+<td style="text-align:left;">
+1997-12-04
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1488594
+</td>
+<td style="text-align:right;">
+41606348
+</td>
+<td style="text-align:left;">
+carfilzomib
+</td>
+<td style="text-align:left;">
+2019-03-05
+</td>
+<td style="text-align:left;">
+2019-03-05
+</td>
+<td style="text-align:left;">
+carfilzomib,daratumumab
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2019-02-05
+</td>
+<td style="text-align:left;">
+2019-03-05
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1507071
+</td>
+<td style="text-align:right;">
+42122197
+</td>
+<td style="text-align:left;">
+nivolumab
+</td>
+<td style="text-align:left;">
+2019-03-05
+</td>
+<td style="text-align:left;">
+2019-03-05
+</td>
+<td style="text-align:left;">
+nivolumab
+</td>
+<td style="text-align:right;">
+35803677
+</td>
+<td style="text-align:left;">
+Nivolumab monotherapy
+</td>
+<td style="text-align:left;">
+2019-02-05
+</td>
+<td style="text-align:left;">
+2019-03-05
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+171451
+</td>
+<td style="text-align:right;">
+83993
+</td>
+<td style="text-align:left;">
+paclitaxel
+</td>
+<td style="text-align:left;">
+2002-04-16
+</td>
+<td style="text-align:left;">
+2002-04-16
+</td>
+<td style="text-align:left;">
+paclitaxel
+</td>
+<td style="text-align:right;">
+35804166
+</td>
+<td style="text-align:left;">
+Paclitaxel monotherapy
+</td>
+<td style="text-align:left;">
+2002-04-16
+</td>
+<td style="text-align:left;">
+2002-04-16
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+393655
+</td>
+<td style="text-align:right;">
+172179
+</td>
+<td style="text-align:left;">
+fluorouracil
+</td>
+<td style="text-align:left;">
+1998-08-13
+</td>
+<td style="text-align:left;">
+1998-08-13
+</td>
+<td style="text-align:left;">
+fluorouracil
+</td>
+<td style="text-align:right;">
+35804769
+</td>
+<td style="text-align:left;">
+Fluorouracil monotherapy
+</td>
+<td style="text-align:left;">
+1998-08-06
+</td>
+<td style="text-align:left;">
+1998-08-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="sql" class="section level3">
+<h3>SQL</h3>
+<p>The following SQL is used to join the 2 Source Tables:</p>
+<pre><code>#&gt; SELECT 
+#&gt; patelm9.esophagus_cohort.person_id AS esophagus_person_id
+#&gt; ,patelm9.esophagus_cohort.ptid
+#&gt; ,patelm9.oncoregimenfinder_regimen_ingredients.*
+#&gt;  FROM patelm9.esophagus_cohort
+#&gt;  LEFT JOIN patelm9.oncoregimenfinder_regimen_ingredients ON patelm9.oncoregimenfinder_regimen_ingredients.person_id = patelm9.esophagus_cohort.person_id
+#&gt; ;</code></pre>
+<p><strong>Output</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+esophagus_person_id
+</th>
+<th style="text-align:left;">
+ptid
+</th>
+<th style="text-align:left;">
+person_id
+</th>
+<th style="text-align:left;">
+drug_exposure_id
+</th>
+<th style="text-align:left;">
+ingredient
+</th>
+<th style="text-align:left;">
+ingredient_start_date
+</th>
+<th style="text-align:left;">
+ingredient_end_date
+</th>
+<th style="text-align:left;">
+regimen
+</th>
+<th style="text-align:left;">
+hemonc_concept_id
+</th>
+<th style="text-align:left;">
+reg_name
+</th>
+<th style="text-align:left;">
+regimen_start_date
+</th>
+<th style="text-align:left;">
+regimen_end_date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+112009
+</td>
+<td style="text-align:left;">
+MSKEGC0084
+</td>
+<td style="text-align:left;">
+112009
+</td>
+<td style="text-align:left;">
+17696417
+</td>
+<td style="text-align:left;">
+oxaliplatin
+</td>
+<td style="text-align:left;">
+2018-05-21
+</td>
+<td style="text-align:left;">
+2018-05-22
+</td>
+<td style="text-align:left;">
+oxaliplatin
+</td>
+<td style="text-align:left;">
+35805078
+</td>
+<td style="text-align:left;">
+Oxaliplatin monotherapy
+</td>
+<td style="text-align:left;">
+2018-05-03
+</td>
+<td style="text-align:left;">
+2018-05-22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+112009
+</td>
+<td style="text-align:left;">
+MSKEGC0084
+</td>
+<td style="text-align:left;">
+112009
+</td>
+<td style="text-align:left;">
+17696416
+</td>
+<td style="text-align:left;">
+oxaliplatin
+</td>
+<td style="text-align:left;">
+2018-05-03
+</td>
+<td style="text-align:left;">
+2018-05-04
+</td>
+<td style="text-align:left;">
+oxaliplatin
+</td>
+<td style="text-align:left;">
+35805078
+</td>
+<td style="text-align:left;">
+Oxaliplatin monotherapy
+</td>
+<td style="text-align:left;">
+2018-05-03
+</td>
+<td style="text-align:left;">
+2018-05-22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+112009
+</td>
+<td style="text-align:left;">
+MSKEGC0084
+</td>
+<td style="text-align:left;">
+112009
+</td>
+<td style="text-align:left;">
+17696418
+</td>
+<td style="text-align:left;">
+oxaliplatin
+</td>
+<td style="text-align:left;">
+2018-06-05
+</td>
+<td style="text-align:left;">
+2018-06-06
+</td>
+<td style="text-align:left;">
+oxaliplatin
+</td>
+<td style="text-align:left;">
+35805078
+</td>
+<td style="text-align:left;">
+Oxaliplatin monotherapy
+</td>
+<td style="text-align:left;">
+2018-06-05
+</td>
+<td style="text-align:left;">
+2018-06-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+225659
+</td>
+<td style="text-align:left;">
+MSKEGC0103
+</td>
+<td style="text-align:left;">
+225659
+</td>
+<td style="text-align:left;">
+13532829
+</td>
+<td style="text-align:left;">
+ramucirumab
+</td>
+<td style="text-align:left;">
+2018-04-05
+</td>
+<td style="text-align:left;">
+2018-04-06
+</td>
+<td style="text-align:left;">
+ramucirumab
+</td>
+<td style="text-align:left;">
+35805372
+</td>
+<td style="text-align:left;">
+Ramucirumab monotherapy
+</td>
+<td style="text-align:left;">
+2018-04-05
+</td>
+<td style="text-align:left;">
+2018-04-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+239542
+</td>
+<td style="text-align:left;">
+MSKEGC0090
+</td>
+<td style="text-align:left;">
+239542
+</td>
+<td style="text-align:left;">
+6265129
+</td>
+<td style="text-align:left;">
+paclitaxel
+</td>
+<td style="text-align:left;">
+2015-01-29
+</td>
+<td style="text-align:left;">
+2015-01-29
+</td>
+<td style="text-align:left;">
+paclitaxel
+</td>
+<td style="text-align:left;">
+35804166
+</td>
+<td style="text-align:left;">
+Paclitaxel monotherapy
+</td>
+<td style="text-align:left;">
+2015-01-29
+</td>
+<td style="text-align:left;">
+2015-02-13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+239542
+</td>
+<td style="text-align:left;">
+MSKEGC0090
+</td>
+<td style="text-align:left;">
+239542
+</td>
+<td style="text-align:left;">
+6265130
+</td>
+<td style="text-align:left;">
+paclitaxel
+</td>
+<td style="text-align:left;">
+2015-02-05
+</td>
+<td style="text-align:left;">
+2015-02-05
+</td>
+<td style="text-align:left;">
+paclitaxel
+</td>
+<td style="text-align:left;">
+35804166
+</td>
+<td style="text-align:left;">
+Paclitaxel monotherapy
+</td>
+<td style="text-align:left;">
+2015-01-29
+</td>
+<td style="text-align:left;">
+2015-02-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="oncoregimenfinder-results-summary" class="section level2">
+<h2>OncoRegimenFinder Results Summary</h2>
+<div id="missingness" class="section level3">
+<h3>Missingness</h3>
+<p>Analysis of OncoRegimenFinder results shows that out of the unique OMOP Person Id count of 1428 patients in the Esophagus Cohort overall, only 582 Person Ids were resulted from OncoRegimenFinder.</p>
+Full Metrics:<br />
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:left;">
+COUNT
+</th>
+<th style="text-align:left;">
+DISTINCT_COUNT
+</th>
+<th style="text-align:left;">
+NA_COUNT
+</th>
+<th style="text-align:left;">
+NA_STR_COUNT
+</th>
+<th style="text-align:left;">
+BLANK_COUNT
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+esophagus_person_id
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+1428
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ptid
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+1428
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+person_id
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+582
+</td>
+<td style="text-align:left;">
+861
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+drug_exposure_id
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+6242
+</td>
+<td style="text-align:left;">
+861
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ingredient
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+40
+</td>
+<td style="text-align:left;">
+861
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ingredient_start_date
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+1533
+</td>
+<td style="text-align:left;">
+861
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ingredient_end_date
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+1625
+</td>
+<td style="text-align:left;">
+861
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+regimen
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+106
+</td>
+<td style="text-align:left;">
+861
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hemonc_concept_id
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+53
+</td>
+<td style="text-align:left;">
+1749
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+reg_name
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+53
+</td>
+<td style="text-align:left;">
+1749
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+regimen_start_date
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+1195
+</td>
+<td style="text-align:left;">
+861
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+regimen_end_date
+</td>
+<td style="text-align:left;">
+7725
+</td>
+<td style="text-align:left;">
+1225
+</td>
+<td style="text-align:left;">
+861
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="redcap-data" class="section level2">
+<h2>REDCap Data</h2>
+<p>The REDCap Data is exported as a tabular file and the main patient identifier and all variables associated with oncology treatments are selected.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2"></a>identifier_vars &lt;-<span class="st"> &quot;ptid&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>treatment_vars &lt;-</span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="st">          </span><span class="kw">c</span>(<span class="st">&#39;neoadj_regimen&#39;</span>,</span>
+<span id="cb4-5"><a href="#cb4-5"></a>          <span class="st">&#39;neoadj_tx_additional_drugs&#39;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6"></a>          <span class="st">&#39;neoadj_tx_addtl_drugs_2&#39;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7"></a>          <span class="st">&#39;crt_name&#39;</span>,</span>
+<span id="cb4-8"><a href="#cb4-8"></a>          <span class="st">&#39;neoadjcrt_tx_additional_drugs&#39;</span>,</span>
+<span id="cb4-9"><a href="#cb4-9"></a>          <span class="st">&#39;neoadjcrt_tx_addtl_drugs_2&#39;</span>,</span>
+<span id="cb4-10"><a href="#cb4-10"></a>          <span class="st">&#39;adj_regimen&#39;</span>,</span>
+<span id="cb4-11"><a href="#cb4-11"></a>          <span class="st">&#39;adj_tx_additional_drugs&#39;</span>,</span>
+<span id="cb4-12"><a href="#cb4-12"></a>          <span class="st">&#39;adj_tx_addtl_drugs_2&#39;</span>,</span>
+<span id="cb4-13"><a href="#cb4-13"></a>          <span class="st">&#39;adj_rt_concurrent&#39;</span>,</span>
+<span id="cb4-14"><a href="#cb4-14"></a>          <span class="st">&#39;adjcrt_tx_additional_drugs&#39;</span>,</span>
+<span id="cb4-15"><a href="#cb4-15"></a>          <span class="st">&#39;adjcrt_tx_addtl_drugs_2&#39;</span>,</span>
+<span id="cb4-16"><a href="#cb4-16"></a>          <span class="st">&#39;induction_regimen&#39;</span>,</span>
+<span id="cb4-17"><a href="#cb4-17"></a>          <span class="st">&#39;periop_neo_regimen&#39;</span>,</span>
+<span id="cb4-18"><a href="#cb4-18"></a>          <span class="st">&#39;periop_adj_regimen&#39;</span>,</span>
+<span id="cb4-19"><a href="#cb4-19"></a>          <span class="st">&#39;tx_name&#39;</span>,</span>
+<span id="cb4-20"><a href="#cb4-20"></a>          <span class="st">&#39;advanced_tx_additional_drugs&#39;</span>,</span>
+<span id="cb4-21"><a href="#cb4-21"></a>          <span class="st">&#39;advanced_tx_addtl_drugs_2&#39;</span>,</span>
+<span id="cb4-22"><a href="#cb4-22"></a>          <span class="st">&#39;tx_maintenance_drugs&#39;</span>,</span>
+<span id="cb4-23"><a href="#cb4-23"></a>          <span class="st">&#39;advanced_tx_addtl_drugsm1_1&#39;</span>,</span>
+<span id="cb4-24"><a href="#cb4-24"></a>          <span class="st">&#39;advanced_tx_addtl_drugsm1_2&#39;</span>,</span>
+<span id="cb4-25"><a href="#cb4-25"></a>          <span class="st">&#39;tx_maintenance2_drugs&#39;</span>,</span>
+<span id="cb4-26"><a href="#cb4-26"></a>          <span class="st">&#39;advanced_tx_addtl_drugsm2_1&#39;</span>,</span>
+<span id="cb4-27"><a href="#cb4-27"></a>          <span class="st">&#39;advanced_tx_addtl_drugsm2_2&#39;</span>,</span>
+<span id="cb4-28"><a href="#cb4-28"></a>          <span class="st">&#39;palliative_rt_concurrent&#39;</span>,</span>
+<span id="cb4-29"><a href="#cb4-29"></a>          <span class="st">&#39;neoadj_tx_base_regimen&#39;</span>,</span>
+<span id="cb4-30"><a href="#cb4-30"></a>          <span class="st">&#39;neoadjcrt_tx_base_regimen&#39;</span>,</span>
+<span id="cb4-31"><a href="#cb4-31"></a>          <span class="st">&#39;adj_tx_base_regimen&#39;</span>,</span>
+<span id="cb4-32"><a href="#cb4-32"></a>          <span class="st">&#39;adjcrt_tx_base_regimen&#39;</span>,</span>
+<span id="cb4-33"><a href="#cb4-33"></a>          <span class="st">&#39;advanced_tx_base_regimen&#39;</span>,</span>
+<span id="cb4-34"><a href="#cb4-34"></a>          <span class="st">&#39;regimen_name_m1&#39;</span>,</span>
+<span id="cb4-35"><a href="#cb4-35"></a>          <span class="st">&#39;regimen_name_m2&#39;</span>,</span>
+<span id="cb4-36"><a href="#cb4-36"></a>          <span class="st">&#39;hipec_drugs&#39;</span>)</span></code></pre></div>
+<p>For each of the Variables, a copy of the REDCap Data is selected for the Patient Identifier (<code>ptid</code>) and the Variable, as well as any associated Start and Stop Dates and placed in a list object.</p>
+<p>The output is a list of the length of the <code>treament_vars</code>, where each position of the list occupied by the Patient Identifier, the treatment_var, and all the possible date data associated with that treatment. Unlike other REDCap projects where there is a single set of start and end dates associated with the treatment, the Esophagus REDCap took it an extra step by including valuable clinical context information in their data collection. For example, the Variable <code>regimen_name_2</code> has the following possible dates: tx_start-tx_stop, tx_pre_maintenance_start-tx_pre_maintenance_stop, and tx_pre_maintenance2_start-tx_pre_maintenance2_stop.</p>
+<pre><code>#&gt; # A tibble: 32 x 8
+#&gt;    ptid  regimen_name_m2 tx_start tx_maintenance_… tx_maintenance2…
+#&gt;    &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt;    &lt;chr&gt;            &lt;chr&gt;           
+#&gt;  1 MSKE… FOLFOX + Trast… 2016-12… 2017-02-08       2019-08-14      
+#&gt;  2 MSKE… Other           2017-02… 2017-06-08       2017-12-11      
+#&gt;  3 MSKE… Pembrolizumab   2017-03… 2017-10-03       2019-10-09      
+#&gt;  4 MSKE… CAPOX +Trastuz… 2017-04… 2017-10-12       2018-05-10      
+#&gt;  5 MSKE… CAPOX +Trastuz… 2017-05… 2017-10-25       2018-06-13      
+#&gt;  6 MSKE… CAPOX +Trastuz… 2018-08… 2019-03-13       2019-05-22      
+#&gt;  7 MSKE… 5-FU+Trastuzum… 2019-01… 2019-03-06       2019-08-07      
+#&gt;  8 MSKE… FOLFOX (5-FU +… 2016-08… 2016-12-05       2017-03-06      
+#&gt;  9 MSKE… FOLFIRI (5-FU … 2019-03… 2019-07-03       2019-08-21      
+#&gt; 10 MSKE… Capecitabine    2019-07… 2019-11-20       2020-02-05      
+#&gt; # … with 22 more rows, and 3 more variables: tx_pre_maintenance_stop &lt;chr&gt;,
+#&gt; #   tx_pre_maintenance2_stop &lt;chr&gt;, tx_stop &lt;chr&gt;</code></pre>
+<p>For this particular project, 21 Variables have more than 1 set of start-stop dates for treatments due to contextual differences.</p>
+<p>In order to manage the one-to-many relationship between a treatment and the contextual start and stop dates, the all the date Variables data are pivoted and the context is separated from the <code>DateType</code>, whether the <code>Date</code> represents a start or stop of a treatment.</p>
+<pre><code>#&gt; # A tibble: 14,646 x 6
+#&gt;    VARIABLE       ptid       PV     Context   DateType   Date      
+#&gt;    &lt;chr&gt;          &lt;chr&gt;      &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;     
+#&gt;  1 neoadj_regimen MSKEGC0040 FOLFOX neoadj    start      2018-04-05
+#&gt;  2 neoadj_regimen MSKEGC0040 FOLFOX crt       start_date &lt;NA&gt;      
+#&gt;  3 neoadj_regimen MSKEGC0040 FOLFOX adj       start      &lt;NA&gt;      
+#&gt;  4 neoadj_regimen MSKEGC0040 FOLFOX adj_rt    start      &lt;NA&gt;      
+#&gt;  5 neoadj_regimen MSKEGC0040 FOLFOX induction start      &lt;NA&gt;      
+#&gt;  6 neoadj_regimen MSKEGC0040 FOLFOX neoadj    stop       2018-06-07
+#&gt;  7 neoadj_regimen MSKEGC0040 FOLFOX crt       stop_date  &lt;NA&gt;      
+#&gt;  8 neoadj_regimen MSKEGC0040 FOLFOX adj       stop       &lt;NA&gt;      
+#&gt;  9 neoadj_regimen MSKEGC0040 FOLFOX adj_rt    stop       &lt;NA&gt;      
+#&gt; 10 neoadj_regimen MSKEGC0040 FOLFOX induction stop       &lt;NA&gt;      
+#&gt; # … with 14,636 more rows</code></pre>
+<p>Lastly, the data is massaged into the Patient Events Table Format, thereby successfully isolating the start-stop date concept pairs to a single observation level. At this stage any rows where both the Event Start and End Date are NA or blank are filtered out.</p>
+<pre><code>#&gt; # A tibble: 10,868 x 6
+#&gt;    VARIABLE       ptid       PV     Context   EVENT_START_DATE EVENT_END_DATE
+#&gt;    &lt;chr&gt;          &lt;chr&gt;      &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;         
+#&gt;  1 neoadj_regimen MSKEGC0040 FOLFOX neoadj    2018-04-05       2018-06-07    
+#&gt;  2 neoadj_regimen MSKEGC0040 FOLFOX crt       NA               NA            
+#&gt;  3 neoadj_regimen MSKEGC0040 FOLFOX adj       NA               NA            
+#&gt;  4 neoadj_regimen MSKEGC0040 FOLFOX adj_rt    NA               NA            
+#&gt;  5 neoadj_regimen MSKEGC0040 FOLFOX induction NA               NA            
+#&gt;  6 neoadj_regimen MSKEGC0042 FLOT   neoadj    2017-11-30       2018-01-10    
+#&gt;  7 neoadj_regimen MSKEGC0042 FLOT   crt       NA               NA            
+#&gt;  8 neoadj_regimen MSKEGC0042 FLOT   adj       2018-04-25       2018-05-09    
+#&gt;  9 neoadj_regimen MSKEGC0042 FLOT   adj_rt    NA               NA            
+#&gt; 10 neoadj_regimen MSKEGC0042 FLOT   induction NA               NA            
+#&gt; # … with 10,858 more rows</code></pre>
+<p>The REDCap Data is then joined with the Esophagus Cohort Data on the <code>ptid</code> Variable to be able to map the data back to the OMOP Person Id. The Event Date columns are copied to additional <code>NORMALIZE</code> columns. These columns will also be added to the OncoRegimenFinder results in order to perform a union and to compare the accuracy between the 2 data sources.</p>
+<pre><code>#&gt; Joining, by = &quot;ptid&quot;
+#&gt; # A tibble: 4,495 x 9
+#&gt;    VARIABLE ptid  PV    Context EVENT_START_DATE EVENT_END_DATE person_id
+#&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;            &lt;chr&gt;              &lt;dbl&gt;
+#&gt;  1 neoadj_… MSKE… FOLF… neoadj  2018-04-05       2018-06-07        859261
+#&gt;  2 neoadj_… MSKE… FLOT  neoadj  2017-11-30       2018-01-10       1199120
+#&gt;  3 neoadj_… MSKE… FLOT  adj     2018-04-25       2018-05-09       1199120
+#&gt;  4 neoadj_… MSKE… EOX … neoadj  2017-03-01       &lt;NA&gt;             1421563
+#&gt;  5 neoadj_… MSKE… FOLF… neoadj  2017-08-02       2017-08-02       1284231
+#&gt;  6 neoadj_… MSKE… FLOT  neoadj  2018-10-16       2018-11-27       1295920
+#&gt;  7 neoadj_… MSKE… Cape… adj     2018-05-24       2018-07-11       1308346
+#&gt;  8 neoadj_… MSKE… Cape… neoadj  2014-12-26       2015-01-16       1327098
+#&gt;  9 neoadj_… MSKE… Cape… adj     2015-04-22       2015-06-01       1327098
+#&gt; 10 neoadj_… MSKE… mDCF  neoadj  2015-08-31       2016-01-14       1355614
+#&gt; # … with 4,485 more rows, and 2 more variables: NORMALIZE_START_DATE &lt;chr&gt;,
+#&gt; #   NORMALIZE_END_DATE &lt;chr&gt;</code></pre>
+<p>To prepare the REDCap Data for the join with the OncoRegimenFinder results for a side-by-side comparison, the last step is grouping the REDCap Data by Person Id.</p>
+<p>The OncoRegimenFinder results is also be grouped based on Person Id, allowing for specific joins at the person level after copying the Date data into their corresponding <code>NORMALIZE</code> columns.</p>
+<pre><code>#&gt; # A tibble: 7,725 x 14
+#&gt;    esophagus_perso… ptid  person_id drug_exposure_id ingredient ingredient_star…
+#&gt;    &lt;chr&gt;            &lt;chr&gt;     &lt;int&gt; &lt;chr&gt;            &lt;chr&gt;      &lt;chr&gt;           
+#&gt;  1 112009           MSKE…    112009 17696417         oxaliplat… 2018-05-21      
+#&gt;  2 112009           MSKE…    112009 17696416         oxaliplat… 2018-05-03      
+#&gt;  3 112009           MSKE…    112009 17696418         oxaliplat… 2018-06-05      
+#&gt;  4 225659           MSKE…    225659 13532829         ramucirum… 2018-04-05      
+#&gt;  5 239542           MSKE…    239542 6265129          paclitaxel 2015-01-29      
+#&gt;  6 239542           MSKE…    239542 6265130          paclitaxel 2015-02-05      
+#&gt;  7 239542           MSKE…    239542 6265131          paclitaxel 2015-02-13      
+#&gt;  8 239542           MSKE…    239542 6265139          oxaliplat… 2015-03-03      
+#&gt;  9 239542           MSKE…    239542 6265140          oxaliplat… 2015-03-17      
+#&gt; 10 239542           MSKE…    239542 6265141          oxaliplat… 2015-03-31      
+#&gt; # … with 7,715 more rows, and 8 more variables: ingredient_end_date &lt;chr&gt;,
+#&gt; #   regimen &lt;chr&gt;, hemonc_concept_id &lt;chr&gt;, reg_name &lt;chr&gt;,
+#&gt; #   regimen_start_date &lt;chr&gt;, regimen_end_date &lt;chr&gt;,
+#&gt; #   NORMALIZE_START_DATE &lt;chr&gt;, NORMALIZE_END_DATE &lt;chr&gt;</code></pre>
+<p>The data from both sources are then blended, with a <code>DATA_SOURCE</code> column to demarcate whether the source was OMOP or REDCap.</p>
+</div>
+<div id="notably-incorrect" class="section level2">
+<h2>Notably Incorrect</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">print</span>(final_output<span class="op">$</span><span class="st">`</span><span class="dt">1558617</span><span class="st">`</span>)</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="co">#&gt; # A tibble: 12 x 20</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="co">#&gt;    DATA_SOURCE VARIABLE ptid  PV    Context EVENT_START_DATE EVENT_</span><span class="re">END</span><span class="co">_DATE</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;            &lt;chr&gt;         </span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="co">#&gt;  1 REDCAP      tx_name  MSKE… FLOT  tx      2019-04-24       2020-01-30    </span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="co">#&gt;  2 REDCAP      tx_name  MSKE… FLOT  tx_mai… 2019-11-07       &lt;NA&gt;          </span></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="co">#&gt;  3 REDCAP      tx_name  MSKE… FLOT  tx_pre… &lt;NA&gt;             2019-06-10    </span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="co">#&gt;  4 REDCAP      tx_main… MSKE… FOLF… tx      2019-04-24       2020-01-30    </span></span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="co">#&gt;  5 REDCAP      tx_main… MSKE… FOLF… tx_mai… 2019-11-07       &lt;NA&gt;          </span></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="co">#&gt;  6 REDCAP      tx_main… MSKE… FOLF… tx_pre… &lt;NA&gt;             2019-06-10    </span></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="co">#&gt;  7 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="co">#&gt;  8 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="co">#&gt;  9 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="co">#&gt; 10 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-15"><a href="#cb10-15"></a><span class="co">#&gt; 11 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="co">#&gt; 12 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-17"><a href="#cb10-17"></a><span class="co">#&gt; # … with 13 more variables: person_id &lt;dbl&gt;, NORMALIZE_START_DATE &lt;chr&gt;,</span></span>
+<span id="cb10-18"><a href="#cb10-18"></a><span class="co">#&gt; #   NORMALIZE_</span><span class="re">END</span><span class="co">_DATE &lt;chr&gt;, esophagus_person_id &lt;chr&gt;,</span></span>
+<span id="cb10-19"><a href="#cb10-19"></a><span class="co">#&gt; #   drug_exposure_id &lt;chr&gt;, ingredient &lt;chr&gt;, ingredient_start_date &lt;chr&gt;,</span></span>
+<span id="cb10-20"><a href="#cb10-20"></a><span class="co">#&gt; #   ingredient_end_date &lt;chr&gt;, regimen &lt;chr&gt;, hemonc_concept_id &lt;chr&gt;,</span></span>
+<span id="cb10-21"><a href="#cb10-21"></a><span class="co">#&gt; #   reg_name &lt;chr&gt;, regimen_start_date &lt;chr&gt;, regimen_end_date &lt;chr&gt;</span></span>
+<span id="cb10-22"><a href="#cb10-22"></a><span class="kw">print</span>(final_output<span class="op">$</span><span class="st">`</span><span class="dt">1557156</span><span class="st">`</span>)</span>
+<span id="cb10-23"><a href="#cb10-23"></a><span class="co">#&gt; # A tibble: 14 x 20</span></span>
+<span id="cb10-24"><a href="#cb10-24"></a><span class="co">#&gt;    DATA_SOURCE VARIABLE ptid  PV    Context EVENT_START_DATE EVENT_</span><span class="re">END</span><span class="co">_DATE</span></span>
+<span id="cb10-25"><a href="#cb10-25"></a><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;            &lt;chr&gt;         </span></span>
+<span id="cb10-26"><a href="#cb10-26"></a><span class="co">#&gt;  1 REDCAP      crt_name MSKE… Durv… crt     2019-10-16       2019-12-10    </span></span>
+<span id="cb10-27"><a href="#cb10-27"></a><span class="co">#&gt;  2 REDCAP      crt_name MSKE… Durv… induct… 2019-09-18       2019-10-02    </span></span>
+<span id="cb10-28"><a href="#cb10-28"></a><span class="co">#&gt;  3 REDCAP      inducti… MSKE… Folf… crt     2019-10-16       2019-12-10    </span></span>
+<span id="cb10-29"><a href="#cb10-29"></a><span class="co">#&gt;  4 REDCAP      inducti… MSKE… Folf… induct… 2019-09-18       2019-10-02    </span></span>
+<span id="cb10-30"><a href="#cb10-30"></a><span class="co">#&gt;  5 REDCAP      tx_name  MSKE… Folf… tx      2020-01-27       &lt;NA&gt;          </span></span>
+<span id="cb10-31"><a href="#cb10-31"></a><span class="co">#&gt;  6 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-32"><a href="#cb10-32"></a><span class="co">#&gt;  7 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-33"><a href="#cb10-33"></a><span class="co">#&gt;  8 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-34"><a href="#cb10-34"></a><span class="co">#&gt;  9 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-35"><a href="#cb10-35"></a><span class="co">#&gt; 10 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-36"><a href="#cb10-36"></a><span class="co">#&gt; 11 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-37"><a href="#cb10-37"></a><span class="co">#&gt; 12 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-38"><a href="#cb10-38"></a><span class="co">#&gt; 13 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-39"><a href="#cb10-39"></a><span class="co">#&gt; 14 OMOP        &lt;NA&gt;     MSKE… &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;             &lt;NA&gt;          </span></span>
+<span id="cb10-40"><a href="#cb10-40"></a><span class="co">#&gt; # … with 13 more variables: person_id &lt;dbl&gt;, NORMALIZE_START_DATE &lt;chr&gt;,</span></span>
+<span id="cb10-41"><a href="#cb10-41"></a><span class="co">#&gt; #   NORMALIZE_</span><span class="re">END</span><span class="co">_DATE &lt;chr&gt;, esophagus_person_id &lt;chr&gt;,</span></span>
+<span id="cb10-42"><a href="#cb10-42"></a><span class="co">#&gt; #   drug_exposure_id &lt;chr&gt;, ingredient &lt;chr&gt;, ingredient_start_date &lt;chr&gt;,</span></span>
+<span id="cb10-43"><a href="#cb10-43"></a><span class="co">#&gt; #   ingredient_end_date &lt;chr&gt;, regimen &lt;chr&gt;, hemonc_concept_id &lt;chr&gt;,</span></span>
+<span id="cb10-44"><a href="#cb10-44"></a><span class="co">#&gt; #   reg_name &lt;chr&gt;, regimen_start_date &lt;chr&gt;, regimen_end_date &lt;chr&gt;</span></span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
