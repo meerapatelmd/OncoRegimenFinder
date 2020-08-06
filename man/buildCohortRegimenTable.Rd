@@ -13,7 +13,8 @@ buildCohortRegimenTable(
   cohortTable,
   regimenTable,
   renameCurrentTables = TRUE,
-  drug_classification_id_input
+  drug_classification_id_input,
+  false_positive_id = OncoRegimenFinder::falsepositives
 )
 }
 \arguments{

@@ -13,3 +13,5 @@ Timestamp	Activity Type	Function	File	Details
 2020-08-05 23:35:27	read	simply_read_csv	data-raw/falsepositives.csv	
 2020-08-05 23:36:30	read	simply_read_csv	data-raw/topclasses.csv	
 2020-08-05 23:36:30	read	simply_read_csv	data-raw/falsepositives.csv	
+2020-08-05 23:49:53	read	simply_read_csv	data-raw/topclasses.csv	
+2020-08-05 23:49:53	read	simply_read_csv	data-raw/falsepositives.csv	

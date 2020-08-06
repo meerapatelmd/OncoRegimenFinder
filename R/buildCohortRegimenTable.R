@@ -15,7 +15,8 @@ buildCohortRegimenTable <-
                  cohortTable,
                  regimenTable,
                  renameCurrentTables = TRUE,
-                 drug_classification_id_input) {
+                 drug_classification_id_input,
+                 false_positive_id = OncoRegimenFinder::falsepositives) {
 
                 cohortTable <- toupper(cohortTable)
                 regimenTable <- toupper(regimenTable)
@@ -70,7 +71,8 @@ buildCohortRegimenTable <-
                                                          writeDatabaseSchema = writeDatabaseSchema,
                                                          cohortTable = cohortTable,
                                                          regimenTable = regimenTable,
-                                                         drug_classification_id_input = drug_classification_id_input))
+                                                         drug_classification_id_input = drug_classification_id_input,
+                                                  false_positive_id = false_positive_id))
 
 
                         }
