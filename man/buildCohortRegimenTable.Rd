@@ -12,19 +12,41 @@ buildCohortRegimenTable(
   writeDatabaseSchema,
   cohortTable,
   regimenTable,
-  renameCurrentTables = TRUE,
-  drug_classification_id_input,
+  drug_classification_id_input = c(OncoRegimenFinder::atc_antineoplastic_id,
+    OncoRegimenFinder::hemonc_classes),
   false_positive_id = OncoRegimenFinder::falsepositives
 )
 }
 \arguments{
-\item{cohortDefinitionId}{Optional. Cohort Definition Id in the \code{cdmResultSchema}}
+\item{conn}{Connection object to the database engine}
 
-\item{cohortDefinitionIdSchema}{Optional. Schema where the the cohort and cohort definition ID point to.}
+\item{cdmDatabaseSchema}{Source CDM Drug Exposure Table schema}
+
+\item{cohortDefinitionId}{(optional) Cohort Definition Id that filters the CDM Drug Exposure Table to create cohort-specific tables, if desired.}
+
+\item{cohortDefinitionIdSchema}{(optional) If a \code{cohortDefinitionId} is provided, the schema in which the cohort table is located.}
+
+\item{writeDatabaseSchema}{Schema where the OncoRegimenFinder tables will be written to.}
+
+\item{cohortTable}{Name of the Cohort Table OncoRegimenFinder requires to execute the algorithm}
+
+\item{regimenTable}{Name of the Regimen Table OncoRegimen will execute the algorithm on.}
+
+\item{drug_classification_id_input}{OMOP Concept Ids for Drug Classes curated from the OMOP Vocabulary that are used to identify antineoplastic drugs in the Drug Exposures Table. OncoRegimenFinder is packaged with a default vector of values (c(OncoRegimenFinder::atc_antineoplastic_id, OncoRegimenFinder::hemonc_classes)).}
+
+\item{false_positive_id}{OMOP Concept Ids for Drugs that are often classified as antineoplastics, but are more likely be used in a non-cancer clinical setting, such as retinoids and certain antibiotics. Default: OncoRegimenFinder::falsepositives.}
 }
 \value{
-The Cohort and Regimen Tables in the writeDatabaseSchema
+Cohort, Regimen, and Regimen Staging Tables in the \code{writeDatabaseSchema}
 }
 \description{
-Build the Cohort and Regimen Tables
+This function builds the Cohort and Regimen Tables for the algorithm the derives the antineoplastic combinations. Since the Regimen Table will be directly transformed via the algorithm, a copy of the Regimen Table is made as a Regimen Staging Table to reference back to for optimization and bug fixing purposes.
+}
+\details{
+If the Cohort, Regimen, and Regimen Staging Tables already exist, these tables are renamed with the system date appended in the format "{_YYYY_MM_DD}". The renaming is skipped and the existing Cohort, Regimen and Regimen Staging Tables are dropped if the dated table already exists, indicating that the OncoRegimenFinder was already run once for that system date.
+}
+\seealso{
+\code{\link[OncoRegimenFinder]{atc_antineoplastic_id}},\code{\link[OncoRegimenFinder]{hemonc_classes}},\code{\link[OncoRegimenFinder]{falsepositives}}
+\code{\link[pg13]{lsTables}},\code{\link[pg13]{renameTable}},\code{\link[pg13]{appendDate}},\code{\link[pg13]{execute}}
+\code{\link[SqlRender]{render}},\code{\link[SqlRender]{readSql}}
 }

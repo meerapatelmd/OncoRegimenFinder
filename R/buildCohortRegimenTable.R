@@ -1,17 +1,16 @@
 #' @title Build the Cohort and Regimen Tables
 #' @description 
-#' This function builds the Cohort and Regimen Tables for the algorithm the derives the antineoplastic combinations. Since the Regimen Table will be directly transformed via the algorithm, a copy of the Regimen Table is made as a Regimen Staging Table to reference back to for optimization and bug fixing purposes. If a Cohort and Regimen Table already
+#' This function builds the Cohort and Regimen Tables for the algorithm the derives the antineoplastic combinations. Since the Regimen Table will be directly transformed via the algorithm, a copy of the Regimen Table is made as a Regimen Staging Table to reference back to for optimization and bug fixing purposes.
 #' 
-#' @param conn PARAM_DESCRIPTION
-#' @param cdmDatabaseSchema PARAM_DESCRIPTION
-#' @param cohortDefinitionId Optional. Cohort Definition Id in the `cdmResultSchema`
-#' @param cohortDefinitionIdSchema Optional. Schema where the the cohort and cohort definition ID point to.
-#' @param writeDatabaseSchema PARAM_DESCRIPTION
-#' @param cohortTable PARAM_DESCRIPTION
-#' @param regimenTable PARAM_DESCRIPTION
-#' @param renameCurrentTables PARAM_DESCRIPTION, Default: TRUE
-#' @param drug_classification_id_input PARAM_DESCRIPTION, Default: c(OncoRegimenFinder::atc_antineoplastic_id, OncoRegimenFinder::hemonc_classes)
-#' @param false_positive_id PARAM_DESCRIPTION, Default: OncoRegimenFinder::falsepositives
+#' @param conn                          Connection object to the database engine  
+#' @param cdmDatabaseSchema             Source CDM Drug Exposure Table schema  
+#' @param cohortDefinitionId            (optional) Cohort Definition Id that filters the CDM Drug Exposure Table to create cohort-specific tables, if desired.
+#' @param cohortDefinitionIdSchema      (optional) If a `cohortDefinitionId` is provided, the schema in which the cohort table is located.
+#' @param writeDatabaseSchema           Schema where the OncoRegimenFinder tables will be written to.
+#' @param cohortTable                   Name of the Cohort Table OncoRegimenFinder requires to execute the algorithm
+#' @param regimenTable                  Name of the Regimen Table OncoRegimen will execute the algorithm on.
+#' @param drug_classification_id_input  OMOP Concept Ids for Drug Classes curated from the OMOP Vocabulary that are used to identify antineoplastic drugs in the Drug Exposures Table. OncoRegimenFinder is packaged with a default vector of values (c(OncoRegimenFinder::atc_antineoplastic_id, OncoRegimenFinder::hemonc_classes)).   
+#' @param false_positive_id             OMOP Concept Ids for Drugs that are often classified as antineoplastics, but are more likely be used in a non-cancer clinical setting, such as retinoids and certain antibiotics. Default: OncoRegimenFinder::falsepositives.
 #' @return  
 #' Cohort, Regimen, and Regimen Staging Tables in the `writeDatabaseSchema`
 #' @details 
@@ -22,11 +21,8 @@
 #'  \code{\link[SqlRender]{render}},\code{\link[SqlRender]{readSql}}
 #' @rdname buildCohortRegimenTable
 #' @export 
-#' @importFrom OncoRegimenFinder atc_antineoplastic_id hemonc_classes falsepositives
 #' @importFrom pg13 lsTables renameTable appendDate execute
 #' @importFrom SqlRender render readSql
-
-
 
 buildCohortRegimenTable <-
         function(conn,
@@ -36,7 +32,6 @@ buildCohortRegimenTable <-
                  writeDatabaseSchema,
                  cohortTable,
                  regimenTable,
-                 renameCurrentTables = TRUE,
                  drug_classification_id_input = c(OncoRegimenFinder::atc_antineoplastic_id,
                                                   OncoRegimenFinder::hemonc_classes),
                  false_positive_id = OncoRegimenFinder::falsepositives) {
@@ -45,66 +40,63 @@ buildCohortRegimenTable <-
                 regimenTable <- toupper(regimenTable)
                 regimenStagingTable <- toupper(paste0(regimenTable, "_staging"))
 
-                if (renameCurrentTables) {
+                Tables <- pg13::lsTables(conn = conn,
+                                         schema = writeDatabaseSchema)
 
-                        Tables <- pg13::lsTables(conn = conn,
-                                                 schema = writeDatabaseSchema)
-
-                        if (cohortTable %in% Tables) {
-                                
-                                newTableName <- pg13::appendDate(cohortTable)
-                                
-                                if (!(newTableName %in% Tables)) {
-                                
-                                        pg13::renameTable(conn = conn,
-                                                          schema = writeDatabaseSchema,
-                                                          tableName = cohortTable,
-                                                          newTableName = newTableName)
-                                } else {
-                                        
-                                        pg13::dropTable(conn = conn,
-                                                        schema = writeDatabaseSchema,
-                                                        tableName = cohortTable)
-                                        
-                                }
-                        }
-
-
-                        if (regimenTable %in% Tables) {
-                                
-                                newTableName <- pg13::appendDate(regimenTable)
-                                
-                                if (!(newTableName %in% Tables)) {
-                                
-                                        pg13::renameTable(conn = conn,
-                                                          schema = writeDatabaseSchema,
-                                                          tableName = regimenTable,
-                                                          newTableName = newTableName)
-                                } else {
-                                        pg13::dropTable(conn = conn,
-                                                        schema = writeDatabaseSchema,
-                                                        tableName = regimenTable)
-                                }
-                        }
+                if (cohortTable %in% Tables) {
                         
-                        if (regimenStagingTable %in% Tables) {
+                        newTableName <- pg13::appendDate(cohortTable)
+                        
+                        if (!(newTableName %in% Tables)) {
+                        
+                                pg13::renameTable(conn = conn,
+                                                  schema = writeDatabaseSchema,
+                                                  tableName = cohortTable,
+                                                  newTableName = newTableName)
+                        } else {
                                 
-                                newTableName <- pg13::appendDate(regimenStagingTable)
+                                pg13::dropTable(conn = conn,
+                                                schema = writeDatabaseSchema,
+                                                tableName = cohortTable)
                                 
-                                if (!(newTableName %in% Tables)) {
-                                        
-                                        pg13::renameTable(conn = conn,
-                                                          schema = writeDatabaseSchema,
-                                                          tableName = regimenStagingTable,
-                                                          newTableName = newTableName)
-                                } else {
-                                        pg13::dropTable(conn = conn,
-                                                        schema = writeDatabaseSchema,
-                                                        tableName = regimenStagingTable)
-                                }
                         }
-
                 }
+
+
+                if (regimenTable %in% Tables) {
+                        
+                        newTableName <- pg13::appendDate(regimenTable)
+                        
+                        if (!(newTableName %in% Tables)) {
+                        
+                                pg13::renameTable(conn = conn,
+                                                  schema = writeDatabaseSchema,
+                                                  tableName = regimenTable,
+                                                  newTableName = newTableName)
+                        } else {
+                                pg13::dropTable(conn = conn,
+                                                schema = writeDatabaseSchema,
+                                                tableName = regimenTable)
+                        }
+                }
+                
+                if (regimenStagingTable %in% Tables) {
+                        
+                        newTableName <- pg13::appendDate(regimenStagingTable)
+                        
+                        if (!(newTableName %in% Tables)) {
+                                
+                                pg13::renameTable(conn = conn,
+                                                  schema = writeDatabaseSchema,
+                                                  tableName = regimenStagingTable,
+                                                  newTableName = newTableName)
+                        } else {
+                                pg13::dropTable(conn = conn,
+                                                schema = writeDatabaseSchema,
+                                                tableName = regimenStagingTable)
+                        }
+                }
+
 
                 if (!is.null(cohortDefinitionId)) {
                                 pg13::execute(conn,

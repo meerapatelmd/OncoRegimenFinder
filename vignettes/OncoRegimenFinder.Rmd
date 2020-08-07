@@ -4,7 +4,7 @@ description: >
     Learn how to write the OncoRegimenFinder Tables
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{setup-maintenance}
+  %\VignetteIndexEntry{ntroduction to OncoRegimenFinder}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,11 +22,10 @@ The goal of OncoRegimenFinder is to write tables that derive antineoplastic drug
 
 It is important to note that the procedure shown below will run an algorithm with a set `date_lag_input` and `regimen_repeats` across the entire OMOP CDM Drug Exposure Table. Though the ultimate goal is to enable retrieval of derived drug combinations from the final `writeDatabaseSchema.regimenIngredientTable` via a join on the `person_id` field, specific cohorts may require different `date_lag_input` and `regimen_repeats`. For example, esophageal carcinoma patients tend to have regimens executed in blocks of 2 weeks instead of 30 days and the algorithm may return more accurate results with a `date_lag_input` of 15 days. In these cases, it is recommended to rerun this process on the specific cohort in a cohort-specific set of tables.  
 
-### Package Load
+### Package Load  
 
 ```{r setup, echo=TRUE,eval=TRUE,message=FALSE,results="hide"}
 library(OncoRegimenFinder)
-library(tidyverse)
 ```
 
 ```{r, echo=FALSE,eval=TRUE,message=FALSE,results="hide"}
