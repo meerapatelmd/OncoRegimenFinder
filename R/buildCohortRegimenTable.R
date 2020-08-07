@@ -1,10 +1,32 @@
-#' Build the Cohort and Regimen Tables
-#' @import SqlRender
-#' @import pg13
-#' @return The Cohort and Regimen Tables in the writeDatabaseSchema
+#' @title Build the Cohort and Regimen Tables
+#' @description 
+#' This function builds the Cohort and Regimen Tables for the algorithm the derives the antineoplastic combinations. Since the Regimen Table will be directly transformed via the algorithm, a copy of the Regimen Table is made as a Regimen Staging Table to reference back to for optimization and bug fixing purposes. If a Cohort and Regimen Table already
+#' 
+#' @param conn PARAM_DESCRIPTION
+#' @param cdmDatabaseSchema PARAM_DESCRIPTION
 #' @param cohortDefinitionId Optional. Cohort Definition Id in the `cdmResultSchema`
-#' @param cohortDefinitionIdSchema  Optional. Schema where the the cohort and cohort definition ID point to.
-#' @export
+#' @param cohortDefinitionIdSchema Optional. Schema where the the cohort and cohort definition ID point to.
+#' @param writeDatabaseSchema PARAM_DESCRIPTION
+#' @param cohortTable PARAM_DESCRIPTION
+#' @param regimenTable PARAM_DESCRIPTION
+#' @param renameCurrentTables PARAM_DESCRIPTION, Default: TRUE
+#' @param drug_classification_id_input PARAM_DESCRIPTION, Default: c(OncoRegimenFinder::atc_antineoplastic_id, OncoRegimenFinder::hemonc_classes)
+#' @param false_positive_id PARAM_DESCRIPTION, Default: OncoRegimenFinder::falsepositives
+#' @return  
+#' Cohort, Regimen, and Regimen Staging Tables in the `writeDatabaseSchema`
+#' @details 
+#' If the Cohort, Regimen, and Regimen Staging Tables already exist, these tables are renamed with the system date appended in the format "{_YYYY_MM_DD}". The renaming is skipped and the existing Cohort, Regimen and Regimen Staging Tables are dropped if the dated table already exists, indicating that the OncoRegimenFinder was already run once for that system date.
+#' @seealso 
+#'  \code{\link[OncoRegimenFinder]{atc_antineoplastic_id}},\code{\link[OncoRegimenFinder]{hemonc_classes}},\code{\link[OncoRegimenFinder]{falsepositives}}
+#'  \code{\link[pg13]{lsTables}},\code{\link[pg13]{renameTable}},\code{\link[pg13]{appendDate}},\code{\link[pg13]{execute}}
+#'  \code{\link[SqlRender]{render}},\code{\link[SqlRender]{readSql}}
+#' @rdname buildCohortRegimenTable
+#' @export 
+#' @importFrom OncoRegimenFinder atc_antineoplastic_id hemonc_classes falsepositives
+#' @importFrom pg13 lsTables renameTable appendDate execute
+#' @importFrom SqlRender render readSql
+
+
 
 buildCohortRegimenTable <-
         function(conn,
@@ -29,25 +51,57 @@ buildCohortRegimenTable <-
                                                  schema = writeDatabaseSchema)
 
                         if (cohortTable %in% Tables) {
-                                pg13::renameTable(conn = conn,
-                                                  schema = writeDatabaseSchema,
-                                                  tableName = cohortTable,
-                                                  newTableName = pg13::appendDate(cohortTable))
+                                
+                                newTableName <- pg13::appendDate(cohortTable)
+                                
+                                if (!(newTableName %in% Tables)) {
+                                
+                                        pg13::renameTable(conn = conn,
+                                                          schema = writeDatabaseSchema,
+                                                          tableName = cohortTable,
+                                                          newTableName = newTableName)
+                                } else {
+                                        
+                                        pg13::dropTable(conn = conn,
+                                                        schema = writeDatabaseSchema,
+                                                        tableName = cohortTable)
+                                        
+                                }
                         }
 
 
                         if (regimenTable %in% Tables) {
-                                pg13::renameTable(conn = conn,
-                                                  schema = writeDatabaseSchema,
-                                                  tableName = regimenTable,
-                                                  newTableName = pg13::appendDate(regimenTable))
+                                
+                                newTableName <- pg13::appendDate(regimenTable)
+                                
+                                if (!(newTableName %in% Tables)) {
+                                
+                                        pg13::renameTable(conn = conn,
+                                                          schema = writeDatabaseSchema,
+                                                          tableName = regimenTable,
+                                                          newTableName = newTableName)
+                                } else {
+                                        pg13::dropTable(conn = conn,
+                                                        schema = writeDatabaseSchema,
+                                                        tableName = regimenTable)
+                                }
                         }
                         
                         if (regimenStagingTable %in% Tables) {
-                                pg13::renameTable(conn = conn,
-                                                  schema = writeDatabaseSchema,
-                                                  tableName = regimenStagingTable,
-                                                  newTableName = pg13::appendDate(regimenStagingTable))
+                                
+                                newTableName <- pg13::appendDate(regimenStagingTable)
+                                
+                                if (!(newTableName %in% Tables)) {
+                                        
+                                        pg13::renameTable(conn = conn,
+                                                          schema = writeDatabaseSchema,
+                                                          tableName = regimenStagingTable,
+                                                          newTableName = newTableName)
+                                } else {
+                                        pg13::dropTable(conn = conn,
+                                                        schema = writeDatabaseSchema,
+                                                        tableName = regimenStagingTable)
+                                }
                         }
 
                 }

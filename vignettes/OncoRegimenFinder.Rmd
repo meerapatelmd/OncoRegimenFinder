@@ -1,5 +1,7 @@
 ---
-title: "Setup and Maintenance"
+title: "Introduction to OncoRegimenFinder"
+description: > 
+    Learn how to write the OncoRegimenFinder Tables
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{setup-maintenance}
@@ -14,9 +16,15 @@ knitr::opts_chunk$set(
 )
 ```
 
+The goal of OncoRegimenFinder is to write tables that derive antineoplastic drug combinations from every patient in the OMOP CDM instance. The execution occurs in 2 overarching steps:  
+1. Subsetting the Drug Exposure table for antineoplastic drugs  
+1. Executing an algorithm that derives antineoplastic drug combinations based on overlaps in the window of time created by adding and subtracting the `date_lag_input` in days from the start date of the drug exposure. This initial resultset is then joined onto itself for a number of iterations determined by `regimen_repeats`, the maximum number of drugs in derived drug combinations.  
+
+It is important to note that the procedure shown below will run an algorithm with a set `date_lag_input` and `regimen_repeats` across the entire OMOP CDM Drug Exposure Table. Though the ultimate goal is to enable retrieval of derived drug combinations from the final `writeDatabaseSchema.regimenIngredientTable` via a join on the `person_id` field, specific cohorts may require different `date_lag_input` and `regimen_repeats`. For example, esophageal carcinoma patients tend to have regimens executed in blocks of 2 weeks instead of 30 days and the algorithm may return more accurate results with a `date_lag_input` of 15 days. In these cases, it is recommended to rerun this process on the specific cohort in a cohort-specific set of tables.  
+
 ### Package Load
 
-```{r setup}
+```{r setup, echo=TRUE,eval=TRUE,message=FALSE,results="hide"}
 library(OncoRegimenFinder)
 library(tidyverse)
 ```
@@ -31,18 +39,18 @@ It is recommended that the parameters are centralized at the start of execution 
 
 ```{r settings, eval=FALSE}
 # Schema of Source Person and Drug Exposure Tables
-cdmDatabaseSchema = "omop_cdm_2"
+cdmDatabaseSchema <- "omop_cdm_2"
 
 # Output Schema and Tables
-writeDatabaseSchema = "patelm9"
-cohortTable = "oncoregimenfinder_cohort"
-regimenTable = "oncoregimenfinder_regimen"
-regimenStagingTable = "oncoregimenfinder_regimen_staging"
-vocabularyTable = "oncoregimenfinder_vocabulary"
-regimenIngredientTable= "oncoregimenfinder_regimen_ingredients"
+writeDatabaseSchema <- "patelm9"
+cohortTable <- "oncoregimenfinder_cohort"
+regimenTable <- "oncoregimenfinder_regimen"
+regimenStagingTable <- "oncoregimenfinder_regimen_staging"
+vocabularyTable <- "oncoregimenfinder_vocabulary"
+regimenIngredientTable <- "oncoregimenfinder_regimen_ingredients"
 
 # OMOP Vocabulary Drug Classes to filter Drug Exposures for
-drug_classification_id_input = c(#ATC Antineoplastics (OncoRegimenFinder::atc_antineoplastics_id)
+drug_classification_id_input <- c(#ATC Antineoplastics (OncoRegimenFinder::atc_antineoplastics_id)
                                  21601387, 
                                  #HemOnc Classes (OncoRegimenFinder::hemonc_classes)
                                  35101847, 
@@ -64,8 +72,8 @@ false_positive_id <-
                   989482, 1550557, 1551099, 924120, 904351)
 
 # Date difference when assessing for drug combinations in the Drug Exposures table
-date_lag_input = 30
-regimen_repeats = 5
+date_lag_input <- 30
+regimen_repeats <- 5
 
 ```
 
@@ -82,8 +90,8 @@ regimen_repeats = 5
 OncoRegimenFinder::buildCohortRegimenTable(conn = conn,
                                            cdmDatabaseSchema = cdmDatabaseSchema,
                                            writeDatabaseSchema = writeDatabaseSchema,
-                                           cohortTable = cohortTable,
-                                           regimenTable = regimenTable,
+                                           cohortTable = "oncoregimenfinder_cohort",
+                                           regimenTable = "oncoregimenfinder_regimen",
                                            drug_classification_id_input = drug_classification_id_input,
                                            false_positive_id = false_positive_id)
 ```
@@ -96,15 +104,18 @@ The `Cohort Table` includes the Person Id, Drug Exposure Id with Start and End D
 cohortTableData <-
   pg13::query(conn = conn,
               sql_statement = pg13::buildQuery(schema = "patelm9",
-                                               tableName = cohortTable,
+                                               tableName = "oncoregimenfinder_cohort",
                                                n = 20,
                                                n_type = "random"))
 
 print(cohortTableData)
 
 ```
+
+
+
 ```{r cohortcount, echo=FALSE,eval=TRUE}
-grep(pattern = cohortTable,
+grep(pattern = "oncoregimenfinder_cohort",
     pg13::lsTables(conn = conn,
                    schema = "patelm9"),
     ignore.case = T,
@@ -127,7 +138,7 @@ The Regimen and Regimen Staging Tables, are identical to one another at this poi
 regimenStagingTableData <-
   pg13::query(conn = conn,
               sql_statement = pg13::buildQuery(schema = "patelm9",
-                                               tableName = regimenStagingTable,
+                                               tableName = "oncoregimenfinder_regimen_staging",
                                                n = 20,
                                                n_type = "random"))
 
@@ -137,7 +148,7 @@ print(regimenStagingTableData)
 
 
 ```{r regimenstagingcount, echo=FALSE, eval=TRUE}
-grep(pattern = regimenStagingTable,
+grep(pattern = "oncoregimenfinder_regimen_staging",
     pg13::lsTables(conn = conn,
                    schema = "patelm9"),
     ignore.case = T,
@@ -157,7 +168,7 @@ The Regimen Table is grouped by Person Id, Drug Exposure Id, Ingredient and Ingr
 
 OncoRegimenFinder::processRegimenTable(conn = conn,
                     writeDatabaseSchema = "patelm9",
-                    regimenTable = regimenTable,
+                    regimenTable = "oncoregimenfinder_regimen",
                     date_lag_input = 30,
                     regimen_repeats = 5)
 
@@ -170,7 +181,7 @@ OncoRegimenFinder::processRegimenTable(conn = conn,
 regimenTableData <-
   pg13::query(conn = conn,
               sql_statement = pg13::buildQuery(schema = "patelm9",
-                                               tableName = regimenTable,
+                                               tableName = "oncoregimenfinder_regimen",
                                                n = 20,
                                                n_type = "random"))
 
@@ -180,13 +191,13 @@ print(regimenTableData)
 
 
 ```{r regimencount, echo=FALSE, eval=TRUE}
-grep(pattern = paste(regimenStagingTable, regimenIngredientTable, sep = "|"),
+grep(pattern = paste("oncoregimenfinder_regimen_staging", "oncoregimenfinder_regimen_ingredients", sep = "|"),
     pg13::lsTables(conn = conn,
                    schema = "patelm9"),
     ignore.case = T,
     value = TRUE,
     invert = TRUE) %>% 
-  purrr::map(function(x) grep(regimenTable, x, ignore.case = T, value = TRUE)) %>% 
+  purrr::map(function(x) grep("oncoregimenfinder_regimen", x, ignore.case = T, value = TRUE)) %>% 
   purrr::keep(~length(.)==1) %>% 
   unlist() %>% 
   rubix::map_names_set(function(x) pg13::query(conn = conn,
@@ -203,7 +214,7 @@ grep(pattern = paste(regimenStagingTable, regimenIngredientTable, sep = "|"),
 OncoRegimenFinder::createVocabTable(conn = conn,
                                     writeDatabaseSchema = "patelm9",
                                     cdmDatabaseSchema = cdmDatabaseSchema,
-                                    vocabularyTable = vocabularyTable)
+                                    vocabularyTable = "oncoregimenfinder_vocabulary")
 
 ```
 
@@ -224,7 +235,7 @@ print(vocabularyTableData)
 
 
 ```{r vocabularycount, echo=FALSE, eval=TRUE}
-grep(pattern = vocabularyTable,
+grep(pattern = "oncoregimenfinder_vocabulary",
     pg13::lsTables(conn = conn,
                    schema = "patelm9"),
     ignore.case = T,
@@ -241,10 +252,10 @@ grep(pattern = vocabularyTable,
 ```{r, eval=FALSE, echo = TRUE}
 createRegimenIngrTable(conn = conn,
                        writeDatabaseSchema = "patelm9",
-                       cohortTable = cohortTable,
-                       regimenTable = regimenTable,
-                       regimenIngredientTable = regimenIngredientTable,
-                       vocabularyTable = vocabularyTable)
+                       cohortTable = "oncoregimenfinder_cohort",
+                       regimenTable = "oncoregimenfinder_regimen",
+                       regimenIngredientTable = "oncoregimenfinder_regimen_ingredients",
+                       vocabularyTable = "oncoregimenfinder_vocabulary")
 ```
 
 ##### Regimen Ingredient Table  
@@ -264,7 +275,7 @@ print(regimenIngrTableData)
 
 
 ```{r regingrcount, echo=FALSE, eval=TRUE}
-grep(pattern = regimenIngredientTable,
+grep(pattern = "oncoregimenfinder_regimen_ingredients",
     pg13::lsTables(conn = conn,
                    schema = "patelm9"),
     ignore.case = T,
