@@ -9,15 +9,17 @@ select
         c1.concept_id as regimen_id,
         cs.concept_synonym_name as regimen_name,
         c2.concept_id as component_id,
-        c2.concept_name as component_name,
+        cs2.concept_synonym_name as component_name,
         c3.concept_id as ingredient_id,
-        c3.concept_name as ingredient_name
+        cs3.concept_synonym_name as ingredient_name
 from @cdmDatabaseSchema.concept_relationship cr1
 join @cdmDatabaseSchema.concept c1 on c1.concept_id=cr1.concept_id_1
 join @cdmDatabaseSchema.concept c2 on c2.concept_id=cr1.concept_id_2
 join @cdmDatabaseSchema.concept_synonym cs ON cs.concept_id=concept_id_1 
 join @cdmDatabaseSchema.concept_relationship cr2 ON cr1.concept_id_2 = cr2.concept_id_1 
 join @cdmDatabaseSchema.concept c3 ON c3.concept_id = cr2.concept_id_2 
+join @cdmDatabaseSchema.concept_synonym cs2 ON cs2.concept_id=c2.concept_id 
+join @cdmDatabaseSchema.concept_synonym cs3 ON cs3.concept_id=c3.concept_id 
 where 
         c1.vocabulary_id='HemOnc' AND
         cr1.relationship_id='Has antineoplastic' AND 

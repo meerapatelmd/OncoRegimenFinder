@@ -36,3 +36,4 @@ Timestamp	Activity Type	Function	File	Details
 2020-08-07 19:04:34	write	copy_to_clipboard		
 2020-08-08 01:13:23	write	copy_to_clipboard		
 2020-08-08 01:21:20	write	write_temp_csv	/var/folders/pg/_nr70_kj7y31yvv84yyy7524sx_q0w/T//RtmpFPpK0V/filed5ae1a8de3dc.csv	
+2020-08-08 16:59:40	write	write_temp_csv	/var/folders/pg/_nr70_kj7y31yvv84yyy7524sx_q0w/T//RtmpPhY7jP/filef7244d0bf2f0.csv	
