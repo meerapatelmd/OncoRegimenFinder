@@ -1,8 +1,8 @@
 ---
-title: "esophagus-redcap"
+title: "Esophagus REDCap Cohort"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{esophagus-redcap}
+  %\VignetteIndexEntry{Esophagus REDCap Cohort}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
