@@ -113,14 +113,20 @@ buildCohortRegimenTable <-
 
                 } else {
 
+                                                        
+                        sql_statement <-
+                                                        SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/CohortBuild.sql")),
+                                                                                 cdmDatabaseSchema = cdmDatabaseSchema,
+                                                                                 writeDatabaseSchema = writeDatabaseSchema,
+                                                                          drugExposureIngredientTable = drugExposureIngredientTable,
+                                                                                 cohortTable = cohortTable,
+                                                                                 regimenTable = regimenTable,
+                                                                                 drug_classification_id_input = drug_classification_id_input,
+                                                                          false_positive_id = false_positive_id)
+                        
+
                                 pg13::execute(conn,
-                                SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/CohortBuild.sql")),
-                                                         cdmDatabaseSchema = cdmDatabaseSchema,
-                                                         writeDatabaseSchema = writeDatabaseSchema,
-                                                         cohortTable = cohortTable,
-                                                         regimenTable = regimenTable,
-                                                         drug_classification_id_input = drug_classification_id_input,
-                                                  false_positive_id = false_positive_id))
+                                              sql_statement = sql_statement)
 
 
                         }
