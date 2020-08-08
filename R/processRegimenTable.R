@@ -10,7 +10,7 @@ processRegimenTable <-
                  date_lag_input = 30,
                  regimen_repeats = 5) {
                 
-                sql <- SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/RegimenCalc2.sql")),
+                sql <- SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/processRegimens.sql")),
                                          writeDatabaseSchema = writeDatabaseSchema,
                                          regimenTable = regimenTable,
                                          date_lag_input = date_lag_input)
