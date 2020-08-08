@@ -21,7 +21,7 @@ select  cte.person_id,
         max(i.ingredient_end_date) over (partition by cte.derived_regimen_start_date, cte.person_id) as derived_regimen_end_date
 into @writeDatabaseSchema.@regimenIngredientTable
 from @writeDatabaseSchema.@regimenTable orig
-left join cte on cte.person_id = orig.person_id and cte.regimen_start_date = orig.ingredient_start_date
+left join cte on cte.person_id = orig.person_id and cte.derived_regimen_start_date = orig.ingredient_start_date
 left join @writeDatabaseSchema.@cohortTable i on i.person_id = orig.person_id and i.drug_exposure_id = orig.drug_exposure_id
 left join @writeDatabaseSchema.@vocabularyTable vt on cte.derived_regimen_name = vt.ingredient_combination
 order by cte.person_id, cte.derived_regimen_start_date
