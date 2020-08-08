@@ -49,6 +49,7 @@ cdmDatabaseSchema <- "omop_cdm_2"
 
 # Output Schema and Tables
 writeDatabaseSchema <- "patelm9"
+drugExposureIngredientTable <- "ingredient_exposure"
 cohortTable <- "oncoregimenfinder_cohort"
 regimenTable <- "oncoregimenfinder_regimen"
 regimenStagingTable <- "oncoregimenfinder_regimen_staging"
@@ -93,7 +94,10 @@ regimen_repeats <- 5
 ### Ingredient Exposure Table 
 
 ```{r}
-OncoRegimenFinder::bu
+OncoRegimenFinder::buildIngredientExposuresTable(conn = conn,
+                                                 cdmDatabaseSchema = cdmDatabaseSchema,
+                                                 writeDatabaseSchema = writeDatabaseSchema,
+                                                 drugExposureIngredientTable = drugExposureIngredientTable)
 ```
 
 
