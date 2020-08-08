@@ -30,7 +30,7 @@ select *,min(rank) over (partition by component_comb_name)
 from CTE_second
 ),
 CTE_fourth as (
-select ct.reg_name, ct.component_comb_name, ct.concept_id
+select ct.regimen_id, ct.regimen_name, ct.component_comb_name 
 from CTE_third ct
 where rank = min
 )
