@@ -7,24 +7,31 @@ createVocabTable <-
         function(conn,
                  writeDatabaseSchema,
                  cdmDatabaseSchema,
-                 vocabularyTable,
-                 renameCurrentTables = TRUE) {
+                 vocabularyTable) {
                 
                 vocabularyTable <- toupper(vocabularyTable)
                 
-                if (renameCurrentTables) {
+                
                         
-                        Tables <- pg13::lsTables(conn = conn,
-                                                 schema = writeDatabaseSchema)
+                Tables <- pg13::lsTables(conn = conn,
+                                         schema = writeDatabaseSchema)
+                
+                if (vocabularyTable %in% Tables) {
                         
-                        if (vocabularyTable %in% Tables) {
+                        newTableName <- pg13::appendDate(vocabularyTable)
+                        
+                        if (!(newTableName %in% Tables)) {
                                 pg13::renameTable(conn = conn,
                                                   schema = writeDatabaseSchema,
                                                   tableName = vocabularyTable,
-                                                  newTableName = pg13::appendDate(vocabularyTable))
+                                                  newTableName = newTableName)
+                        } else {
+                                pg13::dropTable(conn = conn,
+                                                schema = writeDatabaseSchema,
+                                                tableName = vocabularyTable)
                         }
-                        
                 }
+                        
                 
                 
                 sql <- SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/RegimenVoc.sql")),

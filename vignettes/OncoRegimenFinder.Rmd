@@ -244,7 +244,7 @@ grep(pattern = paste("oncoregimenfinder_regimen_staging", "oncoregimenfinder_reg
 
 ```{r, eval=FALSE,echo=TRUE}
 
-OncoRegimenFinder::createVocabTable(conn = conn,
+createVocabTable(conn = conn,
                                     writeDatabaseSchema = "patelm9",
                                     cdmDatabaseSchema = cdmDatabaseSchema,
                                     vocabularyTable = "oncoregimenfinder_vocabulary")

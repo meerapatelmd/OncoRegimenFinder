@@ -7,13 +7,13 @@ drop table if exists @writeDatabaseSchema.@vocabularyTable;
 with CTE as (
 select cs.concept_synonym_name as regimen_name,
      string_agg(c2.concept_name, ', '   order by c2.concept_name asc) as component_comb_name,
-     c1.concept_id as component_id
+     c1.concept_id as regimen_id
 from @cdmDatabaseSchema.concept_relationship 
 join @cdmDatabaseSchema.concept c1 on c1.concept_id=concept_id_1
 join @cdmDatabaseSchema.concept c2 on c2.concept_id=concept_id_2
 join @cdmDatabaseSchema.concept_synonym cs ON cs.concept_id=concept_id_1
 where c1.vocabulary_id='HemOnc' and relationship_id='Has antineoplastic'
-group by c1.concept_name,c1.concept_id
+group by cs.concept_synonym_name,c1.concept_id
 order by c1.concept_name
 ),
 CTE_second as (

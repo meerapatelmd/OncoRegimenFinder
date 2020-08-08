@@ -4,13 +4,7 @@
 \alias{createVocabTable}
 \title{Process Regimen Table}
 \usage{
-createVocabTable(
-  conn,
-  writeDatabaseSchema,
-  cdmDatabaseSchema,
-  vocabularyTable,
-  renameCurrentTables = TRUE
-)
+createVocabTable(conn, writeDatabaseSchema, cdmDatabaseSchema, vocabularyTable)
 }
 \description{
 Process Regimen Table
