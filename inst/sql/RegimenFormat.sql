@@ -4,7 +4,8 @@ drop table if exists  @writeDatabaseSchema.@regimenIngredientTable;
 --Aggregating ingredients in @writeDatabaseSchema.@regimenTable in a comma-separated string based on patient and ingredient_start_date,
 --now regimen_start_date
 with cte as (
-select r.person_id, r.ingredient_start_date AS derived_regimen_start_date,
+select r.person_id, 
+       r.ingredient_start_date AS derived_regimen_start_date,
        string_agg(distinct r.ingredient_concept_name, ', '   order by r.ingredient_concept_name asc) as derived_regimen_name
 from @writeDatabaseSchema.@regimenTable r
 group by r.person_id, r.ingredient_start_date
@@ -23,4 +24,4 @@ from @writeDatabaseSchema.@regimenTable orig
 left join cte on cte.person_id = orig.person_id and cte.regimen_start_date = orig.ingredient_start_date
 left join @writeDatabaseSchema.@cohortTable i on i.person_id = orig.person_id and i.drug_exposure_id = orig.drug_exposure_id
 left join @writeDatabaseSchema.@vocabularyTable vt on cte.derived_regimen_name = vt.ingredient_combination
-order by cte.person_id, regimen_start_date
+order by cte.person_id, cte.derived_regimen_start_date
