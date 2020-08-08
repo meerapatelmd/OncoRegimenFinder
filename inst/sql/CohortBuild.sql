@@ -11,8 +11,8 @@ with CTE_second as (
 select
        de.drug_exposure_id,
        de.person_id,
-       de.ingredient_concept_id as ingredient_concept_id,
-       lower(c.concept_name) as ingredient_concept_name,
+       de.ingredient_concept_id as ingredient_id,
+       lower(c.concept_name) as ingredient_name,
        de.drug_exposure_start_date as ingredient_start_date,
        de.drug_exposure_end_date as ingredient_end_date
 from @writeDatabaseSchema.@drugExposureIngredientTable de 
