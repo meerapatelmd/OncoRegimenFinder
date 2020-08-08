@@ -30,7 +30,7 @@ SELECT
         v1.regimen_name,
         string_agg(v1.ingredient_name, ', ' order by v1.ingredient_name asc) as ingredient_combination 
 FROM vocabulary_first v1
-GROUP BY v1.regimen_id, v1.regimen_name
+GROUP BY v1.regimen_id, v1.regimen_name, v1.ingredient_name
 ORDER BY v1.ingredient_name
 )
 
