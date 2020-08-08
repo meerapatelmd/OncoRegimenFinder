@@ -20,7 +20,7 @@ join @cdmDatabaseSchema.concept_relationship cr2 ON cr1.concept_id_2 = cr2.conce
 join @cdmDatabaseSchema.concept c3 ON c3.concept_id = cr2.concept_id_2 
 where 
         c1.vocabulary_id='HemOnc' AND
-        relationship_id='Has antineoplastic' AND 
+        cr1.relationship_id='Has antineoplastic' AND 
         c3.concept_class_id IN ('Ingredient', 'Precise Ingredient')
 group by cs.concept_synonym_name,c1.concept_id
 order by c1.concept_name
