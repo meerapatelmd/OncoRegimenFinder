@@ -84,6 +84,7 @@ regimen_repeats <- 5
 ```
 
 ## Steps  
+1. (Optional) All the Drug Exposure Table `drug_concept_ids` are mapped to their RxNorm Ingredient and stored in a Ingredient Exposures Table. 
 1. Cohort, Regimen, and a copy of Regimen as "Regimen Staging" Tables are written. 
 1. Regimen Table undergoes further processing by combining overlapping instances of an ingredient start date and +/- the date lag input over the number of regimen repeats.  
 1. A separate Vocabulary Table is created that maps the HemOnc ontology Regimen Concept Name from the OMOP Vocabulary Concept Table to string aggregates of the individual Component Concept Names derived by the algorithm.  
