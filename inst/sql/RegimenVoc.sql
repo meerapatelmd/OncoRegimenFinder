@@ -26,12 +26,12 @@ order by c1.concept_id
 ),
 vocabulary_second AS (
 SELECT 
-        regimen_id,
-        regimen_name,
-        string_agg(ingredient_name, ', ' order by ingredient_name asc) as ingredient_combination 
-FROM vocabulary_first 
-GROUP BY regimen_id, regimen_name
-ORDER BY ingredient_name
+        v1.regimen_id,
+        v1.regimen_name,
+        string_agg(v1.ingredient_name, ', ' order by v1.ingredient_name asc) as v1.ingredient_combination 
+FROM vocabulary_first v1
+GROUP BY v1.regimen_id, v1.regimen_name
+ORDER BY v1.ingredient_name
 )
 
 select *
