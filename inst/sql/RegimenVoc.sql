@@ -22,6 +22,5 @@ where
         c1.vocabulary_id='HemOnc' AND
         cr1.relationship_id='Has antineoplastic' AND 
         c3.concept_class_id IN ('Ingredient', 'Precise Ingredient')
-group by cs.concept_synonym_name,c1.concept_id
-order by c1.concept_name
+order by c1.concept_id
 );
