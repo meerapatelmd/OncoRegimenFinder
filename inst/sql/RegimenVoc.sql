@@ -23,4 +23,5 @@ where
         cr1.relationship_id='Has antineoplastic' AND 
         c3.concept_class_id IN ('Ingredient', 'Precise Ingredient')
 order by c1.concept_id
+)
 ;
