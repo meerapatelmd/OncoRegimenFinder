@@ -1,0 +1,22 @@
+url: https://github.mskcc.org/pages/patelm9/OncoRegimenFinder
+
+home:
+  title: Derive Chemothrapy Regimens from the Drug Exposures Table
+
+articles:
+- title: Setup 
+  navbar: ~
+  contents:
+  - OncoRegimenFinder
+  - Cohorts
+  title: REDCap Cohorts
+  desc: >
+      These articles are to demonstrate the results on specific REDCap Project Cohorts.
+  contents:
+  - starts_with("redcap")
+
+news:
+  releases:
+  - text: "Version 1.0.0"
+  
+

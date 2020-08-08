@@ -1,13 +1,17 @@
 Package: OncoRegimenFinder
 Title: OncoRegimenFinder Package
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: 
-    person(given = "Meera",
+    c(person(given = "Meera",
            family = "Patel",
            role = c("aut", "cre"),
            email = "patelm9@mskcc.org",
-           comment = c(ORCID = "0000-0002-3401-3948"))
-Description: This is a package developed by OHDSI Oncology Workgroup that runs an algorithm the derives Regimens from the Drug Exposures table in the OMOP CDM.
+           comment = c(ORCID = "0000-0002-3401-3948")),
+           person(given = "Michael",
+           family = "Lam",
+           role = c("aut", "cre"),
+           email = "lamm1@mskcc.org"))
+Description: This is a package originally developed by OHDSI Oncology Workgroup that runs an algorithm the derives Regimens from the Drug Exposures table in the OMOP CDM.
 License: Apache License 2.0
 Encoding: UTF-8
 LazyData: true
