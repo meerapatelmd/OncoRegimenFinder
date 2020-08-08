@@ -12,9 +12,9 @@ select
         c2.concept_name as component_name,
         c3.concept_id as ingredient_id,
         c3.concept_name as ingredient_name
-from @cdmDatabaseSchema.concept_relationship 
-join @cdmDatabaseSchema.concept c1 on c1.concept_id=concept_id_1
-join @cdmDatabaseSchema.concept c2 on c2.concept_id=concept_id_2
+from @cdmDatabaseSchema.concept_relationship cr1
+join @cdmDatabaseSchema.concept c1 on c1.concept_id=cr1.concept_id_1
+join @cdmDatabaseSchema.concept c2 on c2.concept_id=cr1.concept_id_2
 join @cdmDatabaseSchema.concept_synonym cs ON cs.concept_id=concept_id_1 
 join @cdmDatabaseSchema.concept_relationship cr2 ON concept_id_2 = cr2.concept_id_1 
 join @cdmDatabaseSchema.concept c3 ON c3.concept_id = cr2.concept_id_2 
