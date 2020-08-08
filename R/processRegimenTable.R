@@ -20,6 +20,8 @@ processRegimenTable <-
                         pg13::execute(conn = conn,
                                       sql_statement = sql)
                         
+                        Sys.sleep(0.2)
+                        
                 }
                 
         }

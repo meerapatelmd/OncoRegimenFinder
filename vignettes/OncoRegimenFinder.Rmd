@@ -274,46 +274,6 @@ grep(pattern = paste("oncoregimenfinder_regimen_staging", "oncoregimenfinder_reg
         dplyr::rename(RowCount = count)
 ```
 
-#### Create Vocabulary Table  
-
-```{r, eval=FALSE,echo=TRUE}
-
-createVocabTable(conn = conn,
-                                    writeDatabaseSchema = "patelm9",
-                                    cdmDatabaseSchema = cdmDatabaseSchema,
-                                    vocabularyTable = "oncoregimenfinder_vocabulary")
-
-```
-
-##### Vocabulary Table 
-
-```{r, echo=FALSE, eval=TRUE, cache=TRUE}
-
-vocabularyTableData <-
-  pg13::query(conn = conn,
-              sql_statement = pg13::buildQuery(schema = "patelm9",
-                                               tableName = "oncoregimenfinder_vocabulary",
-                                               n = 20,
-                                               n_type = "random"))
-
-print(vocabularyTableData)
-
-```
-
-
-```{r vocabularycount, echo=FALSE, eval=TRUE}
-grep(pattern = "oncoregimenfinder_vocabulary",
-    pg13::lsTables(conn = conn,
-                   schema = "patelm9"),
-    ignore.case = T,
-    value = TRUE) %>% 
-        rubix::map_names_set(function(x) pg13::query(conn = conn,
-                                          pg13::renderRowCount(schema = "patelm9",
-                                                   tableName = x))) %>% 
-        dplyr::bind_rows(.id = "Table") %>% 
-        dplyr::rename(RowCount = count)
-```
-
 #### Final Step: Creating the Regimen Ingredient Table   
 
 ```{r, eval=FALSE, echo = TRUE}
