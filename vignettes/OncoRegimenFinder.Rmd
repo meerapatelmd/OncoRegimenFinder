@@ -100,6 +100,19 @@ OncoRegimenFinder::buildIngredientExposuresTable(conn = conn,
                                                  drugExposureIngredientTable = drugExposureIngredientTable)
 ```
 
+```{r}
+grep(pattern = "ingredient_exposure",
+    pg13::lsTables(conn = conn,
+                   schema = "patelm9"),
+    ignore.case = T,
+    value = TRUE) %>% 
+        rubix::map_names_set(function(x) pg13::query(conn = conn,
+                                          pg13::renderRowCount(schema = "patelm9",
+                                                   tableName = x))) %>% 
+        dplyr::bind_rows(.id = "Table") %>% 
+        dplyr::rename(RowCount = count)
+```
+
 
 
 ### Create Cohort, Regimen and Regimen Staging Tables
@@ -187,10 +200,10 @@ The Regimen Table is grouped by Person Id, Drug Exposure Id, Ingredient and Ingr
 ```{r, eval=FALSE,echo=TRUE}
 
 OncoRegimenFinder::processRegimenTable(conn = conn,
-                    writeDatabaseSchema = "patelm9",
-                    regimenTable = "oncoregimenfinder_regimen",
-                    date_lag_input = 30,
-                    regimen_repeats = 5)
+                    writeDatabaseSchema = writeDatabaseSchema,
+                    regimenTable = regimenTable,
+                    date_lag_input = date_lag_input,
+                    regimen_repeats = regimen_repeats)
 
 ```
 
