@@ -28,7 +28,7 @@ vocabulary_second AS (
 SELECT 
         regimen_id,
         regimen_name,
-        string_agg(ingredient_name, ', '   order by ingredient_name asc) as ingredient_combination 
+        string_agg(ingredient_name, ', ' order by ingredient_name asc) as ingredient_combination 
 FROM vocabulary_first 
 GROUP BY regimen_id, regimen_name
 ORDER BY ingredient_name
