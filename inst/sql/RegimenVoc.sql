@@ -4,7 +4,7 @@ drop table if exists @writeDatabaseSchema.@vocabularyTable;
 --Creating a component-based "combo_name" for each reimgne by getting all concepts in HemOnc
 --that has a "is antineoplastic of" relationship and performing a comma-separated string aggregate of all
 --concept_names of its components
-create table @writeDatabaseSchema.@vocabularyTable AS (
+with vocabulary_first AS (
 select 
         c1.concept_id as regimen_id,
         cs.concept_synonym_name as regimen_name,
@@ -23,4 +23,18 @@ where
         cr1.relationship_id='Has antineoplastic' AND 
         c3.concept_class_id IN ('Ingredient', 'Precise Ingredient')
 order by c1.concept_id
-);
+),
+vocabulary_second AS (
+SELECT 
+        v1.regimen_id,
+        v1.regimen_name,
+        string_agg(v1.ingredient_name, ', '   order by v1.ingredient_name asc) as ingredient_combination 
+FROM vocabulary_first v1 
+GROUP BY v1.regimen_id, v1_regimen_name
+ORDER BY v1.ingredient_name
+)
+
+select *
+into @writeDatabaseSchema.@vocabularyTable
+from vocabulary_second
+;
