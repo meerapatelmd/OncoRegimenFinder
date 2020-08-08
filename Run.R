@@ -34,12 +34,12 @@
 # date_lag_input <- 30
 # regimen_repeats <- 5
 # 
-# conn <- fantasia::connectOMOP()
-# testbuildCohortRegimenTable(conn = conn,
-#                             cdmDatabaseSchema = "omop_cdm_2",
-#                             writeDatabaseSchema = "patelm9",
-#                             cohortTable = cohortTable,
-#                             regimenTable = regimenTable,
-#                             drugExposureIngredientTable = drugExposureIngredientTable)
-# fantasia::dcOMOP(conn = conn,
-#                  remove = TRUE)
+conn <- fantasia::connectOMOP()
+testbuildCohortRegimenTable(conn = conn,
+                            cdmDatabaseSchema = "omop_cdm_2",
+                            writeDatabaseSchema = "patelm9",
+                            cohortTable = cohortTable,
+                            regimenTable = regimenTable,
+                            drugExposureIngredientTable = drugExposureIngredientTable)
+fantasia::dcOMOP(conn = conn,
+                 remove = TRUE)

@@ -24,6 +24,7 @@
 #' @importFrom pg13 lsTables renameTable appendDate execute
 #' @importFrom SqlRender render readSql
 
+
 buildCohortRegimenTable <-
         function(conn,
                  cdmDatabaseSchema,
