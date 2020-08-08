@@ -41,7 +41,7 @@ createRegimenIngrTable <-
                         
                 }
                 
-                sql <- SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/RegimenFormat.sql")),
+                sql <- SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/RegimenIngredientTable.sql")),
                                                                                 writeDatabaseSchema = writeDatabaseSchema,
                                                                                 cohortTable = cohortTable,
                                                                                 regimenTable = regimenTable,
