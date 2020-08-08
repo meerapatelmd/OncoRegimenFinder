@@ -20,10 +20,23 @@ createRegimenIngrTable <-
                                                  schema = writeDatabaseSchema)
                         
                         if (regimenIngredientTable %in% Tables) {
-                                pg13::renameTable(conn = conn,
-                                                  schema = writeDatabaseSchema,
-                                                  tableName = regimenIngredientTable,
-                                                  newTableName = pg13::appendDate(regimenIngredientTable))
+                                
+                                newTableName <- pg13::appendDate(regimenIngredientTable)
+                                
+                                if (!(newTableName %in% Tables)) {
+                                        
+                                        pg13::renameTable(conn = conn,
+                                                          schema = writeDatabaseSchema,
+                                                          tableName = regimenIngredientTable,
+                                                          newTableName = newTableName)
+                                        
+                                } else {
+                                        
+                                        pg13::dropTable(conn = conn,
+                                                        schema = writeDatabaseSchema,
+                                                        tableName = regimenIngredientTable)
+                                        
+                                }
                         }
                         
                 }
