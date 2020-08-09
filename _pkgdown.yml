@@ -17,18 +17,18 @@ articles:
   desc:  > 
     Write the prerequisite Vocabulary and Ingredient Exposure Tables before running the algorithm
   contents:
-  - createVocabTable
-  - buildIngredientExposuresTable
+  - '`createVocabTable`'
+  - '`buildIngredientExposuresTable`'
 - title: Run Algorithm
   contents:
-  - buildCohortRegimenTable
-  - processRegimenTable
-  - createRegimenIngrTable
+  - '`buildCohortRegimenTable`'
+  - '`processRegimenTable`'
+  - '`createRegimenIngrTable`'
 - title: Data
   contents:
-  - atc_classification_id
-  - hemonc_classes
-  - falsepositives
-  - topclasses
+  - '`atc_classification_id`'
+  - '`hemonc_classes`'
+  - '`falsepositives`'
+  - '`topclasses`'
 
 
