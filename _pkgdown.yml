@@ -12,7 +12,7 @@ articles:
   contents:
   - starts_with("redcap")
   
-  reference:
+reference:
 - title: Setup 
   desc:  > 
     Write the prerequisite Vocabulary and Ingredient Exposure Tables before running the algorithm
@@ -24,11 +24,5 @@ articles:
   - '`buildCohortRegimenTable`'
   - '`processRegimenTable`'
   - '`createRegimenIngrTable`'
-- title: Data
-  contents:
-  - '`atc_classification_id`'
-  - '`hemonc_classes`'
-  - '`falsepositives`'
-  - '`topclasses`'
 
 
