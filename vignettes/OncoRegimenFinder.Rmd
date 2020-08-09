@@ -1,7 +1,6 @@
 ---
 title: "Introduction to OncoRegimenFinder"  
 author: "Meera Y. Patel, MD"
-date: `r Sys.Date()`
 description: > 
     Learn how to write the OncoRegimenFinder Tables
 output: 
@@ -10,13 +9,15 @@ output:
       number_sections: true
       df_print: paged
 vignette: >
-  %\VignetteIndexEntry{ntroduction to OncoRegimenFinder}
+  %\VignetteIndexEntry{Introduction to OncoRegimenFinder}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  tidy = 'styler',
+  tidy.opts=list(width.cutoff=50),
   collapse = TRUE,
   comment = "#>"
 )
@@ -28,15 +29,44 @@ The goal of OncoRegimenFinder is to write tables that derive antineoplastic drug
 
 It is important to note that the procedure shown below will run an algorithm with a set `date_lag_input` and `regimen_repeats` across the entire OMOP CDM Drug Exposure Table. Though the ultimate goal is to enable retrieval of derived drug combinations from the final `writeDatabaseSchema.regimenIngredientTable` via a join on the `person_id` field, specific cohorts may require different `date_lag_input` and `regimen_repeats`. For example, esophageal carcinoma patients tend to have regimens executed in blocks of 2 weeks instead of 30 days and the algorithm may return more accurate results with a `date_lag_input` of 15 days. In these cases, it is recommended to rerun this process on the specific cohort in a cohort-specific set of tables.  
 
-# Procedure
+# Setup  
+Setup involves writing an Ingredient Exposure Table and a Vocabulary Table that serve as the data sources for the remainder of the OncoRegimenFinder procedure.  
+
+## Setup Requirements  
+1. A database connection object `conn` to your OMOP CDM instance  
+1. `writeDatabaseSchema` destination schema with write privileges  
+
+## Outputs  
+The objective of the setup is to map all data sources to RxNorm Ingredients, which will serve as the point of alignment between Drug Exposures and a Regimen. This involves creating the following tables in `writeDatabaseSchema`:  
+1. Ingredient Exposure Table (`drugExposureIngredientTable`): Drug Exposure Table with an additional `ingredient_concept_id` field that references the RxNorm Ingredient that corresponds to the `drug_concept_id` in the OMOP Vocabulary.  
+1. Vocabulary Table (`vocabularyTable`): In a similar fashion as the Ingredient Exposure Table, HemOnc Regimens are mapped to mapped to 1 or more RxNorm Ingredients.  
+
+## Maintenance  
+* The Ingredient Exposure Table should be rewritten according to the cadence in which the Drug Exposures Table source is modified.  
+* The Vocabulary Table should be rewritten whenever there is an update to HemOnc, RxNorm, or RxNorm Extension in the OMOP Vocabulary.  
+
+
+
+# Table Outputs
+1. Ingredient Exposure Table `drugExposureIngredientTable`: All observations in the OMOP CDM Drug Exposures table with an additional column `ingredient_concept_id` that maps the `drug_concept_id` to the RxNorm Ingredient in the OMOP Vocabulary  
+1. Cohort Table `cohortTable`: Ingredient Exposure table filtered for all the RxNorm Ingredients that are descendants of a superclass comprised of one or more OMOP Vocabulary Concept Classes Concept Ids (`drug_classification_id_input`). By default, `drug_classification_id_input` is set to Concept Classes of `OncoRegimenFinder::atc_antineoplastic_id` and `OncoRegimenFinder::hemonc_classes`, but is modifiable according to user preference.  
+1. Regimen Staging Table `regimenStagingTable`: A copy of the Cohort Table. This table is written to serve as the data source for running OncoRegimenFinder against a cohort requiring non-standard `date_lag_input` and `regimen_repeats` parameters.  
+1. Regimen Table `regimenTable`: Regimen Staging Table that is run through the OncoRegimenFinder algorithm according to the default `date_lag_input` and `regimen_repeats` values of 30 days and 5, respectively.  
+cohortTable <- "oncoregimenfinder_cohort"
+regimenTable <- "oncoregimenfinder_regimen"
+regimenStagingTable <- "oncoregimenfinder_regimen_staging"
+vocabularyTable <- "oncoregimenfinder_vocabulary"
+regimenIngredientTable <- "oncoregimenfinder_regimen_ingredients"
+
+# Procedure  
 ## Load Packages  
 
-```{r setup, echo=TRUE,eval=TRUE,message=FALSE,results="hide"}
-library(tidyverse)
+```{r setup, echo=TRUE,eval=TRUE,message=FALSE,results="hide", warning=FALSE}
 library(OncoRegimenFinder)
 ```
 
-```{r, echo=FALSE,eval=TRUE,message=FALSE,results="hide"}
+```{r secretsetup, echo=FALSE,eval=TRUE,message=FALSE,results="hide",warning=FALSE}
+library(tidyverse)
 library(fantasia)
 conn <- fantasia::connectOMOP()
 ```
@@ -116,17 +146,17 @@ print(vocabularyTableData)
 ```
 
 
-### Ingredient Exposure Table 
+### Ingredient Exposure Table  
 * All the Drug Exposure Table `drug_concept_ids` are mapped to their RxNorm Ingredient and stored in a Ingredient Exposures Table.
 
-```{r}
+```{r ingredientexposures, echo=TRUE,eval=FALSE}
 OncoRegimenFinder::buildIngredientExposuresTable(conn = conn,
                                                  cdmDatabaseSchema = cdmDatabaseSchema,
                                                  writeDatabaseSchema = writeDatabaseSchema,
                                                  drugExposureIngredientTable = drugExposureIngredientTable)
 ```
 
-```{r}
+```{r, ingredientexposurescount, echo=FALSE,eval=TRUE}
 grep(pattern = "ingredient_exposure",
     pg13::lsTables(conn = conn,
                    schema = "patelm9"),
@@ -139,8 +169,6 @@ grep(pattern = "ingredient_exposure",
         dplyr::rename(RowCount = count)
 ```
 
-
-
 # Creating a Core Set of Tables
 The core set of tables are produced on the entire Drug Exposures Table using the set parameters as determined in this script. 
 
@@ -151,7 +179,7 @@ The core set of tables are produced on the entire Drug Exposures Table using the
 
 ### Create Cohort, Regimen and Regimen Staging Tables
 
-```{r, eval=FALSE, echo=TRUE}
+```{r cohortregimentables, eval=FALSE, echo=TRUE}
 
 OncoRegimenFinder::buildCohortRegimenTable(conn = conn,
                                            cdmDatabaseSchema = cdmDatabaseSchema,
@@ -298,7 +326,6 @@ regimenIngrTableData <-
 print(regimenIngrTableData)
 
 ```
-``
 
 
 ```{r regingrcount, echo=FALSE, eval=TRUE}

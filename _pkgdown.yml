@@ -4,7 +4,7 @@ home:
   title: Derive Chemothrapy Regimens from the Drug Exposures Table
 
 articles:
-- title: Setup 
+  title: Setup
   navbar: ~
   contents:
   - OncoRegimenFinder
