@@ -16,16 +16,16 @@ articles:
 - title: Setup 
   desc:  > 
     Write the prerequisite Vocabulary and Ingredient Exposure Tables before running the algorithm
-- contents:
+  contents:
   - createVocabTable
   - buildIngredientExposuresTable
 - title: Run Algorithm
-- contents:
+  contents:
   - buildCohortRegimenTable
   - processRegimenTable
   - createRegimenIngrTable
 - title: Data
-- contents:
+  contents:
   - atc_classification_id
   - hemonc_classes
   - falsepositives
