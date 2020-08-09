@@ -81,7 +81,7 @@ vocabularyTable <- "oncoregimenfinder_vocabulary"
 ### Vocabulary Table  
 #### Write    
 ```{r vocabulary,eval=FALSE,echo=TRUE}
-createVocabTable(conn = conn,
+OncoRegimenFinder::createVocabTable(conn = conn,
                  writeDatabaseSchema = writeDatabaseSchema,
                  cdmDatabaseSchema = cdmDatabaseSchema,
                  vocabularyTable = vocabularyTable)

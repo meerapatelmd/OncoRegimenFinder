@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Process Regimen Table — processRegimenTable • OncoRegimenFinder</title>
+<title>Top Classes — topclasses • OncoRegimenFinder</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Process Regimen Table — processRegimenTable" />
-<meta property="og:description" content="Process Regimen Table" />
+<meta property="og:title" content="Top Classes — topclasses" />
+<meta property="og:description" content="Top OMOP Classifications for Cancer Drugs" />
 
 
 
@@ -119,24 +119,31 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Process Regimen Table</h1>
+    <h1>Top Classes</h1>
     
-    <div class="hidden name"><code>processRegimenTable.Rd</code></div>
+    <div class="hidden name"><code>topclasses.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Process Regimen Table</p>
+    <p>Top OMOP Classifications for Cancer Drugs</p>
     </div>
 
-    <pre class="usage"><span class='fu'>processRegimenTable</span>(
-  <span class='no'>conn</span>,
-  <span class='no'>writeDatabaseSchema</span>,
-  <span class='no'>regimenTable</span>,
-  <span class='kw'>date_lag_input</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-  <span class='kw'>regimen_repeats</span> <span class='kw'>=</span> <span class='fl'>5</span>
-)</pre>
+    <pre class="usage"><span class='no'>topclasses</span></pre>
 
 
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+
+    <p>A data frame with 99 rows and 4 variables:</p><dl'>
+<dt><code>Vocabulary</code></dt><dd><p>character Vocabulary Id</p></dd>
+<dt><code>Category</code></dt><dd><p>character Category assigned</p></dd>
+<dt><code>cancer_drug_category_concept_id</code></dt><dd><p>character Concept Id for the Category</p></dd>
+<dt><code>cancer_drug_category_concept_name</code></dt><dd><p>character Conecpt Name for the Category</p></dd>
+
+</dl>
+
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>DETAILS</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

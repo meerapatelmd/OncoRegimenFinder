@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Process Regimen Table — processRegimenTable • OncoRegimenFinder</title>
+<title>Build Ingredient Exposures Tables — buildIngredientExposuresTable • OncoRegimenFinder</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Process Regimen Table — processRegimenTable" />
-<meta property="og:description" content="Process Regimen Table" />
+<meta property="og:title" content="Build Ingredient Exposures Tables — buildIngredientExposuresTable" />
+<meta property="og:description" content="This function builds the Ingredient Exposures Table for the algorithm to derive the antineoplastic combinations based on the RxNorm Ingredient of the drug in question." />
 
 
 
@@ -119,24 +119,54 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Process Regimen Table</h1>
+    <h1>Build Ingredient Exposures Tables</h1>
     
-    <div class="hidden name"><code>processRegimenTable.Rd</code></div>
+    <div class="hidden name"><code>buildIngredientExposuresTable.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Process Regimen Table</p>
+    <p>This function builds the Ingredient Exposures Table for the algorithm to derive the antineoplastic combinations based on the RxNorm Ingredient of the drug in question.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>processRegimenTable</span>(
+    <pre class="usage"><span class='fu'>buildIngredientExposuresTable</span>(
   <span class='no'>conn</span>,
+  <span class='no'>cdmDatabaseSchema</span>,
   <span class='no'>writeDatabaseSchema</span>,
-  <span class='no'>regimenTable</span>,
-  <span class='kw'>date_lag_input</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-  <span class='kw'>regimen_repeats</span> <span class='kw'>=</span> <span class='fl'>5</span>
+  <span class='no'>drugExposureIngredientTable</span>
 )</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>conn</th>
+      <td><p>Connection object to the database engine</p></td>
+    </tr>
+    <tr>
+      <th>cdmDatabaseSchema</th>
+      <td><p>Source CDM Drug Exposure Table schema</p></td>
+    </tr>
+    <tr>
+      <th>writeDatabaseSchema</th>
+      <td><p>Schema where the OncoRegimenFinder tables will be written to.</p></td>
+    </tr>
+    <tr>
+      <th>drugExposureIngredientTable</th>
+      <td><p>Name of the new Ingredient Exposure Table</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Ingredient Exposure Table in <code>writeDatabaseSchema</code> that contains all the original fields from the Drug Exposure Table with the addition of an Ingedient Conceot Id column that maps the drug to its RxNorm Ingredient.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>If the Cohort, Regimen, and Regimen Staging Tables already exist, these tables are renamed with the system date appended in the format "_YYYY_MM_DD". The renaming is skipped and the existing Cohort, Regimen and Regimen Staging Tables are dropped if the dated table already exists, indicating that the OncoRegimenFinder was already run once for that system date.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='atc_antineoplastic_id.html'>atc_antineoplastic_id</a></code>,<code><a href='hemonc_classes.html'>hemonc_classes</a></code>,<code><a href='falsepositives.html'>falsepositives</a></code>
+<code><a href='https://rdrr.io/pkg/pg13/man/lsTables.html'>lsTables</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/renameTable.html'>renameTable</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/appendDate.html'>appendDate</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/execute.html'>execute</a></code>
+<code><a href='https://rdrr.io/pkg/SqlRender/man/render.html'>render</a></code>,<code><a href='https://rdrr.io/pkg/SqlRender/man/readSql.html'>readSql</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

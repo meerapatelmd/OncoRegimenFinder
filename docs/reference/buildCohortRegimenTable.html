@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Build the Cohort and Regimen Tables — buildCohortRegimenTable" />
-<meta property="og:description" content="Build the Cohort and Regimen Tables" />
+<meta property="og:description" content="This function builds the Cohort and Regimen Tables for the algorithm the derives the antineoplastic combinations. Since the Regimen Table will be directly transformed via the algorithm, a copy of the Regimen Table is made as a Regimen Staging Table to reference back to for optimization and bug fixing purposes." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OncoRegimenFinder</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/OncoRegimenFinder.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -94,11 +97,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li class="divider"></li>
     <li>
-      <a href="../articles/esophagus-redcap.html">esophagus-redcap</a>
-    </li>
-    <li>
-      <a href="../articles/setup-maintenance.html">setup-maintenance</a>
+      <a href="../articles/index.html">More...</a>
     </li>
   </ul>
 </li>
@@ -124,7 +125,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Build the Cohort and Regimen Tables</p>
+    <p>This function builds the Cohort and Regimen Tables for the algorithm the derives the antineoplastic combinations. Since the Regimen Table will be directly transformed via the algorithm, a copy of the Regimen Table is made as a Regimen Staging Table to reference back to for optimization and bug fixing purposes.</p>
     </div>
 
     <pre class="usage"><span class='fu'>buildCohortRegimenTable</span>(
@@ -133,28 +134,66 @@
   <span class='kw'>cohortDefinitionId</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>cohortDefinitionIdSchema</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>writeDatabaseSchema</span>,
+  <span class='no'>drugExposureIngredientTable</span>,
   <span class='no'>cohortTable</span>,
   <span class='no'>regimenTable</span>,
-  <span class='kw'>renameCurrentTables</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>drug_classification_id_input</span>
+  <span class='kw'>drug_classification_id_input</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw pkg'>OncoRegimenFinder</span><span class='kw ns'>::</span><span class='no'><a href='atc_antineoplastic_id.html'>atc_antineoplastic_id</a></span>,
+    <span class='kw pkg'>OncoRegimenFinder</span><span class='kw ns'>::</span><span class='no'><a href='hemonc_classes.html'>hemonc_classes</a></span>),
+  <span class='kw'>false_positive_id</span> <span class='kw'>=</span> <span class='kw pkg'>OncoRegimenFinder</span><span class='kw ns'>::</span><span class='no'><a href='falsepositives.html'>falsepositives</a></span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>conn</th>
+      <td><p>Connection object to the database engine</p></td>
+    </tr>
+    <tr>
+      <th>cdmDatabaseSchema</th>
+      <td><p>Source CDM Drug Exposure Table schema</p></td>
+    </tr>
+    <tr>
       <th>cohortDefinitionId</th>
-      <td><p>Optional. Cohort Definition Id in the <code>cdmResultSchema</code></p></td>
+      <td><p>(optional) Cohort Definition Id that filters the CDM Drug Exposure Table to create cohort-specific tables, if desired.</p></td>
     </tr>
     <tr>
       <th>cohortDefinitionIdSchema</th>
-      <td><p>Optional. Schema where the the cohort and cohort definition ID point to.</p></td>
+      <td><p>(optional) If a <code>cohortDefinitionId</code> is provided, the schema in which the cohort table is located.</p></td>
+    </tr>
+    <tr>
+      <th>writeDatabaseSchema</th>
+      <td><p>Schema where the OncoRegimenFinder tables will be written to.</p></td>
+    </tr>
+    <tr>
+      <th>cohortTable</th>
+      <td><p>Name of the Cohort Table OncoRegimenFinder requires to execute the algorithm</p></td>
+    </tr>
+    <tr>
+      <th>regimenTable</th>
+      <td><p>Name of the Regimen Table OncoRegimen will execute the algorithm on.</p></td>
+    </tr>
+    <tr>
+      <th>drug_classification_id_input</th>
+      <td><p>OMOP Concept Ids for Drug Classes curated from the OMOP Vocabulary that are used to identify antineoplastic drugs in the Drug Exposures Table. OncoRegimenFinder is packaged with a default vector of values (c(OncoRegimenFinder::atc_antineoplastic_id, OncoRegimenFinder::hemonc_classes)).</p></td>
+    </tr>
+    <tr>
+      <th>false_positive_id</th>
+      <td><p>OMOP Concept Ids for Drugs that are often classified as antineoplastics, but are more likely be used in a non-cancer clinical setting, such as retinoids and certain antibiotics. Default: OncoRegimenFinder::falsepositives.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The Cohort and Regimen Tables in the writeDatabaseSchema</p>
+    <p>Cohort, Regimen, and Regimen Staging Tables in the <code>writeDatabaseSchema</code></p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>If the Cohort, Regimen, and Regimen Staging Tables already exist, these tables are renamed with the system date appended in the format "_YYYY_MM_DD". The renaming is skipped and the existing Cohort, Regimen and Regimen Staging Tables are dropped if the dated table already exists, indicating that the OncoRegimenFinder was already run once for that system date.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='atc_antineoplastic_id.html'>atc_antineoplastic_id</a></code>,<code><a href='hemonc_classes.html'>hemonc_classes</a></code>,<code><a href='falsepositives.html'>falsepositives</a></code>
+<code><a href='https://rdrr.io/pkg/pg13/man/lsTables.html'>lsTables</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/renameTable.html'>renameTable</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/appendDate.html'>appendDate</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/execute.html'>execute</a></code>
+<code><a href='https://rdrr.io/pkg/SqlRender/man/render.html'>render</a></code>,<code><a href='https://rdrr.io/pkg/SqlRender/man/readSql.html'>readSql</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -167,7 +206,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Meera Patel.</p>
+  <p>Developed by Meera Patel, Michael Lam.</p>
 </div>
 
 <div class="pkgdown">
