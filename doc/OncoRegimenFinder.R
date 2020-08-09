@@ -24,7 +24,7 @@ vocabularyTable <- "oncoregimenfinder_vocabulary"
 
 
 ## ----vocabulary,eval=FALSE,echo=TRUE------------------------------------------
-#  createVocabTable(conn = conn,
+#  OncoRegimenFinder::createVocabTable(conn = conn,
 #                   writeDatabaseSchema = writeDatabaseSchema,
 #                   cdmDatabaseSchema = cdmDatabaseSchema,
 #                   vocabularyTable = vocabularyTable)
@@ -41,6 +41,17 @@ grep(pattern = vocabularyTable,
                                                    tableName = x))) %>% 
         dplyr::bind_rows(.id = "Table") %>% 
         dplyr::rename(RowCount = count)
+
+
+## ----samplevocabulary, echo=FALSE, eval=TRUE, cache=TRUE----------------------
+vocabularyTableData <-
+  pg13::query(conn = conn,
+              sql_statement = pg13::buildQuery(schema = writeDatabaseSchema,
+                                               tableName = vocabularyTable,
+                                               n = 20,
+                                               n_type = "random"))
+
+vocabularyTableData
 
 
 ## ----ingredientexposures, echo=TRUE,eval=FALSE--------------------------------
@@ -62,6 +73,20 @@ grep(pattern = drugExposureIngredientTable,
                                                    tableName = x))) %>% 
         dplyr::bind_rows(.id = "Table") %>% 
         dplyr::rename(RowCount = count)
+
+## ----sampleingredientexposure, eval=TRUE, echo=FALSE, cache=TRUE--------------
+
+drugExposureIngredientTableData <-
+  pg13::query(conn = conn,
+              sql_statement = pg13::buildQuery(schema = writeDatabaseSchema,
+                                               tableName = drugExposureIngredientTable,
+                                               n = 20,
+                                               n_type = "random"))
+
+drugExposureIngredientTableData %>%
+  dplyr::select(ingredient_concept_id,
+                starts_with("drug_exposure"))
+
 
 ## ----dc1, echo=F, eval=TRUE, message="hide"-----------------------------------
 
@@ -125,6 +150,18 @@ regimen_repeats <- 5
 #                                             drug_classification_id_input = drug_classification_id_input,
 #                                             false_positive_id = false_positive_id)
 
+## ----cohort, eval=TRUE, echo=FALSE, cache=TRUE--------------------------------
+
+cohortTableData <-
+  pg13::query(conn = conn,
+              sql_statement = pg13::buildQuery(schema = "patelm9",
+                                               tableName = "oncoregimenfinder_cohort",
+                                               n = 20,
+                                               n_type = "random"))
+
+cohortTableData
+
+
 ## ----cohortcount, echo=FALSE,eval=TRUE----------------------------------------
 grep(pattern = "oncoregimenfinder_cohort",
     pg13::lsTables(conn = conn,
@@ -137,6 +174,18 @@ grep(pattern = "oncoregimenfinder_cohort",
         dplyr::bind_rows(.id = "Table") %>% 
         dplyr::rename(RowCount = count)
   
+
+
+## ---- echo=FALSE, eval=TRUE,cache=TRUE----------------------------------------
+
+regimenStagingTableData <-
+  pg13::query(conn = conn,
+              sql_statement = pg13::buildQuery(schema = writeDatabaseSchema,
+                                               tableName = regimenStagingTable,
+                                               n = 20,
+                                               n_type = "random"))
+
+regimenStagingTableData
 
 
 ## ----regimenstagingcount, echo=FALSE, eval=TRUE-------------------------------
@@ -162,6 +211,18 @@ grep(pattern = regimenStagingTable,
 #                      regimen_repeats = regimen_repeats)
 #  
 
+## ----sampleregimen, echo=FALSE, eval=TRUE, cache=TRUE-------------------------
+
+regimenTableData <-
+  pg13::query(conn = conn,
+              sql_statement = pg13::buildQuery(schema = writeDatabaseSchema,
+                                               tableName = regimenTable,
+                                               n = 20,
+                                               n_type = "random"))
+
+regimenTableData
+
+
 ## ----regimencount, echo=FALSE, eval=TRUE--------------------------------------
 grep(pattern = paste(regimenStagingTable, regimenIngredientTable, sep = "|"),
     pg13::lsTables(conn = conn,
@@ -186,6 +247,18 @@ grep(pattern = paste(regimenStagingTable, regimenIngredientTable, sep = "|"),
 #                         regimenTable = "oncoregimenfinder_regimen",
 #                         regimenIngredientTable = "oncoregimenfinder_regimen_ingredients",
 #                         vocabularyTable = "oncoregimenfinder_vocabulary")
+
+## ----sampleregingr, echo=FALSE, eval=TRUE, cache=TRUE-------------------------
+
+regimenIngrTableData <-
+  pg13::query(conn = conn,
+              sql_statement = pg13::buildQuery(schema = writeDatabaseSchema,
+                                               tableName = regimenIngredientTable,
+                                               n = 20,
+                                               n_type = "random"))
+
+regimenIngrTableData
+
 
 ## ----regingrcount, echo=FALSE, eval=TRUE--------------------------------------
 
