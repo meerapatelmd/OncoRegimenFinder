@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Meera Y. Patel, MD" />
+
+
+<title>Introduction to OncoRegimenFinder</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to OncoRegimenFinder</h1>
+<h4 class="author">Meera Y. Patel, MD</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#general-procedure-notes">General Procedure Notes</a></li>
+<li><a href="#setup">Setup</a><ul>
+<li><a href="#setup-requirements">Setup Requirements</a></li>
+<li><a href="#outputs">Outputs</a></li>
+<li><a href="#maintenance">Maintenance</a></li>
+<li><a href="#procedure">Procedure</a><ul>
+<li><a href="#load-packages">Load Packages</a></li>
+<li><a href="#set-parameters">Set Parameters</a></li>
+<li><a href="#vocabulary-table">Vocabulary Table</a></li>
+<li><a href="#ingredient-exposure-table">Ingredient Exposure Table</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#run-algorithm">Run Algorithm</a><ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#outputs-1">Outputs</a><ul>
+<li><a href="#intermediate">Intermediate</a></li>
+<li><a href="#final">Final</a></li>
+</ul></li>
+<li><a href="#procedure-1">Procedure</a><ul>
+<li><a href="#load-packages-1">Load Packages</a></li>
+<li><a href="#set-parameters-1">Set Parameters</a></li>
+<li><a href="#steps">Steps</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>The goal of OncoRegimenFinder is to write tables that derive antineoplastic drug combinations from every patient in the OMOP CDM instance. The execution occurs in 2 overarching steps:<br />
+1. Subsetting the Drug Exposure table for antineoplastic drugs<br />
+2. Executing an algorithm that derives antineoplastic drug combinations based on overlaps in the window of time created by adding and subtracting the <code>date_lag_input</code> in days from the start date of the drug exposure. This initial resultset is then joined onto itself for a number of iterations determined by <code>regimen_repeats</code>, the maximum number of drugs in derived drug combinations.</p>
+<p>It is important to note that the procedures shown below will run an algorithm with a set <code>date_lag_input</code> and <code>regimen_repeats</code> across the entire OMOP CDM Drug Exposure Table. Though the ultimate goal is to enable retrieval of derived drug combinations from the final <code>writeDatabaseSchema.regimenIngredientTable</code> via a join on the <code>person_id</code> field, specific cohorts may require different <code>date_lag_input</code> and <code>regimen_repeats</code>. For example, esophageal carcinoma patients tend to have regimens executed in blocks of 2 weeks instead of 30 days and the algorithm may return more accurate results with a <code>date_lag_input</code> of 15 days. In special cases such as this it, a second run of OncoRegimenFinder with modified parameters should be run with customized table names.</p>
+</div>
+<div id="general-procedure-notes" class="section level1">
+<h1>General Procedure Notes</h1>
+<ul>
+<li>If any of the tables written in this package already exist in the given schema, the existing table is renamed with the system date appended in the format {table}_YYYY_mm_dd. If {table}_YYYY_mm_dd already exists, the process is skipped and the main table (ie {table}) is dropped.</li>
+</ul>
+</div>
+<div id="setup" class="section level1">
+<h1>Setup</h1>
+<p>Setup involves writing an Ingredient Exposure Table and a Vocabulary Table that serve as the data sources for the remainder of the OncoRegimenFinder procedure.</p>
+<div id="setup-requirements" class="section level2">
+<h2>Setup Requirements</h2>
+<ol style="list-style-type: decimal">
+<li>A database connection object <code>conn</code> to your OMOP CDM instance<br />
+</li>
+<li><code>writeDatabaseSchema</code> destination schema with write privileges</li>
+</ol>
+</div>
+<div id="outputs" class="section level2">
+<h2>Outputs</h2>
+<p>The objective of the setup is to map all data sources to RxNorm Ingredients, which will serve as the point of alignment between Drug Exposures and a Regimen. This involves creating the following tables in <code>writeDatabaseSchema</code>:<br />
+1. Ingredient Exposure Table (<code>drugExposureIngredientTable</code>): Drug Exposure Table with an additional <code>ingredient_concept_id</code> field that references the RxNorm Ingredient that corresponds to the <code>drug_concept_id</code> in the OMOP Vocabulary.<br />
+1. Vocabulary Table (<code>vocabularyTable</code>): In a similar fashion as the Ingredient Exposure Table, HemOnc Regimens are mapped to mapped to 1 or more RxNorm Ingredients.</p>
+</div>
+<div id="maintenance" class="section level2">
+<h2>Maintenance</h2>
+<ul>
+<li>The Ingredient Exposure Table should be rewritten according to the cadence in which the Drug Exposures Table source is updated.<br />
+</li>
+<li>The Vocabulary Table should be rewritten whenever there is an update to HemOnc, RxNorm, or RxNorm Extension in the OMOP Vocabulary.</li>
+</ul>
+</div>
+<div id="procedure" class="section level2">
+<h2>Procedure</h2>
+<div id="load-packages" class="section level3">
+<h3>Load Packages</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(OncoRegimenFinder)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+</div>
+<div id="set-parameters" class="section level3">
+<h3>Set Parameters</h3>
+<ul>
+<li><code>cdmDatabaseSchema</code>: schema housing the Concept and Drug Exposure Table<br />
+</li>
+<li><code>writeDatabaseSchema</code>: schema to write the Ingredient Exposure and Vocabulary Table to<br />
+</li>
+<li><code>drugExposureIngredientTable</code>: name of the Ingredient Exposure Table<br />
+</li>
+<li><code>vocabularyTable</code>: name of the Vocabulary Table</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Schema for the Concept and Drug Exposure Tables</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>cdmDatabaseSchema &lt;-<span class="st"> &quot;omop_cdm_2&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Output Schema and Tables</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>writeDatabaseSchema &lt;-<span class="st"> &quot;patelm9&quot;</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>drugExposureIngredientTable &lt;-<span class="st"> &quot;ingredient_exposure&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>vocabularyTable &lt;-<span class="st"> &quot;oncoregimenfinder_vocabulary&quot;</span></span></code></pre></div>
+</div>
+<div id="vocabulary-table" class="section level3">
+<h3>Vocabulary Table</h3>
+<div id="write" class="section level4">
+<h4>Write</h4>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">createVocabTable</span>(</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="dt">conn =</span> conn,</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="dt">writeDatabaseSchema =</span> writeDatabaseSchema,</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="dt">cdmDatabaseSchema =</span> cdmDatabaseSchema,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="dt">vocabularyTable =</span> vocabularyTable</span>
+<span id="cb3-6"><a href="#cb3-6"></a>)</span></code></pre></div>
+</div>
+<div id="row-count-history" class="section level4">
+<h4>Row Count History</h4>
+<div class="kable-table">
+<table>
+<thead>
+<tr class="header">
+<th align="left">Table</th>
+<th align="right">RowCount</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_VOCABULARY</td>
+<td align="right">1530</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_VOCABULARY_2020_07_28</td>
+<td align="right">1388</td>
+</tr>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_VOCABULARY_2020_08_06</td>
+<td align="right">1388</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_VOCABULARY_2020_08_08</td>
+<td align="right">1388</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="at-a-glance" class="section level4">
+<h4>At a Glance</h4>
+<div class="kable-table">
+<table>
+<colgroup>
+<col width="6%"></col>
+<col width="39%"></col>
+<col width="53%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">regimen_id</th>
+<th align="left">regimen_name</th>
+<th align="left">ingredient_combination</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">35804016</td>
+<td align="left">Z-BEAM</td>
+<td align="left">carmustine, cytarabine, etoposide, ibritumomab tiuxetan, melphalan, rituximab</td>
+</tr>
+<tr class="even">
+<td align="right">35804281</td>
+<td align="left">Abemaciclib and Letrozole</td>
+<td align="left">abemaciclib, letrozole</td>
+</tr>
+<tr class="odd">
+<td align="right">35805805</td>
+<td align="left">MOPP-ABV</td>
+<td align="left">bleomycin, doxorubicin, mechlorethamine, prednisone, procarbazine, vinblastine, vincristine</td>
+</tr>
+<tr class="even">
+<td align="right">35803625</td>
+<td align="left">Fludarabine, Busulfan, ATG, Ibritumomab tiuxetan</td>
+<td align="left">busulfan, fludarabine, ibritumomab tiuxetan, rituximab</td>
+</tr>
+<tr class="odd">
+<td align="right">35102013</td>
+<td align="left">R-CHOP (Rituximab Hycela)</td>
+<td align="left">cyclophosphamide, doxorubicin, prednisone, rituximab, vincristine</td>
+</tr>
+<tr class="even">
+<td align="right">35804606</td>
+<td align="left">Acalabrutinib monotherapy</td>
+<td align="left">acalabrutinib</td>
+</tr>
+<tr class="odd">
+<td align="right">35803501</td>
+<td align="left">FLAG</td>
+<td align="left">cytarabine, fludarabine</td>
+</tr>
+<tr class="even">
+<td align="right">35806111</td>
+<td align="left">Carboplatin, Cyclophosphamide, Etoposide, Methotrexate, Vincristine</td>
+<td align="left">carboplatin, cyclophosphamide, etoposide, methotrexate, vincristine</td>
+</tr>
+<tr class="odd">
+<td align="right">35806840</td>
+<td align="left">Bicalutamide monotherapy</td>
+<td align="left">bicalutamide</td>
+</tr>
+<tr class="even">
+<td align="right">35803491</td>
+<td align="left">Fludarabine and TBI, then allo HSCT</td>
+<td align="left">fludarabine</td>
+</tr>
+<tr class="odd">
+<td align="right">35803548</td>
+<td align="left">Arsenic trioxide monotherapy</td>
+<td align="left">arsenic trioxide</td>
+</tr>
+<tr class="even">
+<td align="right">35805644</td>
+<td align="left">(90)YFC, then allo HSCT</td>
+<td align="left">cyclophosphamide, fludarabine, ibritumomab tiuxetan, rituximab</td>
+</tr>
+<tr class="odd">
+<td align="right">35806835</td>
+<td align="left">ADT and Apalutamide</td>
+<td align="left">apalutamide</td>
+</tr>
+<tr class="even">
+<td align="right">35806421</td>
+<td align="left">Cabozantinib and Erlotinib</td>
+<td align="left">cabozantinib, erlotinib</td>
+</tr>
+<tr class="odd">
+<td align="right">35806646</td>
+<td align="left">Cyclophosphamide, Dacarbazine, Vincristine</td>
+<td align="left">cyclophosphamide, dacarbazine, vincristine</td>
+</tr>
+<tr class="even">
+<td align="right">35806328</td>
+<td align="left">FRD</td>
+<td align="left">dexamethasone, lenalidomide, panobinostat</td>
+</tr>
+<tr class="odd">
+<td align="right">35806057</td>
+<td align="left">MRD</td>
+<td align="left">dexamethasone, lenalidomide, melphalan</td>
+</tr>
+<tr class="even">
+<td align="right">35100810</td>
+<td align="left">Exemestane and Tucidinostat</td>
+<td align="left">exemestane</td>
+</tr>
+<tr class="odd">
+<td align="right">35803467</td>
+<td align="left">Azacitidine and Gemtuzumab ozogamicin</td>
+<td align="left">azacitidine, gemtuzumab ozogamicin</td>
+</tr>
+<tr class="even">
+<td align="right">35806850</td>
+<td align="left">Apalutamide monotherapy</td>
+<td align="left">apalutamide</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="ingredient-exposure-table" class="section level3">
+<h3>Ingredient Exposure Table</h3>
+<div id="write-ingredient-exposure-table" class="section level4">
+<h4>Write Ingredient Exposure Table</h4>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2"></a>OncoRegimenFinder<span class="op">::</span><span class="kw">buildIngredientExposuresTable</span>(</span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="dt">conn =</span> conn,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="dt">cdmDatabaseSchema =</span> cdmDatabaseSchema,</span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="dt">writeDatabaseSchema =</span> writeDatabaseSchema,</span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="dt">drugExposureIngredientTable =</span> drugExposureIngredientTable</span>
+<span id="cb4-7"><a href="#cb4-7"></a>)</span></code></pre></div>
+</div>
+<div id="row-count-history-1" class="section level4">
+<h4>Row Count History</h4>
+<div class="kable-table">
+<table>
+<thead>
+<tr class="header">
+<th align="left">Table</th>
+<th align="right">RowCount</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">INGREDIENT_EXPOSURE</td>
+<td align="right">55834050</td>
+</tr>
+<tr class="even">
+<td align="left">INGREDIENT_EXPOSURE_2020_08_08</td>
+<td align="right">55834050</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="at-a-glance-1" class="section level4">
+<h4>At a Glance</h4>
+<div class="kable-table">
+<table>
+<colgroup>
+<col width="15%"></col>
+<col width="11%"></col>
+<col width="17%"></col>
+<col width="20%"></col>
+<col width="16%"></col>
+<col width="18%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">ingredient_concept_id</th>
+<th align="right">drug_exposure_id</th>
+<th align="left">drug_exposure_start_date</th>
+<th align="left">drug_exposure_start_datetime</th>
+<th align="left">drug_exposure_end_date</th>
+<th align="left">drug_exposure_end_datetime</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">19049024</td>
+<td align="right">36229972</td>
+<td align="left">2017-12-23</td>
+<td align="left">2017-12-23 09:37:00</td>
+<td align="left">2017-12-24</td>
+<td align="left">2017-12-24 09:58:00</td>
+</tr>
+<tr class="even">
+<td align="right">967823</td>
+<td align="right">6550117</td>
+<td align="left">1999-01-20</td>
+<td align="left">1999-01-20 16:24:00</td>
+<td align="left">1999-01-20</td>
+<td align="left">1999-01-20 16:24:00</td>
+</tr>
+<tr class="odd">
+<td align="right">19078092</td>
+<td align="right">36254185</td>
+<td align="left">2018-10-11</td>
+<td align="left">2018-10-11 15:21:00</td>
+<td align="left">2018-10-13</td>
+<td align="left">2018-10-13 06:27:00</td>
+</tr>
+<tr class="even">
+<td align="right">19049024</td>
+<td align="right">37508949</td>
+<td align="left">2015-11-11</td>
+<td align="left">2015-11-11 20:20:00</td>
+<td align="left">2015-11-11</td>
+<td align="left">2015-11-11 22:01:00</td>
+</tr>
+<tr class="odd">
+<td align="right">1746114</td>
+<td align="right">38983207</td>
+<td align="left">2018-03-02</td>
+<td align="left">2018-03-02 03:44:00</td>
+<td align="left">2018-03-02</td>
+<td align="left">2018-03-02 06:00:00</td>
+</tr>
+<tr class="even">
+<td align="right">1310317</td>
+<td align="right">15482332</td>
+<td align="left">1990-07-24</td>
+<td align="left">1990-07-24 12:38:00</td>
+<td align="left">1990-07-25</td>
+<td align="left">1990-07-25 12:38:00</td>
+</tr>
+<tr class="odd">
+<td align="right">19049105</td>
+<td align="right">25567265</td>
+<td align="left">2010-07-22</td>
+<td align="left">2010-07-22 06:22:00</td>
+<td align="left">2010-07-22</td>
+<td align="left">2010-07-22 17:56:01</td>
+</tr>
+<tr class="even">
+<td align="right">1314002</td>
+<td align="right">44835604</td>
+<td align="left">2010-02-20</td>
+<td align="left">2010-02-20 11:42:00</td>
+<td align="left">2010-02-20</td>
+<td align="left">2010-02-20 00:00:00</td>
+</tr>
+<tr class="odd">
+<td align="right">1518254</td>
+<td align="right">388158</td>
+<td align="left">2003-04-17</td>
+<td align="left">2003-04-17 00:00:00</td>
+<td align="left">2003-04-17</td>
+<td align="left">2003-04-17 00:00:00</td>
+</tr>
+<tr class="even">
+<td align="right">1125315</td>
+<td align="right">30543765</td>
+<td align="left">2011-08-11</td>
+<td align="left">2011-08-11 06:36:00</td>
+<td align="left">2011-08-11</td>
+<td align="left">2011-08-11 06:36:00</td>
+</tr>
+<tr class="odd">
+<td align="right">40241331</td>
+<td align="right">48696981</td>
+<td align="left">2015-09-28</td>
+<td align="left">2015-09-28 15:00:02</td>
+<td align="left">2015-10-02</td>
+<td align="left">2015-10-02 12:04:28</td>
+</tr>
+<tr class="even">
+<td align="right">1125315</td>
+<td align="right">11486382</td>
+<td align="left">2005-02-11</td>
+<td align="left">2005-02-11 23:45:00</td>
+<td align="left">2005-02-18</td>
+<td align="left">2005-02-18 12:00:00</td>
+</tr>
+<tr class="odd">
+<td align="right">1518254</td>
+<td align="right">16395051</td>
+<td align="left">1996-02-06</td>
+<td align="left">1996-02-06 23:59:59</td>
+<td align="left">1996-03-05</td>
+<td align="left">1996-03-05 18:00:00</td>
+</tr>
+<tr class="even">
+<td align="right">1518254</td>
+<td align="right">28766270</td>
+<td align="left">2015-06-30</td>
+<td align="left">2015-06-30 10:50:00</td>
+<td align="left">2015-07-06</td>
+<td align="left">2015-07-06 06:14:00</td>
+</tr>
+<tr class="odd">
+<td align="right">752061</td>
+<td align="right">45472529</td>
+<td align="left">2011-11-10</td>
+<td align="left">2011-11-10 18:26:00</td>
+<td align="left">2011-11-10</td>
+<td align="left">2011-11-10 00:00:00</td>
+</tr>
+<tr class="even">
+<td align="right">1129625</td>
+<td align="right">8729041</td>
+<td align="left">2001-06-04</td>
+<td align="left">2001-06-04 13:40:00</td>
+<td align="left">2001-06-05</td>
+<td align="left">2001-06-05 13:40:00</td>
+</tr>
+<tr class="odd">
+<td align="right">911354</td>
+<td align="right">39577949</td>
+<td align="left">2017-02-09</td>
+<td align="left">2017-02-09 00:00:01</td>
+<td align="left">2017-02-10</td>
+<td align="left">2017-02-10 01:00:00</td>
+</tr>
+<tr class="even">
+<td align="right">1344905</td>
+<td align="right">21265985</td>
+<td align="left">2014-09-24</td>
+<td align="left">2014-09-24 08:00:00</td>
+<td align="left">2014-09-24</td>
+<td align="left">2014-09-24 08:00:00</td>
+</tr>
+<tr class="odd">
+<td align="right">1154029</td>
+<td align="right">46984970</td>
+<td align="left">2015-08-04</td>
+<td align="left">2015-08-04 13:03:00</td>
+<td align="left">2015-08-04</td>
+<td align="left">2015-08-04 00:00:00</td>
+</tr>
+<tr class="even">
+<td align="right">1560524</td>
+<td align="right">37476714</td>
+<td align="left">2015-06-30</td>
+<td align="left">2015-06-30 08:00:00</td>
+<td align="left">2015-06-30</td>
+<td align="left">2015-06-30 08:00:00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="run-algorithm" class="section level1">
+<h1>Run Algorithm</h1>
+<p>The algorithm can be run once the tables are written in <a href="#setup">Setup</a>.</p>
+<div id="requirements" class="section level2">
+<h2>Requirements</h2>
+<ol style="list-style-type: decimal">
+<li>A database connection object <code>conn</code> to your OMOP CDM instance<br />
+</li>
+<li><code>writeDatabaseSchema</code> destination schema with write privileges<br />
+</li>
+<li><code>writeDatabaseSchema</code>.<code>vocabularyTable</code> &amp; <code>writeDatabaseSchema</code>.<code>drugExposureIngredientTable</code> Tables (see [“Setup”])</li>
+</ol>
+</div>
+<div id="outputs-1" class="section level2">
+<h2>Outputs</h2>
+<div id="intermediate" class="section level3">
+<h3>Intermediate</h3>
+<ol style="list-style-type: decimal">
+<li>Cohort Table <code>cohortTable</code>: Ingredient Exposure table filtered for all the RxNorm Ingredients that are descendants of a superclass comprised of one or more OMOP Vocabulary Concept Classes Concept Ids (<code>drug_classification_id_input</code>). By default, <code>drug_classification_id_input</code> is set to Concept Classes of <code>OncoRegimenFinder::atc_antineoplastic_id</code> and <code>OncoRegimenFinder::hemonc_classes</code>, but is modifiable according to user preference.<br />
+</li>
+<li>Regimen Staging Table <code>regimenStagingTable</code>: A copy of the Cohort Table. This table is written to serve as the data source for running OncoRegimenFinder against a cohort requiring non-standard <code>date_lag_input</code> and <code>regimen_repeats</code> parameters.</li>
+</ol>
+</div>
+<div id="final" class="section level3">
+<h3>Final</h3>
+<ol style="list-style-type: decimal">
+<li><em>Regimen Table <code>regimenTable</code></em>: Regimen Staging Table that is run through the OncoRegimenFinder algorithm according to the default <code>date_lag_input</code> and <code>regimen_repeats</code> values of 30 days and 5, respectively.<br />
+</li>
+<li><em>Regimen Ingredient Table <code>regimenIngredientTable</code></em>: Regimen Ingredient Table that maps the algorithm output in the Regimen Table to HemOnc Regimens in the <code>vocabularyTable</code> written in <a href="#setup">Setup</a>.</li>
+</ol>
+</div>
+</div>
+<div id="procedure-1" class="section level2">
+<h2>Procedure</h2>
+<div id="load-packages-1" class="section level3">
+<h3>Load Packages</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">library</span>(OncoRegimenFinder)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+</div>
+<div id="set-parameters-1" class="section level3">
+<h3>Set Parameters</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Schema of Source Person and Drug Exposure Tables</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>cdmDatabaseSchema &lt;-<span class="st"> &quot;omop_cdm_2&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co"># Output Schema and Tables</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>writeDatabaseSchema &lt;-<span class="st"> &quot;patelm9&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>drugExposureIngredientTable &lt;-<span class="st"> &quot;ingredient_exposure&quot;</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>cohortTable &lt;-<span class="st"> &quot;oncoregimenfinder_cohort&quot;</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a>regimenTable &lt;-<span class="st"> &quot;oncoregimenfinder_regimen&quot;</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>regimenStagingTable &lt;-<span class="st"> &quot;oncoregimenfinder_regimen_staging&quot;</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a>vocabularyTable &lt;-<span class="st"> &quot;oncoregimenfinder_vocabulary&quot;</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a>regimenIngredientTable &lt;-<span class="st"> &quot;oncoregimenfinder_regimen_ingredients&quot;</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co"># OMOP Vocabulary Drug Classes to filter Drug Exposures for</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a>drug_classification_id_input &lt;-<span class="st"> </span><span class="kw">c</span>( <span class="co"># ATC Antineoplastics (OncoRegimenFinder::atc_antineoplastics_id)</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a>  <span class="dv">21601387</span>,</span>
+<span id="cb6-16"><a href="#cb6-16"></a>  <span class="co"># HemOnc Classes (OncoRegimenFinder::hemonc_classes)</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a>  <span class="dv">35101847</span>,</span>
+<span id="cb6-18"><a href="#cb6-18"></a>  <span class="dv">35807195</span>,</span>
+<span id="cb6-19"><a href="#cb6-19"></a>  <span class="dv">35807466</span>,</span>
+<span id="cb6-20"><a href="#cb6-20"></a>  <span class="dv">35807470</span>,</span>
+<span id="cb6-21"><a href="#cb6-21"></a>  <span class="dv">35807489</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a>)</span>
+<span id="cb6-23"><a href="#cb6-23"></a>false_positive_id &lt;-</span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="st">  </span><span class="co"># OncoRegimenFinder::falsepositives</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a><span class="st">  </span><span class="kw">c</span>(</span>
+<span id="cb6-26"><a href="#cb6-26"></a>    <span class="dv">45775396</span>, <span class="dv">1304850</span>, <span class="dv">792993</span>, <span class="dv">19010482</span>, <span class="dv">19089602</span>,</span>
+<span id="cb6-27"><a href="#cb6-27"></a>    <span class="dv">19080458</span>, <span class="dv">19104221</span>, <span class="dv">19065450</span>, <span class="dv">1510328</span>, <span class="dv">42903942</span>,</span>
+<span id="cb6-28"><a href="#cb6-28"></a>    <span class="dv">1354698</span>, <span class="dv">1551860</span>, <span class="dv">19003472</span>, <span class="dv">1356009</span>, <span class="dv">40244464</span>,</span>
+<span id="cb6-29"><a href="#cb6-29"></a>    <span class="dv">1303425</span>, <span class="dv">745466</span>, <span class="dv">1389464</span>, <span class="dv">19025194</span>, <span class="dv">740910</span>, <span class="dv">1710612</span>,</span>
+<span id="cb6-30"><a href="#cb6-30"></a>    <span class="dv">35606631</span>, <span class="dv">19003999</span>, <span class="dv">985708</span>, <span class="dv">45775206</span>, <span class="dv">1308432</span>, <span class="dv">1522957</span>,</span>
+<span id="cb6-31"><a href="#cb6-31"></a>    <span class="dv">1760616</span>, <span class="dv">950637</span>, <span class="dv">1300978</span>, <span class="dv">44816310</span>, <span class="dv">1500211</span>, <span class="dv">1506270</span>,</span>
+<span id="cb6-32"><a href="#cb6-32"></a>    <span class="dv">923645</span>, <span class="dv">19061406</span>, <span class="dv">40171288</span>, <span class="dv">1388796</span>, <span class="dv">40168303</span>, <span class="dv">975125</span>,</span>
+<span id="cb6-33"><a href="#cb6-33"></a>    <span class="dv">1507705</span>, <span class="dv">1511449</span>, <span class="dv">1738521</span>, <span class="dv">1548195</span>, <span class="dv">1518254</span>, <span class="dv">40222444</span>,</span>
+<span id="cb6-34"><a href="#cb6-34"></a>    <span class="dv">1713332</span>, <span class="dv">1112807</span>, <span class="dv">19014878</span>, <span class="dv">19034726</span>, <span class="dv">984232</span>, <span class="dv">1525866</span>,</span>
+<span id="cb6-35"><a href="#cb6-35"></a>    <span class="dv">989482</span>, <span class="dv">1550557</span>, <span class="dv">1551099</span>, <span class="dv">924120</span>, <span class="dv">904351</span></span>
+<span id="cb6-36"><a href="#cb6-36"></a>  )</span>
+<span id="cb6-37"><a href="#cb6-37"></a></span>
+<span id="cb6-38"><a href="#cb6-38"></a><span class="co"># Date difference when assessing for drug combinations in the Drug Exposures table</span></span>
+<span id="cb6-39"><a href="#cb6-39"></a>date_lag_input &lt;-<span class="st"> </span><span class="dv">30</span></span>
+<span id="cb6-40"><a href="#cb6-40"></a>regimen_repeats &lt;-<span class="st"> </span><span class="dv">5</span></span></code></pre></div>
+</div>
+<div id="steps" class="section level3">
+<h3>Steps</h3>
+<ol style="list-style-type: decimal">
+<li>Cohort, Regimen, and a copy of Regimen as “Regimen Staging” Tables are written.</li>
+<li>Regimen Table undergoes further processing by combining overlapping instances of an ingredient start date and +/- the date lag input over the number of regimen repeats.<br />
+</li>
+<li>A final Regimen Ingredient Table joins the Vocabulary Table with the Regimen Table to map drug combinations derived from this algorithm back to the HemOnc ontology and other OMOP Concepts</li>
+</ol>
+<div id="write-cohort-and-regimen-staging-tables" class="section level4">
+<h4>Write Cohort and Regimen Staging Tables</h4>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>OncoRegimenFinder<span class="op">::</span><span class="kw">buildCohortRegimenTable</span>(</span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="dt">conn =</span> conn,</span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="dt">cdmDatabaseSchema =</span> cdmDatabaseSchema,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="dt">writeDatabaseSchema =</span> writeDatabaseSchema,</span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="dt">cohortTable =</span> cohortTable,</span>
+<span id="cb7-6"><a href="#cb7-6"></a>  <span class="dt">regimenTable =</span> regimenTable,</span>
+<span id="cb7-7"><a href="#cb7-7"></a>  <span class="dt">drug_classification_id_input =</span> drug_classification_id_input,</span>
+<span id="cb7-8"><a href="#cb7-8"></a>  <span class="dt">false_positive_id =</span> false_positive_id</span>
+<span id="cb7-9"><a href="#cb7-9"></a>)</span></code></pre></div>
+<div id="cohort-table" class="section level5">
+<h5>Cohort Table</h5>
+<p>The <code>Cohort Table</code> selects for the Person Id, Drug Exposure Id with Start and End Dates for all Drug Concept Ids that are RxNorm Ingredients representing that Drug Exposure filtered for all descendants of the curated Drug Cl argument.</p>
+<div id="at-a-glance-2" class="section level6">
+<h6>At a Glance</h6>
+<div class="kable-table">
+<table>
+<colgroup>
+<col width="17%"></col>
+<col width="10%"></col>
+<col width="14%"></col>
+<col width="16%"></col>
+<col width="22%"></col>
+<col width="20%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">drug_exposure_id</th>
+<th align="right">person_id</th>
+<th align="right">ingredient_id</th>
+<th align="left">ingredient_name</th>
+<th align="left">ingredient_start_date</th>
+<th align="left">ingredient_end_date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">43510770</td>
+<td align="right">1577110</td>
+<td align="right">1314924</td>
+<td align="left">gemcitabine</td>
+<td align="left">2020-04-09</td>
+<td align="left">2020-04-09</td>
+</tr>
+<tr class="even">
+<td align="right">42211431</td>
+<td align="right">1510643</td>
+<td align="right">1350504</td>
+<td align="left">etoposide</td>
+<td align="left">2018-11-08</td>
+<td align="left">2018-11-09</td>
+</tr>
+<tr class="odd">
+<td align="right">25590913</td>
+<td align="right">1085499</td>
+<td align="right">1397141</td>
+<td align="left">bevacizumab</td>
+<td align="left">2017-10-23</td>
+<td align="left">2017-10-24</td>
+</tr>
+<tr class="even">
+<td align="right">4548199</td>
+<td align="right">334837</td>
+<td align="right">1387104</td>
+<td align="left">trastuzumab</td>
+<td align="left">2005-05-24</td>
+<td align="left">2005-05-24</td>
+</tr>
+<tr class="odd">
+<td align="right">39228220</td>
+<td align="right">1400724</td>
+<td align="right">1397599</td>
+<td align="left">cisplatin</td>
+<td align="left">2016-10-17</td>
+<td align="left">2016-10-18</td>
+</tr>
+<tr class="even">
+<td align="right">47140104</td>
+<td align="right">1262137</td>
+<td align="right">40239056</td>
+<td align="left">abiraterone</td>
+<td align="left">2016-04-14</td>
+<td align="left">2016-04-14</td>
+</tr>
+<tr class="odd">
+<td align="right">18926857</td>
+<td align="right">946480</td>
+<td align="right">1314924</td>
+<td align="left">gemcitabine</td>
+<td align="left">2007-02-09</td>
+<td align="left">2007-02-09</td>
+</tr>
+<tr class="even">
+<td align="right">18042145</td>
+<td align="right">118282</td>
+<td align="right">997276</td>
+<td align="left">cimetidine</td>
+<td align="left">1997-11-10</td>
+<td align="left">1997-11-20</td>
+</tr>
+<tr class="odd">
+<td align="right">38230898</td>
+<td align="right">1369641</td>
+<td align="right">1378382</td>
+<td align="left">paclitaxel</td>
+<td align="left">2018-04-18</td>
+<td align="left">2018-04-19</td>
+</tr>
+<tr class="even">
+<td align="right">48466444</td>
+<td align="right">1324886</td>
+<td align="right">40239056</td>
+<td align="left">abiraterone</td>
+<td align="left">2016-07-25</td>
+<td align="left">2016-11-18</td>
+</tr>
+<tr class="odd">
+<td align="right">40891098</td>
+<td align="right">1455165</td>
+<td align="right">1378382</td>
+<td align="left">paclitaxel</td>
+<td align="left">2018-03-26</td>
+<td align="left">2018-03-27</td>
+</tr>
+<tr class="even">
+<td align="right">5632670</td>
+<td align="right">886080</td>
+<td align="right">45775965</td>
+<td align="left">pembrolizumab</td>
+<td align="left">2018-07-16</td>
+<td align="left">2018-07-17</td>
+</tr>
+<tr class="odd">
+<td align="right">14128001</td>
+<td align="right">652114</td>
+<td align="right">1305058</td>
+<td align="left">methotrexate</td>
+<td align="left">1989-02-15</td>
+<td align="left">1989-02-16</td>
+</tr>
+<tr class="even">
+<td align="right">42203758</td>
+<td align="right">1510433</td>
+<td align="right">40238188</td>
+<td align="left">ipilimumab</td>
+<td align="left">2018-12-18</td>
+<td align="left">2018-12-19</td>
+</tr>
+<tr class="odd">
+<td align="right">2478440</td>
+<td align="right">284085</td>
+<td align="right">19078187</td>
+<td align="left">ifosfamide</td>
+<td align="left">1995-06-18</td>
+<td align="left">1995-06-18</td>
+</tr>
+<tr class="even">
+<td align="right">48287966</td>
+<td align="right">1290173</td>
+<td align="right">996416</td>
+<td align="left">finasteride</td>
+<td align="left">2017-09-12</td>
+<td align="left">2018-08-13</td>
+</tr>
+<tr class="odd">
+<td align="right">1716396</td>
+<td align="right">267847</td>
+<td align="right">1305058</td>
+<td align="left">methotrexate</td>
+<td align="left">1996-09-17</td>
+<td align="left">1996-09-18</td>
+</tr>
+<tr class="even">
+<td align="right">17865708</td>
+<td align="right">938335</td>
+<td align="right">1314924</td>
+<td align="left">gemcitabine</td>
+<td align="left">2004-10-19</td>
+<td align="left">2004-10-19</td>
+</tr>
+<tr class="odd">
+<td align="right">27757432</td>
+<td align="right">1126206</td>
+<td align="right">1315942</td>
+<td align="left">docetaxel</td>
+<td align="left">2010-06-10</td>
+<td align="left">2010-06-10</td>
+</tr>
+<tr class="even">
+<td align="right">32730470</td>
+<td align="right">1224428</td>
+<td align="right">1351541</td>
+<td align="left">leuprolide</td>
+<td align="left">2014-10-31</td>
+<td align="left">2014-11-01</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="row-count-history-2" class="section level6">
+<h6>Row Count History</h6>
+<div class="kable-table">
+<table>
+<thead>
+<tr class="header">
+<th align="left">Table</th>
+<th align="right">RowCount</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_COHORT</td>
+<td align="right">5244273</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_COHORT_2020_07_15</td>
+<td align="right">4553840</td>
+</tr>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_COHORT_2020_07_28</td>
+<td align="right">4554988</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_COHORT_2020_08_06</td>
+<td align="right">613635</td>
+</tr>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_COHORT_2020_08_07</td>
+<td align="right">5244273</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_COHORT_2020_08_08</td>
+<td align="right">104701978</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="regimen-staging-table" class="section level5">
+<h5>Regimen Staging Table</h5>
+<p>The final Regimen Table is derived from the Regimen Staging Table is also to source of Regimens used to process special cohort tables. The Regimen Staging Table also serves as the data source when running OncoRegimenFinder against special cohorts.</p>
+<div id="at-a-glance-3" class="section level6">
+<h6>At a Glance</h6>
+<div class="kable-table">
+<table>
+<colgroup>
+<col width="17%"></col>
+<col width="10%"></col>
+<col width="14%"></col>
+<col width="16%"></col>
+<col width="22%"></col>
+<col width="20%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">drug_exposure_id</th>
+<th align="right">person_id</th>
+<th align="right">ingredient_id</th>
+<th align="left">ingredient_name</th>
+<th align="left">ingredient_start_date</th>
+<th align="left">ingredient_end_date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">17664150</td>
+<td align="right">111284</td>
+<td align="right">1305058</td>
+<td align="left">methotrexate</td>
+<td align="left">1993-02-18</td>
+<td align="left">1993-02-19</td>
+</tr>
+<tr class="even">
+<td align="right">44288249</td>
+<td align="right">1071532</td>
+<td align="right">1118084</td>
+<td align="left">celecoxib</td>
+<td align="left">2008-06-24</td>
+<td align="left">2008-06-24</td>
+</tr>
+<tr class="odd">
+<td align="right">30226090</td>
+<td align="right">1172389</td>
+<td align="right">42801287</td>
+<td align="left">pertuzumab</td>
+<td align="left">2015-11-23</td>
+<td align="left">2015-11-24</td>
+</tr>
+<tr class="even">
+<td align="right">14323899</td>
+<td align="right">736160</td>
+<td align="right">1311409</td>
+<td align="left">dacarbazine</td>
+<td align="left">1993-09-15</td>
+<td align="left">1993-09-16</td>
+</tr>
+<tr class="odd">
+<td align="right">35229406</td>
+<td align="right">1279492</td>
+<td align="right">1351541</td>
+<td align="left">leuprolide</td>
+<td align="left">2014-01-13</td>
+<td align="left">2014-01-14</td>
+</tr>
+<tr class="even">
+<td align="right">36971980</td>
+<td align="right">1330155</td>
+<td align="right">1329241</td>
+<td align="left">bleomycin</td>
+<td align="left">2015-03-06</td>
+<td align="left">2015-03-06</td>
+</tr>
+<tr class="odd">
+<td align="right">2345066</td>
+<td align="right">280953</td>
+<td align="right">1315946</td>
+<td align="left">letrozole</td>
+<td align="left">2004-01-20</td>
+<td align="left">2004-04-28</td>
+</tr>
+<tr class="even">
+<td align="right">33710302</td>
+<td align="right">1246213</td>
+<td align="right">1344905</td>
+<td align="left">carboplatin</td>
+<td align="left">2018-07-17</td>
+<td align="left">2018-07-18</td>
+</tr>
+<tr class="odd">
+<td align="right">29037866</td>
+<td align="right">1149623</td>
+<td align="right">1338512</td>
+<td align="left">doxorubicin</td>
+<td align="left">2010-12-15</td>
+<td align="left">2010-12-15</td>
+</tr>
+<tr class="even">
+<td align="right">9113779</td>
+<td align="right">588386</td>
+<td align="right">19026972</td>
+<td align="left">lenalidomide</td>
+<td align="left">2003-12-12</td>
+<td align="left">2004-01-10</td>
+</tr>
+<tr class="odd">
+<td align="right">15557976</td>
+<td align="right">933138</td>
+<td align="right">1387104</td>
+<td align="left">trastuzumab</td>
+<td align="left">2005-01-07</td>
+<td align="left">2005-01-07</td>
+</tr>
+<tr class="even">
+<td align="right">20244608</td>
+<td align="right">975775</td>
+<td align="right">1314924</td>
+<td align="left">gemcitabine</td>
+<td align="left">2007-01-31</td>
+<td align="left">2007-01-31</td>
+</tr>
+<tr class="odd">
+<td align="right">27617032</td>
+<td align="right">1123110</td>
+<td align="right">1387104</td>
+<td align="left">trastuzumab</td>
+<td align="left">2010-05-04</td>
+<td align="left">2010-05-04</td>
+</tr>
+<tr class="even">
+<td align="right">50069311</td>
+<td align="right">1519864</td>
+<td align="right">1377141</td>
+<td align="left">hydroxyurea</td>
+<td align="left">2019-01-09</td>
+<td align="left">2019-01-14</td>
+</tr>
+<tr class="odd">
+<td align="right">4947133</td>
+<td align="right">628536</td>
+<td align="right">1314924</td>
+<td align="left">gemcitabine</td>
+<td align="left">1999-02-02</td>
+<td align="left">1999-02-03</td>
+</tr>
+<tr class="even">
+<td align="right">24792413</td>
+<td align="right">1069667</td>
+<td align="right">40230712</td>
+<td align="left">eribulin</td>
+<td align="left">2017-01-17</td>
+<td align="left">2017-01-18</td>
+</tr>
+<tr class="odd">
+<td align="right">13738894</td>
+<td align="right">920933</td>
+<td align="right">1314924</td>
+<td align="left">gemcitabine</td>
+<td align="left">2009-10-22</td>
+<td align="left">2009-10-22</td>
+</tr>
+<tr class="even">
+<td align="right">36027389</td>
+<td align="right">1302209</td>
+<td align="right">1350504</td>
+<td align="left">etoposide</td>
+<td align="left">2014-10-17</td>
+<td align="left">2014-10-19</td>
+</tr>
+<tr class="odd">
+<td align="right">18600449</td>
+<td align="right">940571</td>
+<td align="right">955632</td>
+<td align="left">fluorouracil</td>
+<td align="left">2012-01-23</td>
+<td align="left">2012-01-23</td>
+</tr>
+<tr class="even">
+<td align="right">1288482</td>
+<td align="right">143518</td>
+<td align="right">1367268</td>
+<td align="left">irinotecan</td>
+<td align="left">1996-10-14</td>
+<td align="left">1996-10-15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="row-count-history-3" class="section level6">
+<h6>Row Count History</h6>
+<div class="kable-table">
+<table>
+<thead>
+<tr class="header">
+<th align="left">Table</th>
+<th align="right">RowCount</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_STAGING</td>
+<td align="right">5244273</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_STAGING_2020_08_06</td>
+<td align="right">613635</td>
+</tr>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_STAGING_2020_08_07</td>
+<td align="right">5244273</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_STAGING_2020_08_08</td>
+<td align="right">104701978</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="process-regimen-table" class="section level4">
+<h4>Process Regimen Table</h4>
+<p>The Regimen Table is grouped by Person Id, Drug Exposure Id, Ingredient and Ingredient Start Date and joined onto itself based on overlapping window of time by +/= the Date Lag Input parameter and iterated on based on the Regimen Repeats given.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2"></a>OncoRegimenFinder<span class="op">::</span><span class="kw">processRegimenTable</span>(</span>
+<span id="cb8-3"><a href="#cb8-3"></a>  <span class="dt">conn =</span> conn,</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="dt">writeDatabaseSchema =</span> writeDatabaseSchema,</span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="dt">regimenTable =</span> regimenTable,</span>
+<span id="cb8-6"><a href="#cb8-6"></a>  <span class="dt">date_lag_input =</span> date_lag_input,</span>
+<span id="cb8-7"><a href="#cb8-7"></a>  <span class="dt">regimen_repeats =</span> regimen_repeats</span>
+<span id="cb8-8"><a href="#cb8-8"></a>)</span></code></pre></div>
+<div id="regimen-table" class="section level5">
+<h5>Regimen Table</h5>
+<div id="at-a-glance-4" class="section level6">
+<h6>At a Glance</h6>
+<div class="kable-table">
+<table>
+<thead>
+<tr class="header">
+<th align="right">person_id</th>
+<th align="right">drug_exposure_id</th>
+<th align="left">ingredient_name</th>
+<th align="left">ingredient_start_date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">628392</td>
+<td align="right">4939997</td>
+<td align="left">irinotecan</td>
+<td align="left">1997-10-15</td>
+</tr>
+<tr class="even">
+<td align="right">1073840</td>
+<td align="right">24992237</td>
+<td align="left">cetuximab</td>
+<td align="left">2010-01-04</td>
+</tr>
+<tr class="odd">
+<td align="right">1146685</td>
+<td align="right">28891005</td>
+<td align="left">trastuzumab</td>
+<td align="left">2010-07-08</td>
+</tr>
+<tr class="even">
+<td align="right">948799</td>
+<td align="right">19032734</td>
+<td align="left">fulvestrant</td>
+<td align="left">2018-09-04</td>
+</tr>
+<tr class="odd">
+<td align="right">1232646</td>
+<td align="right">33112592</td>
+<td align="left">methotrexate</td>
+<td align="left">2013-01-17</td>
+</tr>
+<tr class="even">
+<td align="right">1459261</td>
+<td align="right">41017248</td>
+<td align="left">cyclophosphamide</td>
+<td align="left">2018-11-08</td>
+</tr>
+<tr class="odd">
+<td align="right">1124714</td>
+<td align="right">47813136</td>
+<td align="left">exemestane</td>
+<td align="left">2020-03-04</td>
+</tr>
+<tr class="even">
+<td align="right">1488293</td>
+<td align="right">41607303</td>
+<td align="left">fluorouracil</td>
+<td align="left">2018-10-11</td>
+</tr>
+<tr class="odd">
+<td align="right">1181929</td>
+<td align="right">30687396</td>
+<td align="left">goserelin</td>
+<td align="left">2012-11-14</td>
+</tr>
+<tr class="even">
+<td align="right">1278040</td>
+<td align="right">35134476</td>
+<td align="left">doxorubicin</td>
+<td align="left">2014-06-24</td>
+</tr>
+<tr class="odd">
+<td align="right">1456854</td>
+<td align="right">40920909</td>
+<td align="left">finasteride</td>
+<td align="left">2018-07-17</td>
+</tr>
+<tr class="even">
+<td align="right">1309848</td>
+<td align="right">36287798</td>
+<td align="left">melphalan</td>
+<td align="left">2014-08-19</td>
+</tr>
+<tr class="odd">
+<td align="right">1407002</td>
+<td align="right">49183488</td>
+<td align="left">letrozole</td>
+<td align="left">2019-04-01</td>
+</tr>
+<tr class="even">
+<td align="right">1378454</td>
+<td align="right">38530828</td>
+<td align="left">avelumab</td>
+<td align="left">2019-07-30</td>
+</tr>
+<tr class="odd">
+<td align="right">1169137</td>
+<td align="right">46856635</td>
+<td align="left">everolimus</td>
+<td align="left">2015-04-07</td>
+</tr>
+<tr class="even">
+<td align="right">995112</td>
+<td align="right">21128949</td>
+<td align="left">doxorubicin</td>
+<td align="left">2006-06-28</td>
+</tr>
+<tr class="odd">
+<td align="right">868593</td>
+<td align="right">4990434</td>
+<td align="left">vinorelbine</td>
+<td align="left">2004-09-15</td>
+</tr>
+<tr class="even">
+<td align="right">1335418</td>
+<td align="right">37153894</td>
+<td align="left">cetuximab</td>
+<td align="left">2019-04-03</td>
+</tr>
+<tr class="odd">
+<td align="right">629445</td>
+<td align="right">4985565</td>
+<td align="left">cyclophosphamide</td>
+<td align="left">1997-10-02</td>
+</tr>
+<tr class="even">
+<td align="right">571807</td>
+<td align="right">8727331</td>
+<td align="left">cimetidine</td>
+<td align="left">2000-10-17</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="row-count-history-4" class="section level6">
+<h6>Row Count History</h6>
+<div class="kable-table">
+<table>
+<thead>
+<tr class="header">
+<th align="left">Table</th>
+<th align="right">RowCount</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_REGIMEN</td>
+<td align="right">5244273</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_2020_07_15</td>
+<td align="right">4553362</td>
+</tr>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_2020_07_28</td>
+<td align="right">4554510</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_2020_08_06</td>
+<td align="right">613603</td>
+</tr>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_2020_08_07</td>
+<td align="right">5244273</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_2020_08_08</td>
+<td align="right">104701978</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="write-regimen-ingredient-table" class="section level4">
+<h4>Write Regimen Ingredient Table</h4>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">createRegimenIngrTable</span>(</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  <span class="dt">conn =</span> conn,</span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="dt">writeDatabaseSchema =</span> <span class="st">&quot;patelm9&quot;</span>,</span>
+<span id="cb9-4"><a href="#cb9-4"></a>  <span class="dt">cohortTable =</span> <span class="st">&quot;oncoregimenfinder_cohort&quot;</span>,</span>
+<span id="cb9-5"><a href="#cb9-5"></a>  <span class="dt">regimenTable =</span> <span class="st">&quot;oncoregimenfinder_regimen&quot;</span>,</span>
+<span id="cb9-6"><a href="#cb9-6"></a>  <span class="dt">regimenIngredientTable =</span> <span class="st">&quot;oncoregimenfinder_regimen_ingredients&quot;</span>,</span>
+<span id="cb9-7"><a href="#cb9-7"></a>  <span class="dt">vocabularyTable =</span> <span class="st">&quot;oncoregimenfinder_vocabulary&quot;</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a>)</span></code></pre></div>
+<div id="regimen-ingredient-table" class="section level5">
+<h5>Regimen Ingredient Table</h5>
+<div id="at-a-glance-5" class="section level6">
+<h6>At a Glance</h6>
+<div class="kable-table">
+<table>
+<colgroup>
+<col width="4%"></col>
+<col width="8%"></col>
+<col width="7%"></col>
+<col width="10%"></col>
+<col width="9%"></col>
+<col width="16%"></col>
+<col width="5%"></col>
+<col width="14%"></col>
+<col width="12%"></col>
+<col width="11%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">person_id</th>
+<th align="right">drug_exposure_id</th>
+<th align="left">ingredient_name</th>
+<th align="left">ingredient_start_date</th>
+<th align="left">ingredient_end_date</th>
+<th align="left">derived_regimen_name</th>
+<th align="right">regimen_id</th>
+<th align="left">regimen_name</th>
+<th align="left">derived_regimen_start_date</th>
+<th align="left">derived_regimen_end_date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1071965</td>
+<td align="right">24969187</td>
+<td align="left">fluorouracil</td>
+<td align="left">2012-02-27</td>
+<td align="left">2012-02-27</td>
+<td align="left">fluorouracil, panitumumab</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">2012-02-27</td>
+<td align="left">2012-02-27</td>
+</tr>
+<tr class="even">
+<td align="right">578673</td>
+<td align="right">8910293</td>
+<td align="left">doxorubicin</td>
+<td align="left">2000-07-15</td>
+<td align="left">2000-07-15</td>
+<td align="left">doxorubicin, vincristine</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">2000-07-15</td>
+<td align="left">2000-08-05</td>
+</tr>
+<tr class="odd">
+<td align="right">1161695</td>
+<td align="right">29638564</td>
+<td align="left">paclitaxel</td>
+<td align="left">2011-04-20</td>
+<td align="left">2011-04-20</td>
+<td align="left">paclitaxel</td>
+<td align="right">35804153</td>
+<td align="left">Paclitaxel and RT</td>
+<td align="left">2011-04-14</td>
+<td align="left">2011-05-04</td>
+</tr>
+<tr class="even">
+<td align="right">1212624</td>
+<td align="right">32135450</td>
+<td align="left">ipilimumab</td>
+<td align="left">2016-03-10</td>
+<td align="left">2016-03-11</td>
+<td align="left">ipilimumab, nivolumab</td>
+<td align="right">35804435</td>
+<td align="left">Ipilimumab and Nivolumab</td>
+<td align="left">2016-02-18</td>
+<td align="left">2016-03-11</td>
+</tr>
+<tr class="odd">
+<td align="right">126245</td>
+<td align="right">551202</td>
+<td align="left">docetaxel</td>
+<td align="left">1993-08-05</td>
+<td align="left">1993-08-06</td>
+<td align="left">docetaxel, mitomycin, vinblastine</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">1993-08-05</td>
+<td align="left">1993-09-01</td>
+</tr>
+<tr class="even">
+<td align="right">1262709</td>
+<td align="right">34455325</td>
+<td align="left">pembrolizumab</td>
+<td align="left">2019-05-30</td>
+<td align="left">2019-05-30</td>
+<td align="left">lenvatinib, pembrolizumab</td>
+<td align="right">42542382</td>
+<td align="left">Lenvatinib and Pembrolizumab</td>
+<td align="left">2019-05-09</td>
+<td align="left">2019-06-19</td>
+</tr>
+<tr class="odd">
+<td align="right">935390</td>
+<td align="right">16052063</td>
+<td align="left">paclitaxel</td>
+<td align="left">2004-09-30</td>
+<td align="left">2004-09-30</td>
+<td align="left">cisplatin, irinotecan, paclitaxel</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">2004-09-02</td>
+<td align="left">2004-09-30</td>
+</tr>
+<tr class="even">
+<td align="right">556625</td>
+<td align="right">6838778</td>
+<td align="left">irinotecan</td>
+<td align="left">1999-11-12</td>
+<td align="left">1999-11-13</td>
+<td align="left">irinotecan</td>
+<td align="right">42542416</td>
+<td align="left">IRIS</td>
+<td align="left">1999-11-12</td>
+<td align="left">1999-11-13</td>
+</tr>
+<tr class="odd">
+<td align="right">300532</td>
+<td align="right">3157431</td>
+<td align="left">cisplatin</td>
+<td align="left">1996-02-01</td>
+<td align="left">1996-02-02</td>
+<td align="left">cisplatin, etoposide</td>
+<td align="right">35805329</td>
+<td align="left">Cisplatin and Etoposide</td>
+<td align="left">1996-02-01</td>
+<td align="left">1996-02-07</td>
+</tr>
+<tr class="even">
+<td align="right">1036066</td>
+<td align="right">44251170</td>
+<td align="left">letrozole</td>
+<td align="left">2008-05-08</td>
+<td align="left">2008-05-08</td>
+<td align="left">letrozole</td>
+<td align="right">35804273</td>
+<td align="left">Letrozole monotherapy</td>
+<td align="left">2008-05-08</td>
+<td align="left">2008-05-08</td>
+</tr>
+<tr class="odd">
+<td align="right">1216020</td>
+<td align="right">32292899</td>
+<td align="left">cisplatin</td>
+<td align="left">2012-05-14</td>
+<td align="left">2012-05-14</td>
+<td align="left">cisplatin</td>
+<td align="right">35804144</td>
+<td align="left">Cisplatin and RT</td>
+<td align="left">2012-05-14</td>
+<td align="left">2012-05-14</td>
+</tr>
+<tr class="even">
+<td align="right">615845</td>
+<td align="right">14170673</td>
+<td align="left">fluorouracil</td>
+<td align="left">1994-05-26</td>
+<td align="left">1994-05-30</td>
+<td align="left">fluorouracil</td>
+<td align="right">35804807</td>
+<td align="left">Fluorouracil and Semustine</td>
+<td align="left">1994-05-19</td>
+<td align="left">1994-06-23</td>
+</tr>
+<tr class="odd">
+<td align="right">1034222</td>
+<td align="right">23018072</td>
+<td align="left">oxaliplatin</td>
+<td align="left">2008-01-10</td>
+<td align="left">2008-01-10</td>
+<td align="left">fluorouracil, oxaliplatin</td>
+<td align="right">42542362</td>
+<td align="left">FUOX</td>
+<td align="left">2007-12-27</td>
+<td align="left">2008-01-24</td>
+</tr>
+<tr class="even">
+<td align="right">1399157</td>
+<td align="right">39195252</td>
+<td align="left">fluorouracil</td>
+<td align="left">2018-12-19</td>
+<td align="left">2018-12-20</td>
+<td align="left">fluorouracil, irinotecan</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">2018-12-19</td>
+<td align="left">2018-12-21</td>
+</tr>
+<tr class="odd">
+<td align="right">1301008</td>
+<td align="right">35936691</td>
+<td align="left">fluorouracil</td>
+<td align="left">2014-06-24</td>
+<td align="left">2014-06-24</td>
+<td align="left">fluorouracil, oxaliplatin</td>
+<td align="right">35805353</td>
+<td align="left">Fluorouracil, Oxaliplatin, RT</td>
+<td align="left">2014-06-24</td>
+<td align="left">2014-07-24</td>
+</tr>
+<tr class="even">
+<td align="right">1082246</td>
+<td align="right">25467206</td>
+<td align="left">fluorouracil</td>
+<td align="left">2012-02-22</td>
+<td align="left">2012-02-22</td>
+<td align="left">fluorouracil, irinotecan</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">2012-02-22</td>
+<td align="left">2012-03-21</td>
+</tr>
+<tr class="odd">
+<td align="right">1062258</td>
+<td align="right">45468425</td>
+<td align="left">imatinib</td>
+<td align="left">2011-11-08</td>
+<td align="left">2011-11-08</td>
+<td align="left">imatinib</td>
+<td align="right">35804083</td>
+<td align="left">Imatinib monotherapy</td>
+<td align="left">2011-11-08</td>
+<td align="left">2011-11-08</td>
+</tr>
+<tr class="even">
+<td align="right">1104110</td>
+<td align="right">26652177</td>
+<td align="left">capecitabine</td>
+<td align="left">2009-10-07</td>
+<td align="left">2009-11-05</td>
+<td align="left">capecitabine</td>
+<td align="right">35806890</td>
+<td align="left">Capecitabine and RT</td>
+<td align="left">2009-10-07</td>
+<td align="left">2009-11-05</td>
+</tr>
+<tr class="odd">
+<td align="right">1249593</td>
+<td align="right">33914647</td>
+<td align="left">fluorouracil</td>
+<td align="left">2015-03-20</td>
+<td align="left">2015-03-20</td>
+<td align="left">fluorouracil, oxaliplatin</td>
+<td align="right">42542362</td>
+<td align="left">FUOX</td>
+<td align="left">2015-03-06</td>
+<td align="left">2015-04-03</td>
+</tr>
+<tr class="even">
+<td align="right">917830</td>
+<td align="right">13350806</td>
+<td align="left">leuprolide</td>
+<td align="left">2017-03-20</td>
+<td align="left">2017-03-21</td>
+<td align="left">leuprolide</td>
+<td align="right">35804277</td>
+<td align="left">Leuprolide monotherapy</td>
+<td align="left">2017-03-20</td>
+<td align="left">2017-03-21</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="row-count-history-5" class="section level6">
+<h6>Row Count History</h6>
+<div class="kable-table">
+<table>
+<thead>
+<tr class="header">
+<th align="left">Table</th>
+<th align="right">RowCount</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_INGREDIENTS</td>
+<td align="right">9078320</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_INGREDIENTS_2020_07_15</td>
+<td align="right">4554796</td>
+</tr>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_INGREDIENTS_2020_07_28</td>
+<td align="right">4558240</td>
+</tr>
+<tr class="even">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_INGREDIENTS_2020_08_06</td>
+<td align="right">613885</td>
+</tr>
+<tr class="odd">
+<td align="left">ONCOREGIMENFINDER_REGIMEN_INGREDIENTS_2020_08_08</td>
+<td align="right">5247103</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

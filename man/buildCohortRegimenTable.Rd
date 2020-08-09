@@ -10,6 +10,7 @@ buildCohortRegimenTable(
   cohortDefinitionId = NULL,
   cohortDefinitionIdSchema = NULL,
   writeDatabaseSchema,
+  drugExposureIngredientTable,
   cohortTable,
   regimenTable,
   drug_classification_id_input = c(OncoRegimenFinder::atc_antineoplastic_id,

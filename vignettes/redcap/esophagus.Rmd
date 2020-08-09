@@ -1,6 +1,9 @@
 ---
 title: "Esophagus REDCap Cohort"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    df_print: kable
+    toc: TRUE
 vignette: >
   %\VignetteIndexEntry{Esophagus REDCap Cohort}
   %\VignetteEncoding{UTF-8}
@@ -11,12 +14,13 @@ editor_options:
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  tidy = 'styler',
+  tidy.opts=list(width.cutoff=50),
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
-## Setup
 
 ```{r setup,echo=TRUE,eval=TRUE,message=FALSE,results="hide",warning=FALSE}
 library(tidyverse)
@@ -25,20 +29,21 @@ library(rubix)
 library(OncoRegimenFinder)
 ```
 
-```{r, echo=FALSE,eval=TRUE,message=FALSE,results="hide"}
+```{r secretsetup, echo=FALSE,eval=TRUE,message=FALSE,results="hide", warning=FALSE}
 library(fantasia)
 conn <- fantasia::connectOMOP()
 ```
 
-## Summary 
-The results of the 1) OncoRegimenFinder algorithm is compared to the 2) abstracted Esophagus REDCap cohort treatment data. 
+# Summary  
+The results of the OncoRegimenFinder algorithm is compared to the abstracted Esophagus REDCap cohort treatment data.  
 
-## 1. Esophagus Cohort OncoRegimenFinder  
-### Source Tables:  
+# Esophagus Cohort OncoRegimenFinder  
+## Source Tables:  
 1. Esophagus Cohort Table   
 1. OncoRegimenFinder Regimen Ingredient Table  
     
-**The Esophagus Cohort table `patelm9.esophagus_cohort`**:  
+**Esophagus Cohort Table** 
+`patelm9.esophagus_cohort`:  
 
 ```{r cohort, echo=FALSE,eval=TRUE}
 
@@ -47,20 +52,14 @@ esophagus_cohort <-
                         schema = "patelm9",
                         tableName = "esophagus_cohort")
 
-```
-
-
-```{r cohort2,echo=F,eval=TRUE}
-
-head(esophagus_cohort) %>%
-  kableExtra::kable()
+esophagus_cohort[1:20,]
 
 ```
 
-**OncoRegimenFinder Regimen Ingredient Table `patelm9.oncoregimenfinder_regimen_ingredient`**:  
+**OncoRegimenFinder Regimen Ingredient Table**  
+`patelm9.oncoregimenfinder_regimen_ingredient`:  
 
 ```{r regimen_ingr,echo=F,eval=TRUE}
-
 regimen_ingredient <- 
     pg13::query(conn = conn,
                 pg13::buildQuery(schema = "patelm9",
@@ -68,20 +67,13 @@ regimen_ingredient <-
                                  n = 20,
                                  n_type = "random"))
 
-```
-
-
-```{r regimen_ingr2,echo=F,eval=TRUE}
-
-head(regimen_ingredient) %>%
-      kableExtra::kable()
-
+regimen_ingredient[1:20,]
 ```
 
 ### SQL  
-The following SQL is used to join the 2 Source Tables:
-```{r, eval = TRUE, echo=FALSE}
+The following SQL is used to join the 2 Source Tables:  
 
+```{r, eval=TRUE, echo=FALSE}
 sql <-
 pg13::buildJoinQuery(fields = c("\npatelm9.esophagus_cohort.person_id AS esophagus_person_id\n",
                                 "patelm9.esophagus_cohort.ptid\n",
@@ -95,72 +87,54 @@ pg13::buildJoinQuery(fields = c("\npatelm9.esophagus_cohort.person_id AS esophag
                      joinOnColumn = "person_id")
 
 cat(sql)
-
 ```
 
 
 ```{r, echo=FALSE, eval=TRUE,results='hide'}
-
 esophagus_oncoregimenfinder_results <-
 pg13::query(conn = conn,
              sql_statement = sql)
-
 ```
 
 **Output**:
-
 ```{r, echo = FALSE, eval = TRUE}
-
 esophagus_oncoregimenfinder_results <-
           esophagus_oncoregimenfinder_results %>%
           tibble::as_tibble() %>% 
           dplyr::mutate_all(as.character) %>%
           rubix::normalize_all_to_na() 
 
-head(esophagus_oncoregimenfinder_results) %>%
-          kableExtra::kable()
-
+esophagus_oncoregimenfinder_results[1:20,]
 ```
 
-## OncoRegimenFinder Results Summary  
-### Missingness  
-
+## OncoRegimenFinder Results Summary   
+### Missingness   
 ```{r data_summary, echo=FALSE,eval=TRUE}
-
 data_summary <-
   esophagus_oncoregimenfinder_results %>%
     rubix::summarize_variables() %>%
     dplyr::select(-contains("DISTINCT_VALUES"))
-
 ```
 
-Analysis of OncoRegimenFinder results shows that out of the unique OMOP Person Id count of `r data_summary[data_summary$Variable == "esophagus_person_id", "DISTINCT_COUNT"]` patients in the Esophagus Cohort overall, only `r data_summary[data_summary$Variable == "person_id", "DISTINCT_COUNT"]` Person Ids were resulted from OncoRegimenFinder.
+Analysis of OncoRegimenFinder results shows that `r unlist(data_summary[data_summary$Variable == "person_id", "DISTINCT_COUNT"])` Person Ids out of the `r unlist(data_summary[data_summary$Variable == "esophagus_person_id", "DISTINCT_COUNT"])` unique Person Ids in the Esophagus Cohort were resulted from OncoRegimenFinder.  
 
 Full Metrics:  
 ```{r data_summary2, echo=FALSE,eval=TRUE}
-
-data_summary %>%
-    kableExtra::kable()
-
+data_summary
 ```
 
-
-## REDCap Data  
+## REDCap Data   
 ```{r redcap_data,echo=FALSE,eval=TRUE,message=FALSE,warning=F,results='hide'}
-
 input <-
 fantasia::processRedcapData(data_csv_file = "~/GitHub/MSK-patelm9/escritoire/Esophagus/data_with_phi/STGIEsophagogastricS_DATA_2020-07-28_1354.csv",
                   parsed_metadata_csv_file = "~/GitHub/MSK-patelm9/escritoire/Esophagus/data_without_phi/STGIEsophagogastricSandbox_DataDictionary_2020-06-24_Parsed.csv",
                     identifier_variables = "ptid")
-
 redcapData <- input$ProcessedData
-
 ```
 
-The REDCap Data is exported as a tabular file and the main patient identifier and all variables associated with oncology treatments are selected.
+The REDCap Data is exported as a tabular file and the main patient identifier and all variables associated with oncology treatments are selected.  
 
 ```{r redcap_vars, echo=TRUE,eval=TRUE}
-
 identifier_vars <- "ptid"
 treatment_vars <-
           c('neoadj_regimen',
@@ -196,7 +170,6 @@ treatment_vars <-
           'regimen_name_m1',
           'regimen_name_m2',
           'hipec_drugs')
-
 ```
 
 ```{r qa, echo=FALSE,eval=TRUE}
@@ -207,7 +180,6 @@ treatment_vars <- treatment_vars[(treatment_vars %in% colnames(input$ProcessedDa
 For each of the Variables, a copy of the REDCap Data is selected for the Patient Identifier (`ptid`) and the Variable, as well as any associated Start and Stop Dates and placed in a list object.
 
 ```{r redcapfilter, echo=FALSE,eval=TRUE}
-
 output <-
       treatment_vars %>%
         rubix::map_names_set(function(x) redcapData %>%
@@ -223,13 +195,12 @@ output <-
         purrr::keep(~nrow(.) > 0) %>% 
         # If the df has less than 2 columns, that means there wasn't a date associated with the variable
         purrr::keep(~ncol(.) > 2)
-
 ```
 
 The output is a list of the length of the `treament_vars`, where each position of the list occupied by the Patient Identifier, the treatment_var, and all the possible date data associated with that treatment. Unlike other REDCap projects where there is a single set of start and end dates associated with the treatment, the Esophagus REDCap took it an extra step by including valuable clinical context information in their data collection. For example, the Variable `regimen_name_2` has the following possible dates: tx_start-tx_stop, tx_pre_maintenance_start-tx_pre_maintenance_stop, and tx_pre_maintenance2_start-tx_pre_maintenance2_stop. 
 
 ```{r regimen_name_m2,echo=FALSE,eval=TRUE}
-print(output$regimen_name_m2)
+output$regimen_name_m2[1:20,]
 ```
 
 For this particular project, `r output %>% purrr::keep(~ncol(.)>4) %>% length()` Variables have more than 1 set of start-stop dates for treatments due to contextual differences.
@@ -250,7 +221,7 @@ output2 <-
                                            ~paste("PV"))) %>%
   dplyr::bind_rows(.id = "VARIABLE")
 
-print(output2)
+output2[1:20,]
 ```
 
 Lastly, the data is massaged into the Patient Events Table Format, thereby successfully isolating the start-stop date concept pairs to a single observation level. At this stage any rows where both the Event Start and End Date are NA or blank are filtered out.
@@ -267,14 +238,12 @@ output3 <-
                      values_from = Date,
                      values_fn = list(Date = function(x) paste(unique(x), collapse = "\n")))
 
-print(output3)
-
+output3[1:20,]
 ```
 
 The REDCap Data is then joined with the Esophagus Cohort Data on the `ptid` Variable to be able to map the data back to the OMOP Person Id. The Event Date columns are copied to additional `NORMALIZE` columns. These columns will also be added to the OncoRegimenFinder results in order to perform a union and to compare the accuracy between the 2 data sources.  
 
 ```{r redcap_data4,echo=FALSE,eval=TRUE}
-
 output4 <-
   output3 %>%
   dplyr::full_join(esophagus_cohort) %>%
@@ -286,7 +255,7 @@ output4 <-
   dplyr::mutate(NORMALIZE_START_DATE = EVENT_START_DATE,
                 NORMALIZE_END_DATE = EVENT_END_DATE)
 
-print(output4)
+output4[1:20,]
 ```
 
 To prepare the REDCap Data for the join with the OncoRegimenFinder results for a side-by-side comparison, the last step is grouping the REDCap Data by Person Id. 
@@ -322,10 +291,12 @@ list(REDCAP = output5,
 
 ## Notably Incorrect 
 ```{r}
-print(final_output$`1558617`)
-print(final_output$`1557156`)
+final_output$`1558617`
 ```
 
+```{r}
+final_output$`1557156`
+```
 
 ```{r,echo=FALSE,eval=TRUE,message=FALSE,results="hide"}
 fantasia::dcOMOP(conn = conn,
