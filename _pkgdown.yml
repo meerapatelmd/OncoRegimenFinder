@@ -1,4 +1,5 @@
 url: https://github.mskcc.org/pages/patelm9/OncoRegimenFinder
+
 articles:
 - title: Setup
   desc: > 
@@ -11,4 +12,23 @@ articles:
   contents:
   - starts_with("redcap")
   
+  reference:
+- title: Setup 
+  desc:  > 
+    Write the prerequisite Vocabulary and Ingredient Exposure Tables before running the algorithm
+- contents:
+  - createVocabTable
+  - buildIngredientExposuresTable
+- title: Run Algorithm
+- contents:
+  - buildCohortRegimenTable
+  - processRegimenTable
+  - createRegimenIngrTable
+- title: Data
+- contents:
+  - atc_classification_id
+  - hemonc_classes
+  - falsepositives
+  - topclasses
+
 
