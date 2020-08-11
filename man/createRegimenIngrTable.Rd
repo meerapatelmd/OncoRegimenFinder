@@ -10,8 +10,7 @@ createRegimenIngrTable(
   cohortTable,
   regimenTable,
   regimenIngredientTable,
-  vocabularyTable,
-  renameCurrentTables = TRUE
+  vocabularyTable
 )
 }
 \description{
