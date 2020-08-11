@@ -71,8 +71,6 @@ createVocabTable <-
                                         schema = writeDatabaseSchema,
                                         tableName = vocabularyTable)
                 
-                secretary::press_enter()
-                
                 processedVocabularyA <- 
                         vocabulary %>% 
                                 dplyr::group_by(regimen_id, regimen_name) %>%
