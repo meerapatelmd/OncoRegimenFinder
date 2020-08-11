@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ATC Antineoplastic Id — atc_antineoplastic_id • OncoRegimenFinder</title>
+<title>Row Counts — rowCountHistory • OncoRegimenFinder</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="ATC Antineoplastic Id — atc_antineoplastic_id" />
-<meta property="og:description" content="Concept Id of the ATC Antineoplastics Class" />
+<meta property="og:title" content="Row Counts — rowCountHistory" />
+<meta property="og:description" content="This function takes the names of each of the table arguments for runORF, finds all the tables matching the name with or without the appended date in the format &quot;YYYY_mm_dd&quot;." />
 <meta property="og:image" content="https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/logo.png" />
 
 
@@ -120,28 +120,70 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>ATC Antineoplastic Id</h1>
+    <h1>Row Counts</h1>
     
-    <div class="hidden name"><code>atc_antineoplastic_id.Rd</code></div>
+    <div class="hidden name"><code>rowCountHistory.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Concept Id of the ATC Antineoplastics Class</p>
+    <p>This function takes the names of each of the table arguments for <code><a href='runORF.html'>runORF</a></code>, finds all the tables matching the name with or without the appended date in the format "YYYY_mm_dd".</p>
     </div>
 
-    <pre class="usage"><span class='no'>atc_antineoplastic_id</span></pre>
+    <pre class="usage"><span class='fu'>rowCountHistory</span>(
+  <span class='no'>conn</span>,
+  <span class='no'>writeDatabaseSchema</span>,
+  <span class='no'>vocabularyTable</span>,
+  <span class='no'>drugExposureIngredientTable</span>,
+  <span class='no'>cohortTable</span>,
+  <span class='no'>regimenTable</span>,
+  <span class='no'>regimenIngredientTable</span>
+)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>conn</th>
+      <td><p>Database connection object</p></td>
+    </tr>
+    <tr>
+      <th>writeDatabaseSchema</th>
+      <td><p>Schema where tables are written</p></td>
+    </tr>
+    <tr>
+      <th>vocabularyTable</th>
+      <td><p>Vocabulary Table</p></td>
+    </tr>
+    <tr>
+      <th>drugExposureIngredientTable</th>
+      <td><p>Drug Exposure Table</p></td>
+    </tr>
+    <tr>
+      <th>cohortTable</th>
+      <td><p>Cohort Table</p></td>
+    </tr>
+    <tr>
+      <th>regimenTable</th>
+      <td><p>Regimen Table</p></td>
+    </tr>
+    <tr>
+      <th>regimenIngredientTable</th>
+      <td><p>Regimen Ingredient Table</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A vector of length 1</p><dl'>
-<dt><code>concept_id</code></dt><dd><p>integer</p></dd>
-
-</dl>
-
+    <p>A named list of data frames with counts for each respective argument.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>DETAILS</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/rubix/man/map_names_set.html'>map_names_set</a></code>
+<code><a href='https://rdrr.io/pkg/pg13/man/lsTables.html'>lsTables</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/query.html'>query</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/renderRowCount.html'>renderRowCount</a></code>
+<code><a href='https://purrr.tidyverse.org/reference/map2.html'>map2</a></code>,<code><a href='https://purrr.tidyverse.org/reference/set_names.html'>set_names</a></code>,<code><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></code>
+<code><a href='https://dplyr.tidyverse.org/reference/bind.html'>bind</a></code>,<code><a href='https://dplyr.tidyverse.org/reference/select_all.html'>select_all</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

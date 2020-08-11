@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Introduction to OncoRegimenFinder • OncoRegimenFinder</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -14,6 +20,7 @@
 <script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to OncoRegimenFinder">
 <meta property="og:description" content="Learn how to run OncoRegimenFinder 
 ">
+<meta property="og:image" content="https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -32,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OncoRegimenFinder</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -52,6 +59,9 @@
 </li>
 <li>
   <a href="../articles/index.html">Articles</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -78,644 +88,35 @@
 
     
     
-<div id="overview" class="section level1">
+<div id="load-packages" class="section level1">
 <h1 class="hasAnchor">
-<a href="#overview" class="anchor"></a>Overview</h1>
-<p>The goal of OncoRegimenFinder is to write tables that derive antineoplastic drug combinations from every patient in the OMOP CDM instance. The execution occurs in 2 overarching steps:<br>
-1. Subsetting the Drug Exposure table for antineoplastic drugs<br>
-2. Executing an algorithm that derives antineoplastic drug combinations based on overlaps in the window of time created by adding and subtracting the <code>date_lag_input</code> in days from the start date of the drug exposure. This initial resultset is then joined onto itself for a number of iterations determined by <code>regimen_repeats</code>, the maximum number of drugs in derived drug combinations.</p>
-<p>It is important to note that the procedures shown below will run an algorithm with a set <code>date_lag_input</code> and <code>regimen_repeats</code> across the entire OMOP CDM Drug Exposure Table. Though the ultimate goal is to enable retrieval of derived drug combinations from the final <code>writeDatabaseSchema.regimenIngredientTable</code> via a join on the <code>person_id</code> field, specific cohorts may require different <code>date_lag_input</code> and <code>regimen_repeats</code>. For example, esophageal carcinoma patients tend to have regimens executed in blocks of 2 weeks instead of 30 days and the algorithm may return more accurate results with a <code>date_lag_input</code> of 15 days. In special cases such as this it, a second run of OncoRegimenFinder with modified parameters should be run with customized table names.</p>
+<a href="#load-packages" class="anchor"></a>Load Packages</h1>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">OncoRegimenFinder</span>)</pre></body></html></div>
 </div>
-<div id="general-procedure-notes" class="section level1">
+<div id="set-parameters" class="section level1">
 <h1 class="hasAnchor">
-<a href="#general-procedure-notes" class="anchor"></a>General Procedure Notes</h1>
-<ul>
-<li>If any of the tables written in this package already exist in the given schema, the existing table is renamed with the system date appended in the format {table}_YYYY_mm_dd. If {table}_YYYY_mm_dd already exists, the process is skipped and the main table (ie {table}) is dropped.</li>
-</ul>
-</div>
-<div id="setup" class="section level1">
-<h1 class="hasAnchor">
-<a href="#setup" class="anchor"></a>Setup</h1>
-<p>Setup involves writing an Ingredient Exposure Table and a Vocabulary Table that serve as the data sources for the remainder of the OncoRegimenFinder procedure.</p>
-<div id="setup-requirements" class="section level2">
-<h2 class="hasAnchor">
-<a href="#setup-requirements" class="anchor"></a>Setup Requirements</h2>
-<ol style="list-style-type: decimal">
-<li>A database connection object <code>conn</code> to your OMOP CDM instance<br>
-</li>
-<li>
-<code>writeDatabaseSchema</code> destination schema with write privileges</li>
-</ol>
-</div>
-<div id="outputs" class="section level2">
-<h2 class="hasAnchor">
-<a href="#outputs" class="anchor"></a>Outputs</h2>
-<p>The objective of the setup is to map all data sources to RxNorm Ingredients, which will serve as the point of alignment between Drug Exposures and a Regimen. This involves creating the following tables in <code>writeDatabaseSchema</code>:<br>
-1. Ingredient Exposure Table (<code>drugExposureIngredientTable</code>): Drug Exposure Table with an additional <code>ingredient_concept_id</code> field that references the RxNorm Ingredient that corresponds to the <code>drug_concept_id</code> in the OMOP Vocabulary.<br>
-1. Vocabulary Table (<code>vocabularyTable</code>): In a similar fashion as the Ingredient Exposure Table, HemOnc Regimens are mapped to mapped to 1 or more RxNorm Ingredients.</p>
-</div>
-<div id="maintenance" class="section level2">
-<h2 class="hasAnchor">
-<a href="#maintenance" class="anchor"></a>Maintenance</h2>
-<ul>
-<li>The Ingredient Exposure Table should be rewritten according to the cadence in which the Drug Exposures Table source is updated.<br>
-</li>
-<li>The Vocabulary Table should be rewritten whenever there is an update to HemOnc, RxNorm, or RxNorm Extension in the OMOP Vocabulary.</li>
-</ul>
-</div>
-<div id="procedure" class="section level2">
-<h2 class="hasAnchor">
-<a href="#procedure" class="anchor"></a>Procedure</h2>
-<div id="load-packages" class="section level3">
-<h3 class="hasAnchor">
-<a href="#load-packages" class="anchor"></a>Load Packages</h3>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">OncoRegimenFinder</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)</pre></body></html></div>
-</div>
-<div id="set-parameters" class="section level3">
-<h3 class="hasAnchor">
-<a href="#set-parameters" class="anchor"></a>Set Parameters</h3>
-<ul>
-<li>
-<code>cdmDatabaseSchema</code>: schema housing the Concept and Drug Exposure Table<br>
-</li>
-<li>
-<code>writeDatabaseSchema</code>: schema to write the Ingredient Exposure and Vocabulary Table to<br>
-</li>
-<li>
-<code>drugExposureIngredientTable</code>: name of the Ingredient Exposure Table<br>
-</li>
-<li>
-<code>vocabularyTable</code>: name of the Vocabulary Table</li>
-</ul>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># Schema for the Concept and Drug Exposure Tables</span>
-<span class="no">cdmDatabaseSchema</span> <span class="kw">&lt;-</span> <span class="st">"omop_cdm_2"</span>
-
-<span class="co"># Output Schema and Tables</span>
-<span class="no">writeDatabaseSchema</span> <span class="kw">&lt;-</span> <span class="st">"patelm9"</span>
+<a href="#set-parameters" class="anchor"></a>Set Parameters</h1>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">cdmDatabaseSchema</span> <span class="kw">&lt;-</span> <span class="st">"omop_cdm_2"</span>
+<span class="no">writeDatabaseSchema</span> <span class="kw">&lt;-</span> <span class="st">"oncoregimenfinder"</span>
+<span class="no">vocabularyTable</span> <span class="kw">&lt;-</span> <span class="st">"vocabulary"</span>
 <span class="no">drugExposureIngredientTable</span> <span class="kw">&lt;-</span> <span class="st">"ingredient_exposure"</span>
-<span class="no">vocabularyTable</span> <span class="kw">&lt;-</span> <span class="st">"oncoregimenfinder_vocabulary"</span></pre></body></html></div>
+<span class="no">regimenTable</span> <span class="kw">&lt;-</span> <span class="st">"regimen"</span>
+<span class="no">cohortTable</span> <span class="kw">&lt;-</span> <span class="st">"cohort"</span>
+<span class="no">regimenIngredientTable</span> <span class="kw">&lt;-</span> <span class="st">"regimen_ingredient"</span></pre></body></html></div>
 </div>
-<div id="vocabulary-table" class="section level3">
-<h3 class="hasAnchor">
-<a href="#vocabulary-table" class="anchor"></a>Vocabulary Table</h3>
-<div id="write" class="section level4">
-<h4 class="hasAnchor">
-<a href="#write" class="anchor"></a>Write</h4>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="kw pkg">OncoRegimenFinder</span><span class="kw ns">::</span><span class="fu"><a href="../reference/createVocabTable.html">createVocabTable</a></span>(
-  <span class="kw">conn</span> <span class="kw">=</span> <span class="no">conn</span>,
-  <span class="kw">writeDatabaseSchema</span> <span class="kw">=</span> <span class="no">writeDatabaseSchema</span>,
-  <span class="kw">cdmDatabaseSchema</span> <span class="kw">=</span> <span class="no">cdmDatabaseSchema</span>,
-  <span class="kw">vocabularyTable</span> <span class="kw">=</span> <span class="no">vocabularyTable</span>
-)</pre></body></html></div>
-</div>
-<div id="row-count-history" class="section level4">
-<h4 class="hasAnchor">
-<a href="#row-count-history" class="anchor"></a>Row Count History</h4>
-<pre><code>#&gt;                                     Table RowCount
-#&gt; 1            ONCOREGIMENFINDER_VOCABULARY     1425
-#&gt; 2 ONCOREGIMENFINDER_VOCABULARY_2020_07_28     1388
-#&gt; 3 ONCOREGIMENFINDER_VOCABULARY_2020_08_06     1388
-#&gt; 4 ONCOREGIMENFINDER_VOCABULARY_2020_08_08     1388
-#&gt; 5 ONCOREGIMENFINDER_VOCABULARY_2020_08_09     1530</code></pre>
-</div>
-<div id="at-a-glance" class="section level4">
-<h4 class="hasAnchor">
-<a href="#at-a-glance" class="anchor"></a>At a Glance</h4>
-<pre><code>#&gt;    regimen_id                 regimen_name
-#&gt; 1    35805039        R-CEOP90 (Epirubicin)
-#&gt; 2    35804802  Fluorouracil and Levamisole
-#&gt; 3    35806080                R-CHOP/R-DHAP
-#&gt; 4    35805649                        PEP-C
-#&gt; 5    35102012     R-CHOP-14 (Prednisolone)
-#&gt; 6    35804430     Bu/TT/Cy, then auto HSCT
-#&gt; 7    35803683          RT, then Carmustine
-#&gt; 8    35806586   Docetaxel, Gemcitabine, RT
-#&gt; 9    35804157                        CISCA
-#&gt; 10   35804155   Cisplatin and Methotrexate
-#&gt; 11   35806103      Doxycycline monotherapy
-#&gt; 12   35806653                      PAD/VCD
-#&gt; 13   35807050       Vandetanib monotherapy
-#&gt; 14   35804156  Carboplatin and Gemcitabine
-#&gt; 15   35805123                         DICE
-#&gt; 16   35805687                          FAM
-#&gt; 17   35806314                       Elo-Rd
-#&gt; 18   35805642                           VR
-#&gt; 19   35804079        Nilotinib monotherapy
-#&gt; 20   35102024 CVP (Vinblastine/Prednisone)
-#&gt;                                                                                     ingredient_combination
-#&gt; 1                                       cyclophosphamide, epirubicin, prednisolone, rituximab, vincristine
-#&gt; 2                                                                                 fluorouracil, levamisole
-#&gt; 3  cisplatin, cyclophosphamide, cytarabine, dexamethasone, doxorubicin, prednisone, rituximab, vincristine
-#&gt; 4                                                    cyclophosphamide, etoposide, prednisone, procarbazine
-#&gt; 5                                      cyclophosphamide, doxorubicin, prednisolone, rituximab, vincristine
-#&gt; 6                                                                     busulfan, cyclophosphamide, thiotepa
-#&gt; 7                                                                                               carmustine
-#&gt; 8                                                                                   docetaxel, gemcitabine
-#&gt; 9                                                                 cisplatin, cyclophosphamide, doxorubicin
-#&gt; 10                                                                                 cisplatin, methotrexate
-#&gt; 11                                                                                             doxycycline
-#&gt; 12                                                             bortezomib, cyclophosphamide, dexamethasone
-#&gt; 13                                                                                              vandetanib
-#&gt; 14                                                                                carboplatin, gemcitabine
-#&gt; 15                                                       carboplatin, dexamethasone, etoposide, ifosfamide
-#&gt; 16                                                                    doxorubicin, fluorouracil, mitomycin
-#&gt; 17                                                                 dexamethasone, elotuzumab, lenalidomide
-#&gt; 18                                                                                   bortezomib, rituximab
-#&gt; 19                                                                                               nilotinib
-#&gt; 20                                                             cyclophosphamide, prednisolone, vinblastine</code></pre>
-</div>
-</div>
-<div id="ingredient-exposure-table" class="section level3">
-<h3 class="hasAnchor">
-<a href="#ingredient-exposure-table" class="anchor"></a>Ingredient Exposure Table</h3>
-<div id="write-ingredient-exposure-table" class="section level4">
-<h4 class="hasAnchor">
-<a href="#write-ingredient-exposure-table" class="anchor"></a>Write Ingredient Exposure Table</h4>
-<div class="sourceCode" id="cb6"><html><body><pre class="r">
-<span class="kw pkg">OncoRegimenFinder</span><span class="kw ns">::</span><span class="fu"><a href="../reference/buildIngredientExposuresTable.html">buildIngredientExposuresTable</a></span>(
-  <span class="kw">conn</span> <span class="kw">=</span> <span class="no">conn</span>,
-  <span class="kw">cdmDatabaseSchema</span> <span class="kw">=</span> <span class="no">cdmDatabaseSchema</span>,
-  <span class="kw">writeDatabaseSchema</span> <span class="kw">=</span> <span class="no">writeDatabaseSchema</span>,
-  <span class="kw">drugExposureIngredientTable</span> <span class="kw">=</span> <span class="no">drugExposureIngredientTable</span>
-)</pre></body></html></div>
-</div>
-<div id="row-count-history-1" class="section level4">
-<h4 class="hasAnchor">
-<a href="#row-count-history-1" class="anchor"></a>Row Count History</h4>
-<pre><code>#&gt;                            Table RowCount
-#&gt; 1            INGREDIENT_EXPOSURE 55834050
-#&gt; 2 INGREDIENT_EXPOSURE_2020_08_08 55834050</code></pre>
-</div>
-<div id="at-a-glance-1" class="section level4">
-<h4 class="hasAnchor">
-<a href="#at-a-glance-1" class="anchor"></a>At a Glance</h4>
-<pre><code>#&gt;    ingredient_concept_id drug_exposure_id drug_exposure_start_date
-#&gt; 1               19049105         28503676               2012-05-30
-#&gt; 2                1387104         41724416               2018-09-14
-#&gt; 3                 955632          6514755               1999-09-22
-#&gt; 4                 735979          3326480               2001-05-30
-#&gt; 5                 967823         36156513               2014-10-29
-#&gt; 6               19049105         43079701               2020-02-04
-#&gt; 7                1836430         46779120               2015-02-02
-#&gt; 8                 911354         36809718               2015-04-20
-#&gt; 9               19093848         22956046               2007-08-30
-#&gt; 10               1836430         35731762               2014-06-01
-#&gt; 11               1742253         14547850               2000-01-16
-#&gt; 12                752061         42542762               2019-11-22
-#&gt; 13               1702364         17658538               1992-11-15
-#&gt; 14               1344143         29039993               2010-11-05
-#&gt; 15               1560524         37267212               2015-08-06
-#&gt; 16                967823         29701597               2011-05-02
-#&gt; 17               1596977          2308160               1995-09-28
-#&gt; 18               1560524          6105748               1999-09-01
-#&gt; 19               1560524         30655576               2011-04-20
-#&gt; 20               1124957         49723384               2018-02-21
-#&gt;    drug_exposure_start_datetime drug_exposure_end_date
-#&gt; 1           2012-05-30 07:58:00             2012-05-30
-#&gt; 2           2018-09-14 00:00:01             2018-09-15
-#&gt; 3           1999-09-22 16:07:00             1999-09-23
-#&gt; 4           2001-05-30 10:00:00             2001-06-26
-#&gt; 5           2014-10-29 12:03:00             2014-10-30
-#&gt; 6           2020-02-04 00:28:00             2020-02-04
-#&gt; 7           2015-02-02 14:04:00             2015-02-02
-#&gt; 8           2015-04-20 00:00:01             2015-04-21
-#&gt; 9           2007-08-30 15:30:00             2007-08-30
-#&gt; 10          2014-06-01 23:54:00             2014-06-04
-#&gt; 11          2000-01-16 10:00:00             2000-01-29
-#&gt; 12          2019-11-22 21:17:00             2019-11-23
-#&gt; 13          1992-11-15 10:02:00             1992-11-25
-#&gt; 14          2010-11-05 07:22:00             2010-11-05
-#&gt; 15          2015-08-06 08:00:00             2015-08-06
-#&gt; 16          2011-05-02 13:53:00             2011-05-02
-#&gt; 17          1995-09-28 13:00:00             1995-09-29
-#&gt; 18          1999-09-01 08:00:00             1999-09-02
-#&gt; 19          2011-04-20 11:19:00             2011-04-20
-#&gt; 20          2018-02-21 16:57:02             2018-03-05
-#&gt;    drug_exposure_end_datetime
-#&gt; 1         2012-05-30 07:58:00
-#&gt; 2         2018-09-15 00:00:01
-#&gt; 3         1999-09-23 16:07:00
-#&gt; 4         2001-06-26 10:00:00
-#&gt; 5         2014-10-30 08:34:00
-#&gt; 6         2020-02-04 11:26:00
-#&gt; 7         2015-02-02 00:00:00
-#&gt; 8         2015-04-21 01:00:00
-#&gt; 9         2007-08-30 15:30:00
-#&gt; 10        2014-06-04 17:30:00
-#&gt; 11        2000-01-29 10:00:00
-#&gt; 12        2019-11-23 21:29:00
-#&gt; 13        1992-11-25 06:02:00
-#&gt; 14        2010-11-05 07:22:00
-#&gt; 15        2015-08-06 08:00:00
-#&gt; 16        2011-05-02 16:36:10
-#&gt; 17        1995-09-29 04:00:00
-#&gt; 18        1999-09-02 08:00:00
-#&gt; 19        2011-04-20 17:55:32
-#&gt; 20        2018-03-05 16:44:10</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div id="run-algorithm" class="section level1">
+<div id="run-oncoregimenfinder" class="section level1">
 <h1 class="hasAnchor">
-<a href="#run-algorithm" class="anchor"></a>Run Algorithm</h1>
-<p>The algorithm can be run once the tables are written in <a href="#setup">Setup</a>.</p>
-<div id="requirements" class="section level2">
-<h2 class="hasAnchor">
-<a href="#requirements" class="anchor"></a>Requirements</h2>
-<ol style="list-style-type: decimal">
-<li>A database connection object <code>conn</code> to your OMOP CDM instance<br>
-</li>
-<li>
-<code>writeDatabaseSchema</code> destination schema with write privileges<br>
-</li>
-<li>
-<code>writeDatabaseSchema</code>.<code>vocabularyTable</code> &amp; <code>writeDatabaseSchema</code>.<code>drugExposureIngredientTable</code> Tables (see [“Setup”])</li>
-</ol>
-</div>
-<div id="outputs-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#outputs-1" class="anchor"></a>Outputs</h2>
-<div id="intermediate" class="section level3">
-<h3 class="hasAnchor">
-<a href="#intermediate" class="anchor"></a>Intermediate</h3>
-<ol style="list-style-type: decimal">
-<li>Cohort Table <code>cohortTable</code>: Ingredient Exposure table filtered for all the RxNorm Ingredients that are descendants of a superclass comprised of one or more OMOP Vocabulary Concept Classes Concept Ids (<code>drug_classification_id_input</code>). By default, <code>drug_classification_id_input</code> is set to Concept Classes of <code><a href="../reference/atc_antineoplastic_id.html">OncoRegimenFinder::atc_antineoplastic_id</a></code> and <code><a href="../reference/hemonc_classes.html">OncoRegimenFinder::hemonc_classes</a></code>, but is modifiable according to user preference.<br>
-</li>
-<li>Regimen Staging Table <code>regimenStagingTable</code>: A copy of the Cohort Table. This table is written to serve as the data source for running OncoRegimenFinder against a cohort requiring non-standard <code>date_lag_input</code> and <code>regimen_repeats</code> parameters.</li>
-</ol>
-</div>
-<div id="final" class="section level3">
-<h3 class="hasAnchor">
-<a href="#final" class="anchor"></a>Final</h3>
-<ol style="list-style-type: decimal">
-<li>
-<em>Regimen Table <code>regimenTable</code></em>: Regimen Staging Table that is run through the OncoRegimenFinder algorithm according to the default <code>date_lag_input</code> and <code>regimen_repeats</code> values of 30 days and 5, respectively.<br>
-</li>
-<li>
-<em>Regimen Ingredient Table <code>regimenIngredientTable</code></em>: Regimen Ingredient Table that maps the algorithm output in the Regimen Table to HemOnc Regimens in the <code>vocabularyTable</code> written in <a href="#setup">Setup</a>.</li>
-</ol>
-</div>
-</div>
-<div id="procedure-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#procedure-1" class="anchor"></a>Procedure</h2>
-<div id="load-packages-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#load-packages-1" class="anchor"></a>Load Packages</h3>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">OncoRegimenFinder</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)</pre></body></html></div>
-</div>
-<div id="set-parameters-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#set-parameters-1" class="anchor"></a>Set Parameters</h3>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># Schema of Source Person and Drug Exposure Tables</span>
-<span class="no">cdmDatabaseSchema</span> <span class="kw">&lt;-</span> <span class="st">"omop_cdm_2"</span>
-
-<span class="co"># Output Schema and Tables</span>
-<span class="no">writeDatabaseSchema</span> <span class="kw">&lt;-</span> <span class="st">"patelm9"</span>
-<span class="no">drugExposureIngredientTable</span> <span class="kw">&lt;-</span> <span class="st">"ingredient_exposure"</span>
-<span class="no">cohortTable</span> <span class="kw">&lt;-</span> <span class="st">"oncoregimenfinder_cohort"</span>
-<span class="no">regimenTable</span> <span class="kw">&lt;-</span> <span class="st">"oncoregimenfinder_regimen"</span>
-<span class="no">regimenStagingTable</span> <span class="kw">&lt;-</span> <span class="st">"oncoregimenfinder_regimen_staging"</span>
-<span class="no">vocabularyTable</span> <span class="kw">&lt;-</span> <span class="st">"oncoregimenfinder_vocabulary"</span>
-<span class="no">regimenIngredientTable</span> <span class="kw">&lt;-</span> <span class="st">"oncoregimenfinder_regimen_ingredients"</span>
-
-<span class="co"># OMOP Vocabulary Drug Classes to filter Drug Exposures for</span>
-<span class="no">drug_classification_id_input</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>( <span class="co"># ATC Antineoplastics (OncoRegimenFinder::atc_antineoplastics_id)</span>
-  <span class="fl">21601387</span>,
-  <span class="co"># HemOnc Classes (OncoRegimenFinder::hemonc_classes)</span>
-  <span class="fl">35101847</span>,
-  <span class="fl">35807195</span>,
-  <span class="fl">35807466</span>,
-  <span class="fl">35807470</span>,
-  <span class="fl">35807489</span>
-)
-<span class="no">false_positive_id</span> <span class="kw">&lt;-</span>
-  <span class="co"># OncoRegimenFinder::falsepositives</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-    <span class="fl">45775396</span>, <span class="fl">1304850</span>, <span class="fl">792993</span>, <span class="fl">19010482</span>, <span class="fl">19089602</span>,
-    <span class="fl">19080458</span>, <span class="fl">19104221</span>, <span class="fl">19065450</span>, <span class="fl">1510328</span>, <span class="fl">42903942</span>,
-    <span class="fl">1354698</span>, <span class="fl">1551860</span>, <span class="fl">19003472</span>, <span class="fl">1356009</span>, <span class="fl">40244464</span>,
-    <span class="fl">1303425</span>, <span class="fl">745466</span>, <span class="fl">1389464</span>, <span class="fl">19025194</span>, <span class="fl">740910</span>, <span class="fl">1710612</span>,
-    <span class="fl">35606631</span>, <span class="fl">19003999</span>, <span class="fl">985708</span>, <span class="fl">45775206</span>, <span class="fl">1308432</span>, <span class="fl">1522957</span>,
-    <span class="fl">1760616</span>, <span class="fl">950637</span>, <span class="fl">1300978</span>, <span class="fl">44816310</span>, <span class="fl">1500211</span>, <span class="fl">1506270</span>,
-    <span class="fl">923645</span>, <span class="fl">19061406</span>, <span class="fl">40171288</span>, <span class="fl">1388796</span>, <span class="fl">40168303</span>, <span class="fl">975125</span>,
-    <span class="fl">1507705</span>, <span class="fl">1511449</span>, <span class="fl">1738521</span>, <span class="fl">1548195</span>, <span class="fl">1518254</span>, <span class="fl">40222444</span>,
-    <span class="fl">1713332</span>, <span class="fl">1112807</span>, <span class="fl">19014878</span>, <span class="fl">19034726</span>, <span class="fl">984232</span>, <span class="fl">1525866</span>,
-    <span class="fl">989482</span>, <span class="fl">1550557</span>, <span class="fl">1551099</span>, <span class="fl">924120</span>, <span class="fl">904351</span>
-  )
-
-<span class="co"># Date difference when assessing for drug combinations in the Drug Exposures table</span>
-<span class="no">date_lag_input</span> <span class="kw">&lt;-</span> <span class="fl">30</span>
-<span class="no">regimen_repeats</span> <span class="kw">&lt;-</span> <span class="fl">5</span></pre></body></html></div>
-</div>
-<div id="steps" class="section level3">
-<h3 class="hasAnchor">
-<a href="#steps" class="anchor"></a>Steps</h3>
-<ol style="list-style-type: decimal">
-<li>Cohort, Regimen, and a copy of Regimen as “Regimen Staging” Tables are written.</li>
-<li>Regimen Table undergoes further processing by combining overlapping instances of an ingredient start date and +/- the date lag input over the number of regimen repeats.<br>
-</li>
-<li>A final Regimen Ingredient Table joins the Vocabulary Table with the Regimen Table to map drug combinations derived from this algorithm back to the HemOnc ontology and other OMOP Concepts</li>
-</ol>
-<div id="write-cohort-and-regimen-staging-tables" class="section level4">
-<h4 class="hasAnchor">
-<a href="#write-cohort-and-regimen-staging-tables" class="anchor"></a>Write Cohort and Regimen Staging Tables</h4>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="kw pkg">OncoRegimenFinder</span><span class="kw ns">::</span><span class="fu"><a href="../reference/buildCohortRegimenTable.html">buildCohortRegimenTable</a></span>(
+<a href="#run-oncoregimenfinder" class="anchor"></a>Run OncoRegimenFinder</h1>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="../reference/runORF.html">runORF</a></span>(
   <span class="kw">conn</span> <span class="kw">=</span> <span class="no">conn</span>,
   <span class="kw">cdmDatabaseSchema</span> <span class="kw">=</span> <span class="no">cdmDatabaseSchema</span>,
   <span class="kw">writeDatabaseSchema</span> <span class="kw">=</span> <span class="no">writeDatabaseSchema</span>,
+  <span class="kw">vocabularyTable</span> <span class="kw">=</span> <span class="no">vocabularyTable</span>,
+  <span class="kw">drugExposureIngredientTable</span> <span class="kw">=</span> <span class="no">drugExposureIngredientTable</span>,
   <span class="kw">cohortTable</span> <span class="kw">=</span> <span class="no">cohortTable</span>,
   <span class="kw">regimenTable</span> <span class="kw">=</span> <span class="no">regimenTable</span>,
-  <span class="kw">drug_classification_id_input</span> <span class="kw">=</span> <span class="no">drug_classification_id_input</span>,
-  <span class="kw">false_positive_id</span> <span class="kw">=</span> <span class="no">false_positive_id</span>
+  <span class="kw">regimenIngredientTable</span> <span class="kw">=</span> <span class="no">regimenIngredientTable</span>
 )</pre></body></html></div>
-<div id="cohort-table" class="section level5">
-<h5 class="hasAnchor">
-<a href="#cohort-table" class="anchor"></a>Cohort Table</h5>
-<p>The <code>Cohort Table</code> selects for the Person Id, Drug Exposure Id with Start and End Dates for all Drug Concept Ids that are RxNorm Ingredients representing that Drug Exposure filtered for all descendants of the curated Drug Cl argument.</p>
-<div id="at-a-glance-2" class="section level6">
-<h6>At a Glance</h6>
-<pre><code>#&gt;    drug_exposure_id person_id ingredient_id  ingredient_name
-#&gt; 1          47938790   1184055       1377141      hydroxyurea
-#&gt; 2          41096485   1462435      42873638      carfilzomib
-#&gt; 3          41668045   1490415       1310317 cyclophosphamide
-#&gt; 4          18960067    947368       1325363        erlotinib
-#&gt; 5          28105635   1132507        955632     fluorouracil
-#&gt; 6          26779296   1107093       1378382       paclitaxel
-#&gt; 7          30768166   1183666        955632     fluorouracil
-#&gt; 8          49296796   1418244       1341149     temozolomide
-#&gt; 9          23501117   1044129       1397141      bevacizumab
-#&gt; 10         40300657   1435419       1314924      gemcitabine
-#&gt; 11         33353386   1238148        955632     fluorouracil
-#&gt; 12         48799799   1369468       1389888       bexarotene
-#&gt; 13         42756413   1534828       1305058     methotrexate
-#&gt; 14         11617998     25214       1314273        rituximab
-#&gt; 15         35937429   1299529       1338512      doxorubicin
-#&gt; 16         50270446   1554495       1436678        tamoxifen
-#&gt; 17         16325793    840679       1343346      vinorelbine
-#&gt; 18         24162323   1057086       1397599        cisplatin
-#&gt; 19         26597393   1103245       1397599        cisplatin
-#&gt; 20            57446    104241       1310317 cyclophosphamide
-#&gt;    ingredient_start_date ingredient_end_date
-#&gt; 1             2018-03-05          2018-06-26
-#&gt; 2             2019-03-12          2019-03-12
-#&gt; 3             2018-11-13          2018-11-14
-#&gt; 4             2005-03-31          2005-04-21
-#&gt; 5             2010-02-02          2010-02-02
-#&gt; 6             2009-06-16          2009-06-16
-#&gt; 7             2013-07-08          2013-07-08
-#&gt; 8             2017-07-13          2017-07-18
-#&gt; 9             2009-06-08          2009-06-08
-#&gt; 10            2017-10-02          2017-10-03
-#&gt; 11            2013-03-26          2013-03-26
-#&gt; 12            2016-03-01          2016-04-08
-#&gt; 13            2019-05-28          2019-05-29
-#&gt; 14            2002-07-16          2002-07-17
-#&gt; 15            2014-07-14          2014-07-14
-#&gt; 16            2020-05-01          2020-05-01
-#&gt; 17            2002-01-04          2002-01-05
-#&gt; 18            2008-01-11          2008-01-11
-#&gt; 19            2009-06-02          2009-06-02
-#&gt; 20            1998-09-18          1998-09-18</code></pre>
-</div>
-<div id="row-count-history-2" class="section level6">
-<h6>Row Count History</h6>
-<pre><code>#&gt;                                 Table  RowCount
-#&gt; 1            ONCOREGIMENFINDER_COHORT   5244273
-#&gt; 2 ONCOREGIMENFINDER_COHORT_2020_07_15   4553840
-#&gt; 3 ONCOREGIMENFINDER_COHORT_2020_07_28   4554988
-#&gt; 4 ONCOREGIMENFINDER_COHORT_2020_08_06    613635
-#&gt; 5 ONCOREGIMENFINDER_COHORT_2020_08_07   5244273
-#&gt; 6 ONCOREGIMENFINDER_COHORT_2020_08_08 104701978</code></pre>
-</div>
-</div>
-<div id="regimen-staging-table" class="section level5">
-<h5 class="hasAnchor">
-<a href="#regimen-staging-table" class="anchor"></a>Regimen Staging Table</h5>
-<p>The final Regimen Table is derived from the Regimen Staging Table is also to source of Regimens used to process special cohort tables. The Regimen Staging Table also serves as the data source when running OncoRegimenFinder against special cohorts.</p>
-<div id="at-a-glance-3" class="section level6">
-<h6>At a Glance</h6>
-<pre><code>#&gt;    drug_exposure_id person_id ingredient_id  ingredient_name
-#&gt; 1           9082754    584853       1351541       leuprolide
-#&gt; 2          15906218    826806        997276       cimetidine
-#&gt; 3          34639878   1265127       1305058     methotrexate
-#&gt; 4          41514343   1485448        955632     fluorouracil
-#&gt; 5          47693182   1049302       1348265      anastrozole
-#&gt; 6           2954488    295743       1310317 cyclophosphamide
-#&gt; 7            471003    986062       1367268       irinotecan
-#&gt; 8           3466457    307857       1378382       paclitaxel
-#&gt; 9          15343951    804469       1305058     methotrexate
-#&gt; 10         18802051    944921       1314273        rituximab
-#&gt; 11         20415024    980208        955632     fluorouracil
-#&gt; 12           189734    409549       1344905      carboplatin
-#&gt; 13         16395533    842388       1338512      doxorubicin
-#&gt; 14         25013272   1073091       1314924      gemcitabine
-#&gt; 15         17257506    937397        955632     fluorouracil
-#&gt; 16          4004464    320992       1343346      vinorelbine
-#&gt; 17         42427215   1520529       1314924      gemcitabine
-#&gt; 18           295953    561804        955632     fluorouracil
-#&gt; 19           471027    986182       1315942        docetaxel
-#&gt; 20          9002674    581630       1314273        rituximab
-#&gt;    ingredient_start_date ingredient_end_date
-#&gt; 1             2005-03-11          2005-03-11
-#&gt; 2             1993-04-01          1993-04-01
-#&gt; 3             2013-07-09          2013-07-09
-#&gt; 4             2019-10-09          2019-10-09
-#&gt; 5             2017-11-06          2018-04-10
-#&gt; 6             1996-05-09          1996-05-09
-#&gt; 7             2006-04-04          2006-04-04
-#&gt; 8             2014-01-07          2014-01-07
-#&gt; 9             1989-10-19          1989-10-20
-#&gt; 10            2007-01-11          2007-01-11
-#&gt; 11            2006-01-02          2006-01-02
-#&gt; 12            2001-08-30          2001-08-30
-#&gt; 13            1991-08-30          1991-08-31
-#&gt; 14            2010-05-25          2010-05-25
-#&gt; 15            2010-07-05          2010-07-05
-#&gt; 16            1998-05-13          1998-05-14
-#&gt; 17            2019-09-16          2019-09-16
-#&gt; 18            2000-08-03          2000-08-03
-#&gt; 19            2006-02-09          2006-02-09
-#&gt; 20            2002-12-30          2002-12-31</code></pre>
-</div>
-<div id="row-count-history-3" class="section level6">
-<h6>Row Count History</h6>
-<pre><code>#&gt;                                          Table  RowCount
-#&gt; 1            ONCOREGIMENFINDER_REGIMEN_STAGING   5244273
-#&gt; 2 ONCOREGIMENFINDER_REGIMEN_STAGING_2020_08_06    613635
-#&gt; 3 ONCOREGIMENFINDER_REGIMEN_STAGING_2020_08_07   5244273
-#&gt; 4 ONCOREGIMENFINDER_REGIMEN_STAGING_2020_08_08 104701978</code></pre>
-</div>
-</div>
-</div>
-<div id="process-regimen-table" class="section level4">
-<h4 class="hasAnchor">
-<a href="#process-regimen-table" class="anchor"></a>Process Regimen Table</h4>
-<p>The Regimen Table is grouped by Person Id, Drug Exposure Id, Ingredient and Ingredient Start Date and joined onto itself based on overlapping window of time by +/= the Date Lag Input parameter and iterated on based on the Regimen Repeats given.</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r">
-<span class="kw pkg">OncoRegimenFinder</span><span class="kw ns">::</span><span class="fu"><a href="../reference/processRegimenTable.html">processRegimenTable</a></span>(
-  <span class="kw">conn</span> <span class="kw">=</span> <span class="no">conn</span>,
-  <span class="kw">writeDatabaseSchema</span> <span class="kw">=</span> <span class="no">writeDatabaseSchema</span>,
-  <span class="kw">regimenTable</span> <span class="kw">=</span> <span class="no">regimenTable</span>,
-  <span class="kw">date_lag_input</span> <span class="kw">=</span> <span class="no">date_lag_input</span>,
-  <span class="kw">regimen_repeats</span> <span class="kw">=</span> <span class="no">regimen_repeats</span>
-)</pre></body></html></div>
-<div id="regimen-table" class="section level5">
-<h5 class="hasAnchor">
-<a href="#regimen-table" class="anchor"></a>Regimen Table</h5>
-<div id="at-a-glance-4" class="section level6">
-<h6>At a Glance</h6>
-<pre><code>#&gt;    person_id drug_exposure_id  ingredient_name ingredient_start_date
-#&gt; 1    1254961         34163592      doxorubicin            2013-04-09
-#&gt; 2    1148686         28992094      trastuzumab            2017-08-07
-#&gt; 3     319057          3918692       cimetidine            1997-02-26
-#&gt; 4    1194488         31277542       bortezomib            2011-10-08
-#&gt; 5    1446640         40643068      gemcitabine            2017-09-28
-#&gt; 6    1527289         42586687      trabectedin            2020-06-26
-#&gt; 7    1276736         35103865      carboplatin            2014-03-14
-#&gt; 8     557368          6871779       cimetidine            1999-05-05
-#&gt; 9     564469          2372586      gemcitabine            2017-10-06
-#&gt; 10    856469         16994100     fluorouracil            1992-09-01
-#&gt; 11    266599          1666591        cisplatin            2013-08-05
-#&gt; 12   1002673         21404785     fluorouracil            2007-05-30
-#&gt; 13   1273851         34967406        docetaxel            2014-11-28
-#&gt; 14   1410098         39514055       paclitaxel            2020-06-23
-#&gt; 15   1509722         42186994      oxaliplatin            2018-12-26
-#&gt; 16   1453852         40843082     fluorouracil            2018-04-03
-#&gt; 17   1359547         37916077        rituximab            2015-09-18
-#&gt; 18   1361545         37976115        docetaxel            2017-05-17
-#&gt; 19    103918          6104999 cyclophosphamide            1998-11-10
-#&gt; 20    569648          8648154      vincristine            2000-05-11</code></pre>
-</div>
-<div id="row-count-history-4" class="section level6">
-<h6>Row Count History</h6>
-<pre><code>#&gt;                                  Table  RowCount
-#&gt; 1            ONCOREGIMENFINDER_REGIMEN   5244273
-#&gt; 2 ONCOREGIMENFINDER_REGIMEN_2020_07_15   4553362
-#&gt; 3 ONCOREGIMENFINDER_REGIMEN_2020_07_28   4554510
-#&gt; 4 ONCOREGIMENFINDER_REGIMEN_2020_08_06    613603
-#&gt; 5 ONCOREGIMENFINDER_REGIMEN_2020_08_07   5244273
-#&gt; 6 ONCOREGIMENFINDER_REGIMEN_2020_08_08 104701978</code></pre>
-</div>
-</div>
-</div>
-<div id="write-regimen-ingredient-table" class="section level4">
-<h4 class="hasAnchor">
-<a href="#write-regimen-ingredient-table" class="anchor"></a>Write Regimen Ingredient Table</h4>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="fu"><a href="../reference/createRegimenIngrTable.html">createRegimenIngrTable</a></span>(
-  <span class="kw">conn</span> <span class="kw">=</span> <span class="no">conn</span>,
-  <span class="kw">writeDatabaseSchema</span> <span class="kw">=</span> <span class="st">"patelm9"</span>,
-  <span class="kw">cohortTable</span> <span class="kw">=</span> <span class="st">"oncoregimenfinder_cohort"</span>,
-  <span class="kw">regimenTable</span> <span class="kw">=</span> <span class="st">"oncoregimenfinder_regimen"</span>,
-  <span class="kw">regimenIngredientTable</span> <span class="kw">=</span> <span class="st">"oncoregimenfinder_regimen_ingredients"</span>,
-  <span class="kw">vocabularyTable</span> <span class="kw">=</span> <span class="st">"oncoregimenfinder_vocabulary"</span>
-)</pre></body></html></div>
-<div id="regimen-ingredient-table" class="section level5">
-<h5 class="hasAnchor">
-<a href="#regimen-ingredient-table" class="anchor"></a>Regimen Ingredient Table</h5>
-<div id="at-a-glance-5" class="section level6">
-<h6>At a Glance</h6>
-<pre><code>#&gt;    person_id drug_exposure_id  ingredient_name ingredient_start_date
-#&gt; 1     429158          7218148        rituximab            2014-11-11
-#&gt; 2    1482439         41442328       paclitaxel            2019-11-13
-#&gt; 3    1250380         33937610 cyclophosphamide            2013-05-16
-#&gt; 4    1488769         41625730     fluorouracil            2018-11-06
-#&gt; 5    1053620         23981498 cyclophosphamide            2007-12-07
-#&gt; 6    1434553         40286679      gemcitabine            2017-08-18
-#&gt; 7    1004983         21574799     fluorouracil            2006-07-31
-#&gt; 8     242623          9626573      fludarabine            2001-05-07
-#&gt; 9    1382639         38646062       irinotecan            2016-06-06
-#&gt; 10   1075203         25120948      gemcitabine            2016-12-16
-#&gt; 11   1047514           499158      bevacizumab            2008-05-27
-#&gt; 12    553112          6681235     fluorouracil            1999-01-19
-#&gt; 13   1143381         28615709       pemetrexed            2018-09-21
-#&gt; 14    628788          4954187       cimetidine            1998-01-08
-#&gt; 15   1207565         31909778      bevacizumab            2013-01-29
-#&gt; 16   1553131         43114234       paclitaxel            2019-12-12
-#&gt; 17   1130688         28017236      vincristine            2011-12-13
-#&gt; 18   1302617         48347131        tamoxifen            2019-03-04
-#&gt; 19    414396         10360862        cisplatin            2001-09-24
-#&gt; 20    762569         14610442 cyclophosphamide            1994-06-27
-#&gt;    ingredient_end_date                          derived_regimen_name regimen_id
-#&gt; 1           2014-11-11 carboplatin, etoposide, ifosfamide, rituximab         NA
-#&gt; 2           2019-11-13                                    paclitaxel   35805684
-#&gt; 3           2013-05-16                 cyclophosphamide, doxorubicin   35804208
-#&gt; 4           2018-11-08                      fluorouracil, paclitaxel   35805331
-#&gt; 5           2007-12-07                 cyclophosphamide, doxorubicin   35804199
-#&gt; 6           2017-08-19                        cisplatin, gemcitabine   35804565
-#&gt; 7           2006-07-31                     fluorouracil, oxaliplatin   42542362
-#&gt; 8           2001-05-12                                   fludarabine   35804598
-#&gt; 9           2016-06-07          floxuridine, irinotecan, oxaliplatin         NA
-#&gt; 10          2016-12-17                                   gemcitabine   42542297
-#&gt; 11          2008-05-27                                   bevacizumab   35804263
-#&gt; 12          1999-01-24            cisplatin, docetaxel, fluorouracil   35805364
-#&gt; 13          2018-09-22                     pembrolizumab, pemetrexed   35806404
-#&gt; 14          1998-01-08                                    cimetidine         NA
-#&gt; 15          2013-01-29                                   bevacizumab   35804319
-#&gt; 16          2019-12-12                       paclitaxel, trastuzumab   35804201
-#&gt; 17          2011-12-13                                   vincristine   35807043
-#&gt; 18          2019-04-04                                     tamoxifen   35804221
-#&gt; 19          2001-09-25                       cisplatin, fluorouracil   35803672
-#&gt; 20          1994-06-28    cyclophosphamide, doxorubicin, vincristine   35804365
-#&gt;                                           regimen_name
-#&gt; 1                                                 &lt;NA&gt;
-#&gt; 2                                   Paclitaxel and S-1
-#&gt; 3                                                 ddAC
-#&gt; 4                         Fluorouracil, Paclitaxel, RT
-#&gt; 5                                                   AC
-#&gt; 6                          Gemcitabine, Cisplatin, S-1
-#&gt; 7                                                 FUOX
-#&gt; 8                              Fludarabine monotherapy
-#&gt; 9                                                 &lt;NA&gt;
-#&gt; 10                                 Gemcitabine and S-1
-#&gt; 11 Doxorubicin non-pegylated liposomal and Bevacizumab
-#&gt; 12                                                 DCF
-#&gt; 13                        Pemetrexed and Pembrolizumab
-#&gt; 14                                                &lt;NA&gt;
-#&gt; 15                      Bevacizumab-containing therapy
-#&gt; 16                                          TH (Taxol)
-#&gt; 17                             Vincristine monotherapy
-#&gt; 18                               Tamoxifen monotherapy
-#&gt; 19                         Cisplatin, Fluorouracil, RT
-#&gt; 20                                    VAC (Adriamycin)
-#&gt;    derived_regimen_start_date derived_regimen_end_date
-#&gt; 1                  2014-11-11               2014-12-05
-#&gt; 2                  2019-11-13               2019-12-11
-#&gt; 3                  2013-04-18               2013-05-16
-#&gt; 4                  2018-10-09               2018-11-08
-#&gt; 5                  2007-11-23               2007-12-21
-#&gt; 6                  2017-07-28               2017-08-26
-#&gt; 7                  2006-07-17               2006-07-31
-#&gt; 8                  2001-05-07               2001-06-09
-#&gt; 9                  2016-06-06               2016-07-05
-#&gt; 10                 2016-12-16               2016-12-17
-#&gt; 11                 2008-05-27               2008-05-27
-#&gt; 12                 1999-01-19               1999-01-24
-#&gt; 13                 2018-09-21               2018-09-22
-#&gt; 14                 1998-01-08               1998-02-05
-#&gt; 15                 2013-01-29               2013-02-26
-#&gt; 16                 2019-11-21               2019-12-20
-#&gt; 17                 2011-12-13               2011-12-13
-#&gt; 18                 2019-03-04               2019-04-04
-#&gt; 19                 2001-09-24               2001-10-29
-#&gt; 20                 1994-06-06               1994-06-28</code></pre>
-</div>
-<div id="row-count-history-5" class="section level6">
-<h6>Row Count History</h6>
-<pre><code>#&gt;                                              Table RowCount
-#&gt; 1            ONCOREGIMENFINDER_REGIMEN_INGREDIENTS  9078320
-#&gt; 2 ONCOREGIMENFINDER_REGIMEN_INGREDIENTS_2020_07_15  4554796
-#&gt; 3 ONCOREGIMENFINDER_REGIMEN_INGREDIENTS_2020_07_28  4558240
-#&gt; 4 ONCOREGIMENFINDER_REGIMEN_INGREDIENTS_2020_08_06   613885
-#&gt; 5 ONCOREGIMENFINDER_REGIMEN_INGREDIENTS_2020_08_08  5247103</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
 </div>
   </div>
 

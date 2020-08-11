@@ -3,8 +3,8 @@ pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
   OncoRegimenFinder: OncoRegimenFinder.html
-  esophagus: redcap/esophagus.html
-last_built: 2020-08-09T07:11Z
+  indepthreview: indepthreview.html
+last_built: 2020-08-11T21:54Z
 urls:
   reference: https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/reference
   article: https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/articles

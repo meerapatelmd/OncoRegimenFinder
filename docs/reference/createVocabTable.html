@@ -6,8 +6,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Process Regimen Table — createVocabTable • OncoRegimenFinder</title>
+<title>Write the Vocabulary Table — createVocabTable • OncoRegimenFinder</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -39,8 +46,10 @@
 
 
 
-<meta property="og:title" content="Process Regimen Table — createVocabTable" />
-<meta property="og:description" content="Process Regimen Table" />
+<meta property="og:title" content="Write the Vocabulary Table — createVocabTable" />
+<meta property="og:description" content="The Vocabulary Table takes all the HemOnc Regimens in the OMOP Concept Table, maps the RxNorm Ingredients that comprise each Regimen, and calculates the number of unique ingredients per Regimen in an ingredient_count field and a string aggregate ingredient_combination. The ingredient_combination field combines the names of all the ingredients in a comma-separated string when the ingredient_count is greater than 2, an &quot;and&quot; concatenation when the ingredient_count is 2, or simply the ingredient name when ingredient_count is 1.
+Since a set of RxNorm Ingredients can map to more than 1 HemOnc Regimen, the table also is filtered for the shortest ingredient_combination string by character count by the concept id of the regimen, excluding abbreviations assumed to be of character counts of 5 or less." />
+<meta property="og:image" content="https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/logo.png" />
 
 
 
@@ -72,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OncoRegimenFinder</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -90,18 +99,11 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="divider"></li>
-    <li>
-      <a href="../articles/index.html">More...</a>
-    </li>
-  </ul>
+<li>
+  <a href="../articles/index.html">Articles</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -119,18 +121,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Process Regimen Table</h1>
+    <h1>Write the Vocabulary Table</h1>
     
     <div class="hidden name"><code>createVocabTable.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Process Regimen Table</p>
+    <p>The Vocabulary Table takes all the HemOnc Regimens in the OMOP Concept Table, maps the RxNorm Ingredients that comprise each Regimen, and calculates the number of unique ingredients per Regimen in an <code>ingredient_count</code> field and a string aggregate <code>ingredient_combination</code>. The <code>ingredient_combination</code> field combines the names of all the ingredients in a comma-separated string when the <code>ingredient_count</code> is greater than 2, an "and" concatenation when the <code>ingredient_count</code> is 2, or simply the ingredient name when <code>ingredient_count</code> is 1.
+Since a set of RxNorm Ingredients can map to more than 1 HemOnc Regimen, the table also is filtered for the shortest <code>ingredient_combination</code> string by character count by the concept id of the regimen, excluding abbreviations assumed to be of character counts of 5 or less.</p>
     </div>
 
     <pre class="usage"><span class='fu'>createVocabTable</span>(<span class='no'>conn</span>, <span class='no'>writeDatabaseSchema</span>, <span class='no'>cdmDatabaseSchema</span>, <span class='no'>vocabularyTable</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>conn</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>writeDatabaseSchema</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>cdmDatabaseSchema</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>vocabularyTable</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A Vocabulary Table in the designated schema.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/pg13/man/lsTables.html'>lsTables</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/appendDate.html'>appendDate</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/renameTable.html'>renameTable</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/dropTable.html'>dropTable</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/execute.html'>execute</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/readTable.html'>readTable</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/writeTable.html'>writeTable</a></code>
+<code><a href='https://rdrr.io/pkg/SqlRender/man/render.html'>render</a></code>,<code><a href='https://rdrr.io/pkg/SqlRender/man/readSql.html'>readSql</a></code>
+<code><a href='https://rdrr.io/pkg/secretary/man/press_enter.html'>press_enter</a></code>
+<code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></code>,<code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></code>,<code><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></code>,<code><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></code>,<code><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>mutate-joins</a></code>,<code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></code>,<code><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></code>
+<code><a href='https://rdrr.io/pkg/rubix/man/group_by_unique_aggregate.html'>group_by_unique_aggregate</a></code>,<code><a href='https://rdrr.io/pkg/rubix/man/arrange_by_nchar.html'>arrange_by_nchar</a></code>,<code><a href='https://rdrr.io/pkg/rubix/man/filter_first_row.html'>filter_first_row</a></code>
+<code><a href='https://stringr.tidyverse.org/reference/str_replace.html'>str_replace</a></code>
+<code><a href='https://forcats.tidyverse.org/reference/fct_collapse.html'>fct_collapse</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ATC Antineoplastic Id — atc_antineoplastic_id • OncoRegimenFinder</title>
+<title>Run OncoRegimenFinder — runORF • OncoRegimenFinder</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="ATC Antineoplastic Id — atc_antineoplastic_id" />
-<meta property="og:description" content="Concept Id of the ATC Antineoplastics Class" />
+<meta property="og:title" content="Run OncoRegimenFinder — runORF" />
+<meta property="og:description" content="This function runs OncoRegimenFinder from start to finish." />
 <meta property="og:image" content="https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/logo.png" />
 
 
@@ -120,28 +120,78 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>ATC Antineoplastic Id</h1>
+    <h1>Run OncoRegimenFinder</h1>
     
-    <div class="hidden name"><code>atc_antineoplastic_id.Rd</code></div>
+    <div class="hidden name"><code>runORF.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Concept Id of the ATC Antineoplastics Class</p>
+    <p>This function runs OncoRegimenFinder from start to finish.</p>
     </div>
 
-    <pre class="usage"><span class='no'>atc_antineoplastic_id</span></pre>
+    <pre class="usage"><span class='fu'>runORF</span>(
+  <span class='no'>conn</span>,
+  <span class='no'>cdmDatabaseSchema</span>,
+  <span class='no'>writeDatabaseSchema</span>,
+  <span class='no'>vocabularyTable</span>,
+  <span class='no'>drugExposureIngredientTable</span>,
+  <span class='no'>cohortTable</span>,
+  <span class='no'>regimenTable</span>,
+  <span class='no'>regimenIngredientTable</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>progressBar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>conn</th>
+      <td><p>a database connection object</p></td>
+    </tr>
+    <tr>
+      <th>cdmDatabaseSchema</th>
+      <td><p>OMOP CDM source schema</p></td>
+    </tr>
+    <tr>
+      <th>writeDatabaseSchema</th>
+      <td><p>schema to write to</p></td>
+    </tr>
+    <tr>
+      <th>vocabularyTable</th>
+      <td><p>Vocabulary Table</p></td>
+    </tr>
+    <tr>
+      <th>drugExposureIngredientTable</th>
+      <td><p>Drug Exposure Table</p></td>
+    </tr>
+    <tr>
+      <th>cohortTable</th>
+      <td><p>Cohort Table</p></td>
+    </tr>
+    <tr>
+      <th>regimenTable</th>
+      <td><p>Regimen Table</p></td>
+    </tr>
+    <tr>
+      <th>regimenIngredientTable</th>
+      <td><p>Regimen Ingredient Table</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>If TRUE, prints details of the operations being performed as they are being executed.</p></td>
+    </tr>
+    <tr>
+      <th>progressBar</th>
+      <td><p>If TRUE, prints a progress bar to the console that tracks the write table process.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>A vector of length 1</p><dl'>
-<dt><code>concept_id</code></dt><dd><p>integer</p></dd>
-
-</dl>
-
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>DETAILS</p>
+    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/progress/man/progress_bar.html'>progress_bar</a></code>
+<code><a href='https://rdrr.io/pkg/secretary/man/typewrite.html'>typewrite</a></code>
+<code><a href='createVocabTable.html'>createVocabTable</a></code>,<code><a href='buildIngredientExposuresTable.html'>buildIngredientExposuresTable</a></code>,<code><a href='buildCohortRegimenTable.html'>buildCohortRegimenTable</a></code>,<code><a href='processRegimenTable.html'>processRegimenTable</a></code>,<code><a href='createRegimenIngrTable.html'>createRegimenIngrTable</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
