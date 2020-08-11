@@ -9,37 +9,35 @@ createRegimenIngrTable <-
                  cohortTable,
                  regimenTable,
                  regimenIngredientTable,
-                 vocabularyTable,
-                 renameCurrentTables = TRUE) {
+                 vocabularyTable) {
                 
                 regimenIngredientTable <- toupper(regimenIngredientTable)
                 
-                if (renameCurrentTables) {
+ 
                         
-                        Tables <- pg13::lsTables(conn = conn,
-                                                 schema = writeDatabaseSchema)
+                Tables <- pg13::lsTables(conn = conn,
+                                         schema = writeDatabaseSchema)
+                
+                if (regimenIngredientTable %in% Tables) {
                         
-                        if (regimenIngredientTable %in% Tables) {
+                        newTableName <- pg13::appendDate(regimenIngredientTable)
+                        
+                        if (!(newTableName %in% Tables)) {
                                 
-                                newTableName <- pg13::appendDate(regimenIngredientTable)
+                                pg13::renameTable(conn = conn,
+                                                  schema = writeDatabaseSchema,
+                                                  tableName = regimenIngredientTable,
+                                                  newTableName = newTableName)
                                 
-                                if (!(newTableName %in% Tables)) {
-                                        
-                                        pg13::renameTable(conn = conn,
-                                                          schema = writeDatabaseSchema,
-                                                          tableName = regimenIngredientTable,
-                                                          newTableName = newTableName)
-                                        
-                                } else {
-                                        
-                                        pg13::dropTable(conn = conn,
-                                                        schema = writeDatabaseSchema,
-                                                        tableName = regimenIngredientTable)
-                                        
-                                }
+                        } else {
+                                
+                                pg13::dropTable(conn = conn,
+                                                schema = writeDatabaseSchema,
+                                                tableName = regimenIngredientTable)
+                                
                         }
-                        
                 }
+                        
                 
                 sql <- SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/RegimenIngredientTable.sql")),
                                                                                 writeDatabaseSchema = writeDatabaseSchema,
