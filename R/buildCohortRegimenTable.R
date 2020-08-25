@@ -34,10 +34,12 @@ buildCohortRegimenTable <-
                  drugExposureIngredientTable,
                  cohortTable,
                  regimenTable,
+
                  drug_classification_id_input = c(OncoRegimenFinder::atc_antineoplastic_id,
                                                   OncoRegimenFinder::hemonc_classes),
                  false_positive_id = OncoRegimenFinder::falsepositives,
-                 renameTable) {
+                 renameTable = FALSE) {
+
 
                 cohortTable <- toupper(cohortTable)
                 regimenTable <- toupper(regimenTable)
