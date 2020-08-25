@@ -33,4 +33,6 @@ where
                                 cr.concept_id_2 = 35803411
                                 )
 order by c1.concept_id
-)
+);
+
+grant all on @writeDatabaseSchema.@vocabularyTable to etl_dev;

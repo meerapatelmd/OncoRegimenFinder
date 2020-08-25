@@ -9,16 +9,17 @@ createRegimenIngrTable <-
                  cohortTable,
                  regimenTable,
                  regimenIngredientTable,
-                 vocabularyTable) {
+                 vocabularyTable,
+                 renameTable) {
                 
                 regimenIngredientTable <- toupper(regimenIngredientTable)
                 
- 
+                if (renameTable) {
                         
-                Tables <- pg13::lsTables(conn = conn,
+                  Tables <- pg13::lsTables(conn = conn,
                                          schema = writeDatabaseSchema)
                 
-                if (regimenIngredientTable %in% Tables) {
+                  if (regimenIngredientTable %in% Tables) {
                         
                         newTableName <- pg13::appendDate(regimenIngredientTable)
                         
@@ -36,8 +37,8 @@ createRegimenIngrTable <-
                                                 tableName = regimenIngredientTable)
                                 
                         }
-                }
-                        
+                   }
+                }                       
                 
                 sql <- SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/RegimenIngredientTable.sql")),
                                                                                 writeDatabaseSchema = writeDatabaseSchema,

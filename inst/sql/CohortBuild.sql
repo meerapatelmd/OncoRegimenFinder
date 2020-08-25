@@ -34,3 +34,7 @@ from @writeDatabaseSchema.@cohortTable;
 
 select * into  @writeDatabaseSchema.@regimenTable_staging
 from @writeDatabaseSchema.@cohortTable;
+
+grant all on @writeDatabaseSchema.@cohortTable to etl_dev;
+grant all on @writeDatabaseSchema.@regimenTable to etl_dev;
+grant all on @writeDatabaseSchema.@regimenTable_staging to etl_dev;

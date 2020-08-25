@@ -42,4 +42,6 @@ and c.concept_class_id = 'Ingredient'
 )
 select lower(concept_name) as concept_name, person_id, drug_exposure_start_date as ingredient_start_date, days_supply, start_date
 into @writeDatabaseSchema.raw_events
-from CTE_second
+from CTE_second;
+
+grant all on @writeDatabaseSchema.raw_events to etl_dev;

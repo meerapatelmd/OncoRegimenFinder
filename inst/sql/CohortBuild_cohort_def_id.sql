@@ -32,3 +32,6 @@ from CTE_second;
 
 select * into  @writeDatabaseSchema.@regimenTable
 from @writeDatabaseSchema.@cohortTable;
+
+grant all on @writeDatabaseSchema.@cohortTable to etl_dev;
+grant all on @writeDatabaseSchema.@regimenTable to etl_dev;

@@ -24,3 +24,5 @@ WHERE c.vocabulary_id IN ('RxNorm', 'RxNorm Extension')
 select *
 into @writeDatabaseSchema.@drugExposureIngredientTable
 from ingredient_exposures;
+
+grant all on @writeDatabaseSchema.@drugExposureIngredientTable to etl_dev;

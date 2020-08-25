@@ -1,10 +1,12 @@
 # Connection Object
+devtools::load_all()
 library(DatabaseConnector)
+library(dplyr) 
 conn_details <- DatabaseConnector::createConnectionDetails(dbms = "postgresql",
-                                                           user, 
-                                                           password,
-                                                           port = "5432", 
-                                                           server)
+                                                           server = "dlvidhiomop1.mskcc.org/omop_raw",
+                                                           user = "oncoregimenfinder",
+                                                           password = "jBTHOTCwKpy3",
+                                                           port = "5432")
 conn <- DatabaseConnector::connect(conn_details)
 
 # Settings

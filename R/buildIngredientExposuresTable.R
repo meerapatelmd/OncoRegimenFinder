@@ -26,14 +26,17 @@ buildIngredientExposuresTable <-
         function(conn,
                  cdmDatabaseSchema,
                  writeDatabaseSchema,
-                 drugExposureIngredientTable) {
+                 drugExposureIngredientTable,
+                 renameTable) {
 
                 drugExposureIngredientTable <- toupper(drugExposureIngredientTable)
 
-                Tables <- pg13::lsTables(conn = conn,
+                if (renameTable) {
+
+                   Tables <- pg13::lsTables(conn = conn,
                                          schema = writeDatabaseSchema)
 
-                if (drugExposureIngredientTable %in% Tables) {
+                   if (drugExposureIngredientTable %in% Tables) {
                         
                         newTableName <- pg13::appendDate(drugExposureIngredientTable)
                         
@@ -50,8 +53,8 @@ buildIngredientExposuresTable <-
                                                 tableName = drugExposureIngredientTable)
                                 
                         }
+                   }
                 }
-
                                 pg13::execute(conn,
                                 SqlRender::render(SqlRender::readSql(paste0(system.file(package = "OncoRegimenFinder"), "/sql/IngredientExposureTable.sql")),
                                                          cdmDatabaseSchema = cdmDatabaseSchema,
