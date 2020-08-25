@@ -34,7 +34,8 @@ runORF <-
                  regimenTable,
                  regimenIngredientTable,
                  verbose = TRUE,
-                 progressBar = TRUE) {
+                 progressBar = TRUE,
+                 renameTable = FALSE) {
                 
                 
                 if (progressBar) {
@@ -54,32 +55,28 @@ runORF <-
                 }
                 
                 if (verbose) {
-
                         secretary::typewrite("\nWriting Vocabulary Table...")
-                        
                 }
                 
                 createVocabTable(conn = conn,
                                                     writeDatabaseSchema = writeDatabaseSchema,
                                                     cdmDatabaseSchema = cdmDatabaseSchema,
-                                                    vocabularyTable = vocabularyTable)
+                                                    vocabularyTable = vocabularyTable, renameTable = renameTable)
                 
                 if (progressBar) {
                         pb$tick(tokens = list(what = drugExposureIngredientTable))
                         Sys.sleep(0.2)
                 }
                 
-                
                 if (verbose) {
-                        
                         secretary::typewrite("\nWriting Ingredient Exposures Table...")
-                        
                 }
                 
                 buildIngredientExposuresTable(conn = conn,
                                                                  cdmDatabaseSchema = cdmDatabaseSchema,
                                                                  writeDatabaseSchema = writeDatabaseSchema,
-                                                                 drugExposureIngredientTable = drugExposureIngredientTable)
+                                                                 drugExposureIngredientTable = drugExposureIngredientTable,
+                                              renameTable = renameTable)
                 
                 
                 if (progressBar) {
@@ -88,9 +85,7 @@ runORF <-
                 }
                 
                 if (verbose) {
-                        
                         secretary::typewrite("\nWriting Cohort and Regimen Staging Tables...")
-                        
                 }
                 
                 buildCohortRegimenTable(conn = conn,
@@ -98,7 +93,8 @@ runORF <-
                                                            writeDatabaseSchema = writeDatabaseSchema,
                                                            drugExposureIngredientTable = drugExposureIngredientTable,
                                                            cohortTable = cohortTable,
-                                                           regimenTable = regimenTable)
+                                                           regimenTable = regimenTable,
+                                         renameTable = renameTable)
                 
                 if (progressBar) {
                         pb$tick(tokens = list(what = regimenTable))
@@ -107,11 +103,9 @@ runORF <-
                 
                 
                 if (verbose) {
-                        
                         secretary::typewrite("\nProcessing Regimen Tables...")
-                        
                 }
-                
+               
                 processRegimenTable(conn = conn,
                                                        writeDatabaseSchema = writeDatabaseSchema,
                                                        regimenTable = regimenTable)
@@ -123,9 +117,7 @@ runORF <-
                 }
                 
                 if (verbose) {
-                        
                         secretary::typewrite("\nWriting Regimen Ingredient Table...")
-                        
                 }
                 
                 createRegimenIngrTable(conn = conn,
@@ -133,6 +125,7 @@ runORF <-
                                                           cohortTable = cohortTable,
                                                           regimenTable = regimenTable,
                                                           regimenIngredientTable = regimenIngredientTable,
-                                                          vocabularyTable = vocabularyTable)
+                                                          vocabularyTable = vocabularyTable,
+                                        renameTable = renameTable)
                 
         }

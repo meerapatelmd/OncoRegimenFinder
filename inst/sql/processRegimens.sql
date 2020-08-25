@@ -54,3 +54,5 @@ FROM updated_table;
 DROP TABLE IF EXISTS @writeDatabaseSchema.@regimenTable;
 SELECT * INTO @writeDatabaseSchema.@regimenTable FROM @writeDatabaseSchema.@regimenTable_tmp;
 DROP TABLE IF EXISTS @writeDatabaseSchema.@regimenTable_tmp;
+
+grant all on @writeDatabaseSchema.@regimenTable to etl_dev;

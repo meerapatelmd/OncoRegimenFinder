@@ -34,17 +34,22 @@ buildCohortRegimenTable <-
                  drugExposureIngredientTable,
                  cohortTable,
                  regimenTable,
-                 drug_classification_id_input = c("21601387", "35101847", "35807195", "35807466", "35807470", "35807489"),
-                 false_positive_id = c("45775396", "1304850", "792993", "19010482", "19089602", "19080458", "19104221", "19065450", "1510328", "42903942", "1354698", "1551860", "19003472", "1356009", "40244464", "1303425", "745466", "1389464", "19025194", "740910", "1710612", "35606631", "19003999", "985708", "45775206", "1308432", "1522957", "1760616", "950637", "1300978", "44816310", "1500211", "1506270", "923645", "19061406", "40171288", "1388796", "40168303", "975125", "1507705", "1511449", "1738521", "1548195", "1518254", "40222444", "1713332", "1112807", "19014878", "19034726", "984232", "1525866", "989482", "1550557", "1551099", "924120", "904351")) {
+
+                 drug_classification_id_input = c(OncoRegimenFinder::atc_antineoplastic_id,
+                                                  OncoRegimenFinder::hemonc_classes),
+                 false_positive_id = OncoRegimenFinder::falsepositives,
+                 renameTable = FALSE) {
+
 
                 cohortTable <- toupper(cohortTable)
                 regimenTable <- toupper(regimenTable)
                 regimenStagingTable <- toupper(paste0(regimenTable, "_staging"))
 
-                Tables <- pg13::lsTables(conn = conn,
+                if (renameTable) {
+                   Tables <- pg13::lsTables(conn = conn,
                                          schema = writeDatabaseSchema)
 
-                if (cohortTable %in% Tables) {
+                   if (cohortTable %in% Tables) {
                         
                         newTableName <- pg13::appendDate(cohortTable)
                         
@@ -60,11 +65,11 @@ buildCohortRegimenTable <-
                                                 schema = writeDatabaseSchema,
                                                 tableName = cohortTable)
                                 
-                        }
-                }
+                       }
+                   }
 
 
-                if (regimenTable %in% Tables) {
+                   if (regimenTable %in% Tables) {
                         
                         newTableName <- pg13::appendDate(regimenTable)
                         
@@ -79,9 +84,9 @@ buildCohortRegimenTable <-
                                                 schema = writeDatabaseSchema,
                                                 tableName = regimenTable)
                         }
-                }
+                   }
                 
-                if (regimenStagingTable %in% Tables) {
+                   if (regimenStagingTable %in% Tables) {
                         
                         newTableName <- pg13::appendDate(regimenStagingTable)
                         
@@ -96,8 +101,8 @@ buildCohortRegimenTable <-
                                                 schema = writeDatabaseSchema,
                                                 tableName = regimenStagingTable)
                         }
+                   }
                 }
-
 
                 if (!is.null(cohortDefinitionId)) {
                                 pg13::execute(conn,

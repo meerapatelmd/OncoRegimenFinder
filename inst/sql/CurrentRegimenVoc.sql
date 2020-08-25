@@ -42,4 +42,6 @@ where rank = min
 
 select *
 into @writeDatabaseSchema.@vocabularyTable
-from CTE_fourth
+from CTE_fourth;
+
+grant all on @writeDatabaseSchema.@vocabularyTable to etl_dev;

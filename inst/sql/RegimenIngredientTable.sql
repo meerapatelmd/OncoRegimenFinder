@@ -24,4 +24,6 @@ from @writeDatabaseSchema.@regimenTable orig
 left join cte on cte.person_id = orig.person_id and cte.derived_regimen_start_date = orig.ingredient_start_date
 left join @writeDatabaseSchema.@cohortTable i on i.person_id = orig.person_id and i.drug_exposure_id = orig.drug_exposure_id
 left join @writeDatabaseSchema.@vocabularyTable vt on cte.derived_regimen_name = vt.ingredient_combination
-order by cte.person_id, cte.derived_regimen_start_date
+order by cte.person_id, cte.derived_regimen_start_date;
+
+grant all on @writeDatabaseSchema.@regimenIngredientTable to etl_dev;
