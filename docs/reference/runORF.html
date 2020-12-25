@@ -88,12 +88,9 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/OncoRegimenFinder.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -129,18 +126,19 @@
     <p>This function runs OncoRegimenFinder from start to finish.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>runORF</span>(
-  <span class='no'>conn</span>,
-  <span class='no'>cdmDatabaseSchema</span>,
-  <span class='no'>writeDatabaseSchema</span>,
-  <span class='no'>vocabularyTable</span>,
-  <span class='no'>drugExposureIngredientTable</span>,
-  <span class='no'>cohortTable</span>,
-  <span class='no'>regimenTable</span>,
-  <span class='no'>regimenIngredientTable</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>progressBar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>runORF</span><span class='op'>(</span>
+  <span class='va'>conn</span>,
+  <span class='va'>cdmDatabaseSchema</span>,
+  <span class='va'>writeDatabaseSchema</span>,
+  <span class='va'>vocabularyTable</span>,
+  <span class='va'>drugExposureIngredientTable</span>,
+  <span class='va'>cohortTable</span>,
+  <span class='va'>regimenTable</span>,
+  <span class='va'>regimenIngredientTable</span>,
+  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  progressBar <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  renameTable <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -190,7 +188,7 @@
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/progress/man/progress_bar.html'>progress_bar</a></code>
-<code><a href='https://rdrr.io/pkg/secretary/man/typewrite.html'>typewrite</a></code>
+<code><a href='https://meerapatelmd.github.io/secretary/reference/typewrite.html'>typewrite</a></code>
 <code><a href='createVocabTable.html'>createVocabTable</a></code>,<code><a href='buildIngredientExposuresTable.html'>buildIngredientExposuresTable</a></code>,<code><a href='buildCohortRegimenTable.html'>buildCohortRegimenTable</a></code>,<code><a href='processRegimenTable.html'>processRegimenTable</a></code>,<code><a href='createRegimenIngrTable.html'>createRegimenIngrTable</a></code></p></div>
 
   </div>
@@ -208,7 +206,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

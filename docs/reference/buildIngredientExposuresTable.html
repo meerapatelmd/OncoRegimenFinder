@@ -88,12 +88,9 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/OncoRegimenFinder.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -129,12 +126,13 @@
     <p>This function builds the Ingredient Exposures Table for the algorithm to derive the antineoplastic combinations based on the RxNorm Ingredient of the drug in question.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>buildIngredientExposuresTable</span>(
-  <span class='no'>conn</span>,
-  <span class='no'>cdmDatabaseSchema</span>,
-  <span class='no'>writeDatabaseSchema</span>,
-  <span class='no'>drugExposureIngredientTable</span>
-)</pre>
+    <pre class="usage"><span class='fu'>buildIngredientExposuresTable</span><span class='op'>(</span>
+  <span class='va'>conn</span>,
+  <span class='va'>cdmDatabaseSchema</span>,
+  <span class='va'>writeDatabaseSchema</span>,
+  <span class='va'>drugExposureIngredientTable</span>,
+  <span class='va'>renameTable</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -165,9 +163,9 @@
     <p>If the Cohort, Regimen, and Regimen Staging Tables already exist, these tables are renamed with the system date appended in the format "_YYYY_MM_DD". The renaming is skipped and the existing Cohort, Regimen and Regimen Staging Tables are dropped if the dated table already exists, indicating that the OncoRegimenFinder was already run once for that system date.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='atc_antineoplastic_id.html'>atc_antineoplastic_id</a></code>,<code><a href='hemonc_classes.html'>hemonc_classes</a></code>,<code><a href='falsepositives.html'>falsepositives</a></code>
-<code><a href='https://rdrr.io/pkg/pg13/man/lsTables.html'>lsTables</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/renameTable.html'>renameTable</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/appendDate.html'>appendDate</a></code>,<code><a href='https://rdrr.io/pkg/pg13/man/execute.html'>execute</a></code>
-<code><a href='https://rdrr.io/pkg/SqlRender/man/render.html'>render</a></code>,<code><a href='https://rdrr.io/pkg/SqlRender/man/readSql.html'>readSql</a></code></p></div>
+    <div class='dont-index'><p><code>atc_antineoplastic_id</code>,<code>hemonc_classes</code>,<code>falsepositives</code>
+<code><a href='https://meerapatelmd.github.io/pg13/reference/lsTables.html'>lsTables</a></code>,<code><a href='https://meerapatelmd.github.io/pg13/reference/renameTable.html'>renameTable</a></code>,<code><a href='https://meerapatelmd.github.io/pg13/reference/appendDate.html'>appendDate</a></code>,<code><a href='https://meerapatelmd.github.io/pg13/reference/execute.html'>execute</a></code>
+<code><a href='https://ohdsi.github.io/SqlRender/reference/render.html'>render</a></code>,<code><a href='https://ohdsi.github.io/SqlRender/reference/readSql.html'>readSql</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -184,7 +182,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

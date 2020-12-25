@@ -4,9 +4,6 @@
     <loc>https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/index.html</loc>
   </url>
   <url>
-    <loc>https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/reference/atc_antineoplastic_id.html</loc>
-  </url>
-  <url>
     <loc>https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/reference/buildCohortRegimenTable.html</loc>
   </url>
   <url>
@@ -19,12 +16,6 @@
     <loc>https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/reference/createVocabTable.html</loc>
   </url>
   <url>
-    <loc>https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/reference/falsepositives.html</loc>
-  </url>
-  <url>
-    <loc>https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/reference/hemonc_classes.html</loc>
-  </url>
-  <url>
     <loc>https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/reference/make_connDetails.html</loc>
   </url>
   <url>
@@ -35,14 +26,5 @@
   </url>
   <url>
     <loc>https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/reference/runORF.html</loc>
-  </url>
-  <url>
-    <loc>https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/reference/topclasses.html</loc>
-  </url>
-  <url>
-    <loc>https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/articles/OncoRegimenFinder.html</loc>
-  </url>
-  <url>
-    <loc>https://github.mskcc.org/pages/patelm9/OncoRegimenFinder/articles/indepthreview.html</loc>
   </url>
 </urlset>
