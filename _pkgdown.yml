@@ -1,18 +1,5 @@
 url: https://github.mskcc.org/pages/patelm9/OncoRegimenFinder
 
-articles:
-- title: Setup and Details
-  desc: >
-      Articles on setting up and running OncoRegimenFinder
-  contents:
-  - OncoRegimenFinder
-  - indepthreview
-- title: REDCap Cohorts
-  desc: >
-      These articles are to demonstrate the results on specific REDCap Project Cohorts.
-  contents:
-  - starts_with("redcap")
-
 reference:
 - title: Setup
   desc:  >
