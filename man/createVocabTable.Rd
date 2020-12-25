@@ -4,7 +4,13 @@
 \alias{createVocabTable}
 \title{Write the Vocabulary Table}
 \usage{
-createVocabTable(conn, writeDatabaseSchema, cdmDatabaseSchema, vocabularyTable)
+createVocabTable(
+  conn,
+  writeDatabaseSchema,
+  cdmDatabaseSchema,
+  vocabularyTable,
+  renameTable
+)
 }
 \arguments{
 \item{conn}{PARAM_DESCRIPTION}
@@ -27,7 +33,7 @@ Since a set of RxNorm Ingredients can map to more than 1 HemOnc Regimen, the tab
 \code{\link[SqlRender]{render}},\code{\link[SqlRender]{readSql}}
 \code{\link[secretary]{press_enter}}
 \code{\link[dplyr]{group_by}},\code{\link[dplyr]{summarise}},\code{\link[dplyr]{arrange}},\code{\link[dplyr]{rename}},\code{\link[dplyr]{mutate-joins}},\code{\link[dplyr]{mutate}},\code{\link[dplyr]{select}}
-\code{\link[rubix]{group_by_unique_aggregate}},\code{\link[rubix]{arrange_by_nchar}},\code{\link[rubix]{filter_first_row}}
+\code{\link[rubix]{group_by_unique_aggregate}},\code{\link[rubix]{arrange_by_nchar}}
 \code{\link[stringr]{str_replace}}
 \code{\link[forcats]{fct_collapse}}
 }

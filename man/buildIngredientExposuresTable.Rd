@@ -8,7 +8,8 @@ buildIngredientExposuresTable(
   conn,
   cdmDatabaseSchema,
   writeDatabaseSchema,
-  drugExposureIngredientTable
+  drugExposureIngredientTable,
+  renameTable
 )
 }
 \arguments{

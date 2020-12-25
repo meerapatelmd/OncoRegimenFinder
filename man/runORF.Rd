@@ -14,7 +14,8 @@ runORF(
   regimenTable,
   regimenIngredientTable,
   verbose = TRUE,
-  progressBar = TRUE
+  progressBar = TRUE,
+  renameTable = FALSE
 )
 }
 \arguments{
